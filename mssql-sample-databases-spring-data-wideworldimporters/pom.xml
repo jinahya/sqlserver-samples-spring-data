@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.github.jinahya</groupId>
+    <artifactId>mssql-sample-databases-spring-data</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>mssql-sample-databases-spring-data-wideworldimporters</artifactId>
+  <packaging>jar</packaging>
+
+  <name>${project.artifactId}</name>
+  <description>Spring Data for WideWorldImporters</description>
+
+  <dependencies>
+    <!--
+      The mapped superclasses the entities of this module extend, their id classes, their static metamodel, and the
+      converter the mappings name. Upstream keeps its own entities in its test sources, so none arrive from the jar;
+      the ones here are copies of them. Everything else is declared by the parent.
+      -->
+    <dependency>
+      <groupId>io.github.jinahya</groupId>
+      <artifactId>mssql-sample-databases-persistence-wideworldimporters</artifactId>
+    </dependency>
+  </dependencies>
+</project>

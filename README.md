@@ -1,10 +1,10 @@
-# mssql-sample-databases-spring-data
+# sql-server-samples-spring-data
 
 Spring Data repositories for three Microsoft SQL Server sample databases (AdventureWorks, WideWorldImporters and
 FutonManufacturing), built on the mapped superclasses of
-[mssql-sample-databases-persistence](https://github.com/jinahya/mssql-sample-databases-persistence).
+[sql-server-samples-persistence](https://github.com/jinahya/sql-server-samples-persistence).
 
-The sibling [mssql-sample-databases-jakarta-data](https://github.com/jinahya/mssql-sample-databases-jakarta-data) is
+The sibling [sql-server-samples-jakarta-data](https://github.com/jinahya/sql-server-samples-jakarta-data) is
 the same thing in Jakarta Data.
 
 ## Modules
@@ -40,7 +40,7 @@ takes upstream's id class as its `ID`. The repositories are empty for now.
 The upstream jars are `0.0.1-SNAPSHOT`s that exist only locally. Install them first:
 
 ```sh
-(cd ../../mssql-sample-databases-persistence && ./mvnw -DskipTests install)
+(cd ../../sql-server-samples-persistence && ./mvnw -DskipTests install)
 ```
 
 ## Build
@@ -56,7 +56,7 @@ container that upstream provides, which serves the three databases on `localhost
 the tests:
 
 ```sh
-../../mssql-sample-databases-persistence/compose.sh                                 # Ctrl-C takes it down
+../../sql-server-samples-persistence/compose.sh                                 # Ctrl-C takes it down
 mvn -Dtest='*_SpringBootIT' -Dsurefire.failIfNoSpecifiedTests=false test
 mvn -pl mssql-sample-databases-spring-data-adventureworks -Dtest=StoreRepository_SpringBootIT test
 ```

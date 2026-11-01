@@ -1,16 +1,16 @@
 #
-# Test configuration for mssql-sample-databases-spring-data-futonmanufacturing: FutonManufacturing on the SQL Server that mssql-sample-databases-persistence brings up, not
+# Test configuration for mssql-sample-databases-spring-data-futonmanufacturing: FutonManufacturing on the SQL Server that sql-server-samples-persistence brings up, not
 # an in-memory stand-in.
 #
 # Start it from the sibling checkout, which owns the compose file:
 #
-#     ../../mssql-sample-databases-persistence/compose.sh
+#     ../../sql-server-samples-persistence/compose.sh
 #
 # That runs onacit/mssql-sample-databases:2025-latest as the container `mssql-sample-databases`, publishes 1433, and
 # loads AdventureWorks, WideWorldImporters and FutonManufacturing on start; Ctrl-C takes it down again.
 #
 # These are the same coordinates upstream's own integration-test persistence unit uses (`futonmanufacturing-it`, in
-# src/test/resources/META-INF/persistence.xml of ../../mssql-sample-databases-persistence's
+# src/test/resources/META-INF/persistence.xml of ../../sql-server-samples-persistence's
 # mssql-sample-databases-persistence-futonmanufacturing); keep the two in step.
 #
 spring:

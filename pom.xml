@@ -5,7 +5,7 @@
   <!--
     Modelled on the sibling postgresql-demodb-spring-data: Spring Data JPA over an upstream persistence project,
     parent-less, with Spring Boot's BOM imported. The difference is the shape: upstream
-    (mssql-sample-databases-persistence) has one module per sample database, so this project has one too, each
+    (sql-server-samples-persistence) has one module per sample database, so this project has one too, each
     depending on its upstream module only. This pom is the aggregator and the parent of the three; every version and
     every plugin configuration is here.
     -->
@@ -58,7 +58,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!--
-      As upstream (mssql-sample-databases-persistence): main sources at release 17, tests at 25. 17 is upstream's
+      As upstream (sql-server-samples-persistence): main sources at release 17, tests at 25. 17 is upstream's
       floor, and Boot 4's baseline, so a consumer on 17 can use these jars as it can upstream's. The tests are not
       published, so they take the current LTS.
       -->

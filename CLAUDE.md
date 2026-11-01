@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this project is
 
 Spring Data repositories over the Jakarta Persistence mappings of
-[`mssql-sample-databases-persistence`](https://github.com/jinahya/mssql-sample-databases-persistence), which maps three
+[`sql-server-samples-persistence`](https://github.com/jinahya/sql-server-samples-persistence), which maps three
 Microsoft SQL Server sample databases. A parent-less multi-module project, modelled on the sibling
 `postgresql-demodb-spring-data`; the root `pom.xml` is the aggregator and the parent of:
 
@@ -43,7 +43,7 @@ In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldim
 
 ## Upstream, and the entities
 
-The upstream checkout `../../mssql-sample-databases-persistence` publishes, at `0.0.1-SNAPSHOT`, one jar per database of
+The upstream checkout `../../sql-server-samples-persistence` publishes, at `0.0.1-SNAPSHOT`, one jar per database of
 **mapped superclasses, their `Mapped*Id` id classes, their generated static metamodel, `UuidStringAttributeConverter`,
 `__Constants` and `__Utils`**, all under `...<db>.mapped` (and its schema subpackages). They are **SNAPSHOTs that exist
 only locally**: after a change upstream, run `./mvnw -DskipTests install` there before building here. There is no
@@ -58,7 +58,7 @@ only locally**: after a change upstream, run `./mvnw -DskipTests install` there 
   AdventureWorks' `ProductDocument`. They are plain classes, not entities, and have no repository. Neither are
   upstream's test utilities (`___Persistence_TestUtils`, `_Entity_PersistenceIT`, `*_PersistenceIT`).
 - Entity names carry the schema (`@Entity(name = "SalesStore")`), so JPQL names an entity by it (`FROM SalesStore s`).
-- Read `../../mssql-sample-databases-persistence/README.md` and its `CLAUDE.md` before touching anything about the
+- Read `../../sql-server-samples-persistence/README.md` and its `CLAUDE.md` before touching anything about the
   mappings.
 
 ## Build
@@ -77,7 +77,7 @@ Surefire's default includes do not match `*IT`, and no failsafe plugin is config
 never run the `*_SpringBootIT` classes; run them explicitly with `-Dtest`.
 
 **The integration tests need the sample-databases container** that upstream owns: run
-`../../mssql-sample-databases-persistence/compose.sh` (Ctrl-C takes it down again, with its data). It runs
+`../../sql-server-samples-persistence/compose.sh` (Ctrl-C takes it down again, with its data). It runs
 `onacit/mssql-sample-databases:2025-latest` as the container `mssql-sample-databases` on `localhost:1433`, user `sa`,
 password `Passw0rd!`, with the three databases loaded on start. Each module's `src/test/resources/application.yaml`
 connects to its database there with `ddl-auto: none`, `SQLServerDialect` named outright, and

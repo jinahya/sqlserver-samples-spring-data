@@ -8,11 +8,14 @@ import org.springframework.stereotype.Repository;
  * A repository for {@link Supplier}, the {@code Website.Suppliers} view of WideWorldImporters.
  * <p>
  * The id is {@link Integer}.
+ * <p>
+ * The bean is named {@code websiteSupplierRepository}, not after the interface: another schema of this module has a
+ * {@code SupplierRepository} too, and Spring Data names a repository bean after its simple name.
  *
  * @see Supplier
  */
-@Repository
-public interface WebsiteSupplierRepository
+@Repository("websiteSupplierRepository")
+public interface SupplierRepository
         extends _Repository<Supplier, Integer> {
 
 }

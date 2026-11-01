@@ -30,11 +30,14 @@ In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldim
   `@IdClass` takes upstream's `Mapped*Id` class as its `ID`. The repositories are **empty** for now.
 - Shared: `_Repository` is in `...<db>.data` (public, so every `<schema>.data` package can extend it), the one
   package of main sources that is neither an entity package nor a repository package.
-- **Where two schemas have an entity of the same simple name**, the repository takes the entity's name instead
-  (`@Entity(name = ...)`, schema first): WideWorldImporters has `SalesCustomerRepository` / `WebsiteCustomerRepository`,
-  `PurchasingSupplierRepository` / `WebsiteSupplierRepository`, `WarehouseVehicleTemperatureRepository` /
-  `WebsiteVehicleTemperatureRepository`. The two are in different packages, but Spring Data names a repository bean
-  after its simple name, so two `CustomerRepository`s in one context would clash.
+- **Where two schemas have an entity of the same simple name**, both repositories keep the plain name
+  (`...sales.data.CustomerRepository` and `...website.data.CustomerRepository`), and each carries an explicit bean
+  name, `@Repository("<schema><Entity>Repository")`: WideWorldImporters' `salesCustomerRepository` /
+  `websiteCustomerRepository`, `purchasingSupplierRepository` / `websiteSupplierRepository`,
+  `warehouseVehicleTemperatureRepository` / `websiteVehicleTemperatureRepository`. Spring Data names a repository bean
+  after its simple name otherwise, so the two would clash in one context; its `RepositoryBeanNameGenerator` honours
+  the annotation's value, so a consumer needs no name generator of its own. Inject such a repository by its type, which
+  is unique.
 - The published jars carry **the entities and the repositories**: `spring-data-jpa`, `jakarta.persistence-api`,
   `jakarta.validation-api` and `jakarta.annotation-api` are `provided`. No Boot starter is named in main.
 

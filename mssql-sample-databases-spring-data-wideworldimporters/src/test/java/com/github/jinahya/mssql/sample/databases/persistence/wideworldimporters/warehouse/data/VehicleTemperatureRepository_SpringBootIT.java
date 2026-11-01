@@ -4,19 +4,19 @@ import com.github.jinahya.mssql.sample.databases.persistence.wideworldimporters.
 import com.github.jinahya.mssql.sample.databases.persistence.wideworldimporters.warehouse.VehicleTemperature;
 
 /**
- * Tests {@link WarehouseVehicleTemperatureRepository} against WideWorldImporters, through
+ * Tests {@link VehicleTemperatureRepository} against WideWorldImporters, through
  * {@link _Repository_SpringBootIT}.
  * <p>
  * See that class for the context and the transactions. Needs the database of {@code application.yaml} up, with
  * WideWorldImporters loaded; see that file.
  */
-class WarehouseVehicleTemperatureRepository_SpringBootIT
-        extends _Repository_SpringBootIT<WarehouseVehicleTemperatureRepository, VehicleTemperature, Long> {
+class VehicleTemperatureRepository_SpringBootIT
+        extends _Repository_SpringBootIT<VehicleTemperatureRepository, VehicleTemperature, Long> {
 
     /**
      * Creates a new instance.
      */
-    WarehouseVehicleTemperatureRepository_SpringBootIT() {
-        super(WarehouseVehicleTemperatureRepository.class, VehicleTemperature.class, Long.class);
+    VehicleTemperatureRepository_SpringBootIT() {
+        super(VehicleTemperatureRepository.class, VehicleTemperature.class, Long.class);
     }
 }

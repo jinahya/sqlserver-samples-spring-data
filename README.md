@@ -40,7 +40,7 @@ takes upstream's id class as its `ID`. The repositories are empty for now.
 The upstream jars are `0.0.1-SNAPSHOT`s that exist only locally. Install them first:
 
 ```sh
-(cd ../mssql-sample-databases-persistence && ./mvnw -DskipTests install)
+(cd ../../mssql-sample-databases-persistence && ./mvnw -DskipTests install)
 ```
 
 ## Build
@@ -56,7 +56,7 @@ container that upstream provides, which serves the three databases on `localhost
 the tests:
 
 ```sh
-../mssql-sample-databases-persistence/compose.sh                                 # Ctrl-C takes it down
+../../mssql-sample-databases-persistence/compose.sh                                 # Ctrl-C takes it down
 mvn -Dtest='*_SpringBootIT' -Dsurefire.failIfNoSpecifiedTests=false test
 mvn -pl mssql-sample-databases-spring-data-adventureworks -Dtest=StoreRepository_SpringBootIT test
 ```

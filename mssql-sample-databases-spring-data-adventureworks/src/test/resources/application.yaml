@@ -4,13 +4,13 @@
 #
 # Start it from the sibling checkout, which owns the compose file:
 #
-#     ../mssql-sample-databases-persistence/compose.sh
+#     ../../mssql-sample-databases-persistence/compose.sh
 #
 # That runs onacit/mssql-sample-databases:2025-latest as the container `mssql-sample-databases`, publishes 1433, and
 # loads AdventureWorks, WideWorldImporters and FutonManufacturing on start; Ctrl-C takes it down again.
 #
 # These are the same coordinates upstream's own integration-test persistence unit uses (`adventureworks-it`, in
-# src/test/resources/META-INF/persistence.xml of ../mssql-sample-databases-persistence's
+# src/test/resources/META-INF/persistence.xml of ../../mssql-sample-databases-persistence's
 # mssql-sample-databases-persistence-adventureworks); keep the two in step.
 #
 spring:

@@ -15,6 +15,9 @@ import java.util.function.Function;
 /**
  * The root of the repository tests of this module.
  * <p>
+ * It is public, and its members protected, because the tests that extend it live in the {@code <schema>.data}
+ * packages, one per schema, not in this one.
+ * <p>
  * It holds the three types a repository test is about, and has the repository under test and the
  * {@link EntityManager} injected. It declares no tests and no context of its own: {@link _Repository_SpringBootIT}
  * adds the full context over AdventureWorks.
@@ -23,7 +26,7 @@ import java.util.function.Function;
  * @param <U> the type of the entity the repository manages.
  * @param <V> the type of the entity's id.
  */
-abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
+public abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
 
     /**
      * Creates a new instance for the specified types.
@@ -32,7 +35,8 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
      * @param entityClass     the class of the entity the repository manages.
      * @param idClass         the class of the entity's id.
      */
-    __Repository_TestBase(final Class<T> repositoryClass, final Class<U> entityClass, final Class<V> idClass) {
+    protected __Repository_TestBase(final Class<T> repositoryClass, final Class<U> entityClass,
+                                    final Class<V> idClass) {
         super();
         this.repositoryClass = Objects.requireNonNull(repositoryClass, "repositoryClass is null");
         this.entityClass = Objects.requireNonNull(entityClass, "entityClass is null");
@@ -55,7 +59,7 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
      * @return a function which reads the {@code alias} column of a tuple as a {@code type}.
      * @see #longColumn(String)
      */
-    static <X> Function<Tuple, X> column(final String alias, final Class<X> type) {
+    protected static <X> Function<Tuple, X> column(final String alias, final Class<X> type) {
         Objects.requireNonNull(alias, "alias is null");
         Objects.requireNonNull(type, "type is null");
         return t -> t.get(alias, type);
@@ -73,7 +77,7 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
      * @return a function which reads the {@code alias} column of a tuple as a {@code Long}; {@code null} for
      *         {@code NULL}.
      */
-    static Function<Tuple, Long> longColumn(final String alias) {
+    protected static Function<Tuple, Long> longColumn(final String alias) {
         Objects.requireNonNull(alias, "alias is null");
         return t -> {
             final var value = t.get(alias, Number.class);
@@ -88,7 +92,7 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
      *
      * @return the factory of the injected entity manager.
      */
-    EntityManagerFactory entityManagerFactory() {
+    protected EntityManagerFactory entityManagerFactory() {
         return entityManager().getEntityManagerFactory();
     }
 
@@ -101,7 +105,7 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
      * @param entityInstance the entity whose id is returned.
      * @return the id of {@code entityInstance}.
      */
-    V identifier(final U entityInstance) {
+    protected V identifier(final U entityInstance) {
         return JinahyaEntityManagerFactoryUtils.getIdentifier(entityManagerFactory(), entityInstance);
     }
 
@@ -110,17 +114,17 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
     /**
      * The class of the repository under test.
      */
-    final Class<T> repositoryClass;
+    protected final Class<T> repositoryClass;
 
     /**
      * The class of the entity the repository manages.
      */
-    final Class<U> entityClass;
+    protected final Class<U> entityClass;
 
     /**
      * The class of the entity's id.
      */
-    final Class<V> idClass;
+    protected final Class<V> idClass;
 
     // -----------------------------------------------------------------------------------------------------------------
 
@@ -130,7 +134,7 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
      */
     @Autowired
     @Accessors(fluent = true)
-    @Getter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PROTECTED)
     private EntityManager entityManager;
 
     /**
@@ -138,6 +142,6 @@ abstract class __Repository_TestBase<T extends _Repository<U, V>, U, V> {
      */
     @Autowired
     @Accessors(fluent = true)
-    @Getter(AccessLevel.PACKAGE)
+    @Getter(AccessLevel.PROTECTED)
     private T repositoryInstance;
 }

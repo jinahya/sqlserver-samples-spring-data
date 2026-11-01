@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 
 /**
  * The base of the tests that run a repository against WideWorldImporters, through the full context of
- * {@link ___Spring_TestContext}.
+ * {@link com.github.jinahya.mssql.sample.databases.persistence.wideworldimporters.___Spring_TestContext}.
  * <p>
  * A {@code @SpringBootTest} neither swaps in an embedded database nor wraps a test in a rolled-back transaction. Each
  * repository call runs in its own transaction, and in a persistence context of its own, and commits, unless the test
@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
  * @param <V> the type of the entity's id.
  */
 @SpringBootTest
-abstract class _Repository_SpringBootIT<T extends _Repository<U, V>, U, V>
+public abstract class _Repository_SpringBootIT<T extends _Repository<U, V>, U, V>
         extends __Repository_TestBase<T, U, V> {
 
     /**
@@ -33,7 +33,8 @@ abstract class _Repository_SpringBootIT<T extends _Repository<U, V>, U, V>
      * @param entityClass     the class of the entity the repository manages.
      * @param idClass         the class of the entity's id.
      */
-    _Repository_SpringBootIT(final Class<T> repositoryClass, final Class<U> entityClass, final Class<V> idClass) {
+    protected _Repository_SpringBootIT(final Class<T> repositoryClass, final Class<U> entityClass,
+                                       final Class<V> idClass) {
         super(repositoryClass, entityClass, idClass);
     }
 
@@ -44,7 +45,7 @@ abstract class _Repository_SpringBootIT<T extends _Repository<U, V>, U, V>
      *
      * @return a random entity, or an empty optional if the table holds none.
      */
-    Optional<U> selectRandom() {
+    protected Optional<U> selectRandom() {
         return JinahyaPersistenceTestUtils.selectRandom(entityManager(), entityClass);
     }
 
@@ -56,7 +57,7 @@ abstract class _Repository_SpringBootIT<T extends _Repository<U, V>, U, V>
      *
      * @return a random entity.
      */
-    U selectRandomPresent() {
+    protected U selectRandomPresent() {
         final var selected = selectRandom();
         assumeThat(selected).isNotEmpty();
         return selected.get();

@@ -7,9 +7,10 @@ import org.springframework.data.repository.NoRepositoryBean;
 /**
  * The base of every repository of an {@code @Entity} of this module.
  * <p>
- * It is what each {@code <Entity>Repository} of this package extends, so that whatever every repository should offer
- * is declared once, here. Criteria queries go through {@link org.springframework.data.jpa.domain.Specification} and
- * the generated static metamodel, never through attribute names as strings.
+ * It is what each {@code <Entity>Repository} of the {@code <schema>.data} packages extends, so that whatever every
+ * repository should offer is declared once, here. Criteria queries go through
+ * {@link org.springframework.data.jpa.domain.Specification} and the generated static metamodel, never through attribute
+ * names as strings.
  * <p>
  * {@link NoRepositoryBean}: Spring Data must not instantiate this interface itself, only its subinterfaces.
  *

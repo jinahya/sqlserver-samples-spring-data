@@ -27,9 +27,9 @@ application's decision. This project is that application. Each module's entities
 upstream's test entities, kept in step with them. Upstream's keyless classes (views with no key, the `*_Archive`
 history tables, `ProductDocument`) are not entities, and are not copied.
 
-One repository per entity, in `com.github.jinahya.mssql.sample.databases.persistence.<db>.data`, each extending
-`_Repository<E, ID>` (`JpaRepository` + `JpaSpecificationExecutor`); an entity with an `@IdClass` takes upstream's id
-class as its `ID`. The repositories are empty for now.
+One repository per entity, in the entity's package plus `.data` (`...adventureworks.person.data`), each extending
+`_Repository<E, ID>` (`JpaRepository` + `JpaSpecificationExecutor`, in `...<db>.data`); an entity with an `@IdClass`
+takes upstream's id class as its `ID`. The repositories are empty for now.
 
 ## Requirements
 

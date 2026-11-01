@@ -24,15 +24,17 @@ In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldim
 - Entities: `com.github.jinahya.mssql.sample.databases.persistence.<db>.<schema>`, **in the module's `src/main`**, one
   package per schema (`sales`, `person`, ...; FutonManufacturing has `dbo` only), each extending a mapped superclass of
   upstream's `...<db>.mapped.<schema>` package.
-- Repositories: `com.github.jinahya.mssql.sample.databases.persistence.<db>.data` (`@NullMarked`, JSpecify), one per
-  entity, named `<Entity>Repository`, extending `_Repository<E, ID>` (`JpaRepository` + `JpaSpecificationExecutor`,
-  `@NoRepositoryBean`). An entity with an `@IdClass` takes upstream's `Mapped*Id` class as its `ID`. The repositories
-  are **empty** for now.
+- Repositories: **the entity's package plus `.data`**, `...<db>.<schema>.data` (`...adventureworks.person.data`), each
+  with its own `package-info.java` (`@NullMarked`, JSpecify). One per entity, named `<Entity>Repository`, extending
+  `_Repository<E, ID>` (`JpaRepository` + `JpaSpecificationExecutor`, `@NoRepositoryBean`). An entity with an
+  `@IdClass` takes upstream's `Mapped*Id` class as its `ID`. The repositories are **empty** for now.
+- Shared: `_Repository` is in `...<db>.data` (public, so every `<schema>.data` package can extend it), the one
+  package of main sources that is neither an entity package nor a repository package.
 - **Where two schemas have an entity of the same simple name**, the repository takes the entity's name instead
   (`@Entity(name = ...)`, schema first): WideWorldImporters has `SalesCustomerRepository` / `WebsiteCustomerRepository`,
   `PurchasingSupplierRepository` / `WebsiteSupplierRepository`, `WarehouseVehicleTemperatureRepository` /
-  `WebsiteVehicleTemperatureRepository`. All repositories share one package, and Spring Data names a repository bean
-  after its simple name, so two `CustomerRepository`s could not both exist.
+  `WebsiteVehicleTemperatureRepository`. The two are in different packages, but Spring Data names a repository bean
+  after its simple name, so two `CustomerRepository`s in one context would clash.
 - The published jars carry **the entities and the repositories**: `spring-data-jpa`, `jakarta.persistence-api`,
   `jakarta.validation-api` and `jakarta.annotation-api` are `provided`. No Boot starter is named in main.
 
@@ -100,13 +102,16 @@ Each is commented in `pom.xml`:
 
 ## Tests
 
-Each module's test root, `...<db>.data`, has `___Spring_TestContext`: `@SpringBootConfiguration` +
-`@EnableAutoConfiguration` + `@EntityScan(basePackageClasses = {...})`, naming one entity of each schema package (the
-entities are in sibling packages). It lives in test sources on purpose: nothing in `src/main` carries a
-`@SpringBootApplication`. `SpringTestContext_SpringBootTest` tests the context itself (every entity in the metamodel),
-and is the only test `verify` runs.
+Each module's test root package, `...<db>`, has `___Spring_TestContext`: `@SpringBootConfiguration` +
+`@EnableAutoConfiguration` + `@EntityScan(basePackageClasses = {...})`, naming one entity of each schema package (so the
+scan stays off upstream's `mapped` packages). It is in `<db>`, not in `<db>.data`, because a `@SpringBootTest` finds
+its configuration by walking **up** from its own package, and the repository tests are in `<db>.<schema>.data`; being
+in `<db>` also makes it the base package Spring Data scans for repositories. It lives in test sources on purpose:
+nothing in `src/main` carries a `@SpringBootApplication`. `SpringTestContext_SpringBootTest`, next to it, tests the
+context itself (every entity in the metamodel), and is the only test `verify` runs.
 
-Repository tests extend a small hierarchy, per module:
+Repository tests extend a small hierarchy, per module. The bases are in `...<db>.data`, **public, with protected
+members**, because the tests extending them are in the `<schema>.data` packages:
 
 - `__Repository_TestBase<T, U, V>`: repository, entity and id types; injects the repository (`repositoryInstance()`)
   and the `EntityManager` (`entityManager()`); `identifier(entity)` reads an id through the metamodel; `column(..)`,
@@ -114,15 +119,15 @@ Repository tests extend a small hierarchy, per module:
 - `_Repository_SpringBootIT`: `@SpringBootTest` against the sample database. Repository calls commit unless the test is
   `@Transactional`. `selectRandom()` / `selectRandomPresent()` pick a row, the latter aborting the test by an
   assumption when the table is empty. It declares no tests yet.
-- `<Repository>_SpringBootIT`, one per repository, **empty** for now. There is no `_DataJpaTest` and no H2: as upstream,
-  the tests are ITs only.
+- `<Repository>_SpringBootIT`, one per repository, in its repository's `<schema>.data` package, **empty** for now.
+  There is no `_DataJpaTest` and no H2: as upstream, the tests are ITs only.
 
 A repository test never calls `entityManager()` itself; everything a test does with the database goes through the
 repository under test. An integration test **reads the sample data; it never fabricates rows**. A test that must write
 does so inside `@Transactional`, so it is rolled back.
 
 Logging is set in each module's `src/test/resources/logback-spring.xml` (`org.hibernate.SQL` at DEBUG,
-`org.hibernate.orm.jdbc.bind` at TRACE, the module's `data` package at DEBUG). Keep levels there, not under
+`org.hibernate.orm.jdbc.bind` at TRACE, the module's root package at DEBUG). Keep levels there, not under
 `logging.level` in `application.yaml`, and do not add a `logback.xml` / `logback-test.xml`.
 
 ## Style

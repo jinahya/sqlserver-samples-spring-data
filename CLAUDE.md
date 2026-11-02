@@ -21,7 +21,7 @@ dependencies every module shares). A module's pom declares one dependency: its u
 
 In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldimporters`):
 
-- Entities: `com.github.jinahya.sqlserver.sample.databases.persistence.<db>.<schema>`, **in the module's `src/main`**, one
+- Entities: `com.github.jinahya.sqlserver.sample.persistence.<db>.<schema>`, **in the module's `src/main`**, one
   package per schema (`sales`, `person`, ...; FutonManufacturing has `dbo` only), each extending a mapped superclass of
   upstream's `...<db>.mapped.<schema>` package.
 - Repositories: **the entity's package plus `.data`**, `...<db>.<schema>.data` (`...adventureworks.person.data`), each
@@ -44,7 +44,7 @@ In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldim
 ## Upstream, and the entities
 
 The upstream checkout `../../sqlserver-samples-persistence` publishes, at `0.0.1-SNAPSHOT`, one jar per database of
-**mapped superclasses, their `Mapped*Id` id classes, their generated static metamodel, `UuidStringAttributeConverter`,
+**mapped superclasses, their `Mapped*Id` id classes, their generated static metamodel, their attribute converters,
 `__Constants` and `__Utils`**, all under `...<db>.mapped` (and its schema subpackages). They are **SNAPSHOTs that exist
 only locally**: after a change upstream, run `./mvnw -DskipTests install` there before building here. There is no
 `test-companion` jar and no H2 upstream; its tests are ITs only, on SQL Server.

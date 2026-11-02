@@ -1,6 +1,6 @@
 /**
  * Spring Data repositories for the entities of the {@code website} schema of WideWorldImporters, which live in the
- * parent package {@code com.github.jinahya.sqlserver.sample.databases.persistence.wideworldimporters.website}: this
+ * parent package {@code com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.website}: this
  * module's own entities, each extending a mapped superclass of the upstream
  * {@code sqlserver-samples-persistence-wideworldimporters} artifact.
  * <p>

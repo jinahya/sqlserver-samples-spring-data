@@ -27,5 +27,5 @@
     This module's own code, the tests included. Everything not named here stays at the root's INFO, so a
     log.debug(...) in a test prints nothing without this.
     -->
-  <logger name="com.github.jinahya.sqlserver.sample.databases.persistence.futonmanufacturing" level="DEBUG"/>
+  <logger name="com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing" level="DEBUG"/>
 </configuration>

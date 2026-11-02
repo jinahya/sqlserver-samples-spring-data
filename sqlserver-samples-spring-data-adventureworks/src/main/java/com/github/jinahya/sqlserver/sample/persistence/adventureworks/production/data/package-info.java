@@ -1,6 +1,6 @@
 /**
  * Spring Data repositories for the entities of the {@code production} schema of AdventureWorks, which live in the
- * parent package {@code com.github.jinahya.sqlserver.sample.databases.persistence.adventureworks.production}: this module's
+ * parent package {@code com.github.jinahya.sqlserver.sample.persistence.adventureworks.production}: this module's
  * own entities, each extending a mapped superclass of the upstream
  * {@code sqlserver-samples-persistence-adventureworks} artifact.
  * <p>

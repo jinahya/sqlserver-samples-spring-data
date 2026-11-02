@@ -5,12 +5,12 @@
   <!--
     Modelled on the sibling postgresql-demodb-spring-data: Spring Data JPA over an upstream persistence project,
     parent-less, with Spring Boot's BOM imported. The difference is the shape: upstream
-    (sql-server-samples-persistence) has one module per sample database, so this project has one too, each
+    (sqlserver-samples-persistence) has one module per sample database, so this project has one too, each
     depending on its upstream module only. This pom is the aggregator and the parent of the three; every version and
     every plugin configuration is here.
     -->
   <groupId>io.github.jinahya</groupId>
-  <artifactId>mssql-sample-databases-spring-data</artifactId>
+  <artifactId>sqlserver-samples-spring-data</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
@@ -37,9 +37,9 @@
   </developers>
 
   <modules>
-    <module>mssql-sample-databases-spring-data-adventureworks</module>
-    <module>mssql-sample-databases-spring-data-futonmanufacturing</module>
-    <module>mssql-sample-databases-spring-data-wideworldimporters</module>
+    <module>sqlserver-samples-spring-data-adventureworks</module>
+    <module>sqlserver-samples-spring-data-futonmanufacturing</module>
+    <module>sqlserver-samples-spring-data-wideworldimporters</module>
   </modules>
 
   <scm>
@@ -58,7 +58,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <!--
-      As upstream (sql-server-samples-persistence): main sources at release 17, tests at 25. 17 is upstream's
+      As upstream (sqlserver-samples-persistence): main sources at release 17, tests at 25. 17 is upstream's
       floor, and Boot 4's baseline, so a consumer on 17 can use these jars as it can upstream's. The tests are not
       published, so they take the current LTS.
       -->
@@ -82,7 +82,7 @@
     <version.org.springframework.boot>4.1.2</version.org.springframework.boot>
 
     <!-- Local SNAPSHOT only: `./mvnw -DskipTests install` the sibling checkout to pick up a change there. -->
-    <version.mssql-sample-databases-persistence>0.0.1-SNAPSHOT</version.mssql-sample-databases-persistence>
+    <version.sqlserver-samples-persistence>0.0.1-SNAPSHOT</version.sqlserver-samples-persistence>
 
     <!-- https://central.sonatype.com/artifact/io.github.jinahya/jinahya-persistence-test-utils/versions -->
     <version.jinahya-persistence>0.6.7</version.jinahya-persistence>
@@ -160,18 +160,18 @@
         -->
       <dependency>
         <groupId>io.github.jinahya</groupId>
-        <artifactId>mssql-sample-databases-persistence-adventureworks</artifactId>
-        <version>${version.mssql-sample-databases-persistence}</version>
+        <artifactId>sqlserver-samples-persistence-adventureworks</artifactId>
+        <version>${version.sqlserver-samples-persistence}</version>
       </dependency>
       <dependency>
         <groupId>io.github.jinahya</groupId>
-        <artifactId>mssql-sample-databases-persistence-futonmanufacturing</artifactId>
-        <version>${version.mssql-sample-databases-persistence}</version>
+        <artifactId>sqlserver-samples-persistence-futonmanufacturing</artifactId>
+        <version>${version.sqlserver-samples-persistence}</version>
       </dependency>
       <dependency>
         <groupId>io.github.jinahya</groupId>
-        <artifactId>mssql-sample-databases-persistence-wideworldimporters</artifactId>
-        <version>${version.mssql-sample-databases-persistence}</version>
+        <artifactId>sqlserver-samples-persistence-wideworldimporters</artifactId>
+        <version>${version.sqlserver-samples-persistence}</version>
       </dependency>
 
       <dependency>

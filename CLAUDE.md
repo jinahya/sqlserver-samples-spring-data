@@ -5,23 +5,23 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this project is
 
 Spring Data repositories over the Jakarta Persistence mappings of
-[`sql-server-samples-persistence`](https://github.com/jinahya/sql-server-samples-persistence), which maps three
+[`sqlserver-samples-persistence`](https://github.com/jinahya/sqlserver-samples-persistence), which maps three
 Microsoft SQL Server sample databases. A parent-less multi-module project, modelled on the sibling
 `postgresql-demodb-spring-data`; the root `pom.xml` is the aggregator and the parent of:
 
 | Module                                                  | Database             | Entities |
 |---------------------------------------------------------|----------------------|---------:|
-| `mssql-sample-databases-spring-data-adventureworks`     | `AdventureWorks`     |       82 |
-| `mssql-sample-databases-spring-data-futonmanufacturing` | `FutonManufacturing` |       50 |
-| `mssql-sample-databases-spring-data-wideworldimporters` | `WideWorldImporters` |       34 |
+| `sqlserver-samples-spring-data-adventureworks`     | `AdventureWorks`     |       82 |
+| `sqlserver-samples-spring-data-futonmanufacturing` | `FutonManufacturing` |       50 |
+| `sqlserver-samples-spring-data-wideworldimporters` | `WideWorldImporters` |       34 |
 
 Every version and every plugin configuration lives in the root (`dependencyManagement`, `pluginManagement`, and the
 dependencies every module shares). A module's pom declares one dependency: its upstream module,
-`io.github.jinahya:mssql-sample-databases-persistence-<db>`. Modules do not depend on each other.
+`io.github.jinahya:sqlserver-samples-persistence-<db>`. Modules do not depend on each other.
 
 In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldimporters`):
 
-- Entities: `com.github.jinahya.mssql.sample.databases.persistence.<db>.<schema>`, **in the module's `src/main`**, one
+- Entities: `com.github.jinahya.sqlserver.sample.databases.persistence.<db>.<schema>`, **in the module's `src/main`**, one
   package per schema (`sales`, `person`, ...; FutonManufacturing has `dbo` only), each extending a mapped superclass of
   upstream's `...<db>.mapped.<schema>` package.
 - Repositories: **the entity's package plus `.data`**, `...<db>.<schema>.data` (`...adventureworks.person.data`), each
@@ -43,7 +43,7 @@ In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldim
 
 ## Upstream, and the entities
 
-The upstream checkout `../../sql-server-samples-persistence` publishes, at `0.0.1-SNAPSHOT`, one jar per database of
+The upstream checkout `../../sqlserver-samples-persistence` publishes, at `0.0.1-SNAPSHOT`, one jar per database of
 **mapped superclasses, their `Mapped*Id` id classes, their generated static metamodel, `UuidStringAttributeConverter`,
 `__Constants` and `__Utils`**, all under `...<db>.mapped` (and its schema subpackages). They are **SNAPSHOTs that exist
 only locally**: after a change upstream, run `./mvnw -DskipTests install` there before building here. There is no
@@ -58,7 +58,7 @@ only locally**: after a change upstream, run `./mvnw -DskipTests install` there 
   AdventureWorks' `ProductDocument`. They are plain classes, not entities, and have no repository. Neither are
   upstream's test utilities (`___Persistence_TestUtils`, `_Entity_PersistenceIT`, `*_PersistenceIT`).
 - Entity names carry the schema (`@Entity(name = "SalesStore")`), so JPQL names an entity by it (`FROM SalesStore s`).
-- Read `../../sql-server-samples-persistence/README.md` and its `CLAUDE.md` before touching anything about the
+- Read `../../sqlserver-samples-persistence/README.md` and its `CLAUDE.md` before touching anything about the
   mappings.
 
 ## Build
@@ -68,7 +68,7 @@ release 17, as upstream, tests at 25.
 
 ```sh
 mvn clean verify                                       # compile all modules, run the context tests
-mvn -pl mssql-sample-databases-spring-data-adventureworks test
+mvn -pl sqlserver-samples-spring-data-adventureworks test
 mvn -Dtest='*_SpringBootIT' -Dsurefire.failIfNoSpecifiedTests=false test   # integration tests; needs SQL Server
 mvn -o enforcer:enforce -Denforcer.rules=dependencyConvergence
 ```
@@ -77,7 +77,7 @@ Surefire's default includes do not match `*IT`, and no failsafe plugin is config
 never run the `*_SpringBootIT` classes; run them explicitly with `-Dtest`.
 
 **The integration tests need the sample-databases container** that upstream owns: run
-`../../sql-server-samples-persistence/compose.sh` (Ctrl-C takes it down again, with its data). It runs
+`../../sqlserver-samples-persistence/compose.sh` (Ctrl-C takes it down again, with its data). It runs
 `onacit/mssql-sample-databases:2025-latest` as the container `mssql-sample-databases` on `localhost:1433`, user `sa`,
 password `Passw0rd!`, with the three databases loaded on start. Each module's `src/test/resources/application.yaml`
 connects to its database there with `ddl-auto: none`, `SQLServerDialect` named outright, and

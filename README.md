@@ -1,29 +1,29 @@
-# sql-server-samples-spring-data
+# sqlserver-samples-spring-data
 
 Spring Data repositories for three Microsoft SQL Server sample databases (AdventureWorks, WideWorldImporters and
 FutonManufacturing), built on the mapped superclasses of
-[sql-server-samples-persistence](https://github.com/jinahya/sql-server-samples-persistence).
+[sqlserver-samples-persistence](https://github.com/jinahya/sqlserver-samples-persistence).
 
-The sibling [sql-server-samples-jakarta-data](https://github.com/jinahya/sql-server-samples-jakarta-data) is
+The sibling [sqlserver-samples-jakarta-data](https://github.com/jinahya/sqlserver-samples-jakarta-data) is
 the same thing in Jakarta Data.
 
 ## Modules
 
 One module per sample database, each depending on its upstream module only
-(`mssql-sample-databases-persistence-<db>`):
+(`sqlserver-samples-persistence-<db>`):
 
 | Module                                                  | Database             | Entities |
 |---------------------------------------------------------|----------------------|---------:|
-| `mssql-sample-databases-spring-data-adventureworks`     | `AdventureWorks`     |       82 |
-| `mssql-sample-databases-spring-data-futonmanufacturing` | `FutonManufacturing` |       50 |
-| `mssql-sample-databases-spring-data-wideworldimporters` | `WideWorldImporters` |       34 |
+| `sqlserver-samples-spring-data-adventureworks`     | `AdventureWorks`     |       82 |
+| `sqlserver-samples-spring-data-futonmanufacturing` | `FutonManufacturing` |       50 |
+| `sqlserver-samples-spring-data-wideworldimporters` | `WideWorldImporters` |       34 |
 
 ## The entities
 
 Upstream publishes mapped superclasses (`MappedStore`, ...), their id classes (`MappedSalesOrderDetailId`, ...), their
 static metamodel and a converter, and keeps its entities in its test sources: which associations to map, and how, is an
 application's decision. This project is that application. Each module's entities, in
-`com.github.jinahya.mssql.sample.databases.persistence.<db>.<schema>`, one package per schema, are copies of
+`com.github.jinahya.sqlserver.sample.databases.persistence.<db>.<schema>`, one package per schema, are copies of
 upstream's test entities, kept in step with them. Upstream's keyless classes (views with no key, the `*_Archive`
 history tables, `ProductDocument`) are not entities, and are not copied.
 
@@ -40,7 +40,7 @@ takes upstream's id class as its `ID`. The repositories are empty for now.
 The upstream jars are `0.0.1-SNAPSHOT`s that exist only locally. Install them first:
 
 ```sh
-(cd ../../sql-server-samples-persistence && ./mvnw -DskipTests install)
+(cd ../../sqlserver-samples-persistence && ./mvnw -DskipTests install)
 ```
 
 ## Build
@@ -56,9 +56,9 @@ container that upstream provides, which serves the three databases on `localhost
 the tests:
 
 ```sh
-../../sql-server-samples-persistence/compose.sh                                 # Ctrl-C takes it down
+../../sqlserver-samples-persistence/compose.sh                                 # Ctrl-C takes it down
 mvn -Dtest='*_SpringBootIT' -Dsurefire.failIfNoSpecifiedTests=false test
-mvn -pl mssql-sample-databases-spring-data-adventureworks -Dtest=StoreRepository_SpringBootIT test
+mvn -pl sqlserver-samples-spring-data-adventureworks -Dtest=StoreRepository_SpringBootIT test
 ```
 
 The tests only read the sample data, and never generate DDL.

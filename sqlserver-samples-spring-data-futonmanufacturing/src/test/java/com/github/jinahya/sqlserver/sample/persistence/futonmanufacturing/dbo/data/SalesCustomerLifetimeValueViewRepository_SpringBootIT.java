@@ -1,0 +1,24 @@
+package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo.data;
+
+import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.data._Repository_SpringBootIT;
+import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo.SalesCustomerLifetimeValueView;
+import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo.data.SalesCustomerLifetimeValueViewRepository;
+
+/**
+ * Tests {@link SalesCustomerLifetimeValueViewRepository} against FutonManufacturing, through
+ * {@link _Repository_SpringBootIT}.
+ * <p>
+ * See that class for the context and the transactions. Needs the database of {@code application.yaml} up, with
+ * FutonManufacturing loaded; see that file.
+ */
+class SalesCustomerLifetimeValueViewRepository_SpringBootIT
+        extends _Repository_SpringBootIT<SalesCustomerLifetimeValueViewRepository, SalesCustomerLifetimeValueView,
+                                         Integer> {
+
+    /**
+     * Creates a new instance.
+     */
+    SalesCustomerLifetimeValueViewRepository_SpringBootIT() {
+        super(SalesCustomerLifetimeValueViewRepository.class, SalesCustomerLifetimeValueView.class, Integer.class);
+    }
+}

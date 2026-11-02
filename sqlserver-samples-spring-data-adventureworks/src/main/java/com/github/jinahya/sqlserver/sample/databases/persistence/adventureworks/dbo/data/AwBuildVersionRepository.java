@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface AwBuildVersionRepository
-        extends _Repository<AwBuildVersion, Short> {
+        extends _Repository<AwBuildVersion, Long> {
 
 }

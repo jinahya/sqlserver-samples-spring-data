@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ErrorLogRepository
-        extends _Repository<ErrorLog, Integer> {
+        extends _Repository<ErrorLog, Long> {
 
 }

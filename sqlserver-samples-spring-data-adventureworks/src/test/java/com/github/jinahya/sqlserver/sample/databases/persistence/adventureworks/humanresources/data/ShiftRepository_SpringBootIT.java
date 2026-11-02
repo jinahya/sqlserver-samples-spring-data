@@ -10,12 +10,12 @@ import com.github.jinahya.sqlserver.sample.databases.persistence.adventureworks.
  * AdventureWorks loaded; see that file.
  */
 class ShiftRepository_SpringBootIT
-        extends _Repository_SpringBootIT<ShiftRepository, Shift, Short> {
+        extends _Repository_SpringBootIT<ShiftRepository, Shift, Long> {
 
     /**
      * Creates a new instance.
      */
     ShiftRepository_SpringBootIT() {
-        super(ShiftRepository.class, Shift.class, Short.class);
+        super(ShiftRepository.class, Shift.class, Long.class);
     }
 }

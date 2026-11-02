@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface JobCandidateRepository
-        extends _Repository<JobCandidate, Integer> {
+        extends _Repository<JobCandidate, Long> {
 
 }

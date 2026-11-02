@@ -101,7 +101,8 @@ public class WorkOrder extends MappedWorkOrder {
      */
     public void setScrapReason(@Nullable final ScrapReason scrapReason) {
         this.scrapReason = scrapReason;
-        setScrapReasonId(scrapReason == null ? null : scrapReason.getScrapReasonId());
+        setScrapReasonId(scrapReason == null || scrapReason.getScrapReasonId() == null
+                         ? null : scrapReason.getScrapReasonId().intValue());
     }
 
     // -----------------------------------------------------------------------------------------------------------------

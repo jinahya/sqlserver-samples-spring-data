@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface DepartmentRepository
-        extends _Repository<Department, Short> {
+        extends _Repository<Department, Long> {
 
 }

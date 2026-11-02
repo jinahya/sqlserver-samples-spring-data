@@ -10,12 +10,12 @@ import com.github.jinahya.sqlserver.sample.databases.persistence.adventureworks.
  * AdventureWorks loaded; see that file.
  */
 class JobCandidateRepository_SpringBootIT
-        extends _Repository_SpringBootIT<JobCandidateRepository, JobCandidate, Integer> {
+        extends _Repository_SpringBootIT<JobCandidateRepository, JobCandidate, Long> {
 
     /**
      * Creates a new instance.
      */
     JobCandidateRepository_SpringBootIT() {
-        super(JobCandidateRepository.class, JobCandidate.class, Integer.class);
+        super(JobCandidateRepository.class, JobCandidate.class, Long.class);
     }
 }

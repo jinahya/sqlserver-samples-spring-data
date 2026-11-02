@@ -10,12 +10,12 @@ import com.github.jinahya.sqlserver.sample.databases.persistence.adventureworks.
  * AdventureWorks loaded; see that file.
  */
 class ErrorLogRepository_SpringBootIT
-        extends _Repository_SpringBootIT<ErrorLogRepository, ErrorLog, Integer> {
+        extends _Repository_SpringBootIT<ErrorLogRepository, ErrorLog, Long> {
 
     /**
      * Creates a new instance.
      */
     ErrorLogRepository_SpringBootIT() {
-        super(ErrorLogRepository.class, ErrorLog.class, Integer.class);
+        super(ErrorLogRepository.class, ErrorLog.class, Long.class);
     }
 }

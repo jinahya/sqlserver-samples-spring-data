@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface ShiftRepository
-        extends _Repository<Shift, Short> {
+        extends _Repository<Shift, Long> {
 
 }

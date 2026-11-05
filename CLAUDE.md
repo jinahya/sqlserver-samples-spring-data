@@ -77,7 +77,7 @@ Surefire's default includes do not match `*IT`, and no failsafe plugin is config
 never run the `*_SpringBootIT` classes; run them explicitly with `-Dtest`.
 
 **The integration tests need the sample-databases container** that upstream owns: run
-`../../sqlserver-samples-persistence/compose.sh` (Ctrl-C takes it down again, with its data). It runs
+`../../sqlserver-samples-persistence/_compose.sh` (Ctrl-C takes it down again, with its data). It runs
 `onacit/mssql-sample-databases:2025-latest` as the container `mssql-sample-databases` on `localhost:1433`, user `sa`,
 password `Passw0rd!`, with the three databases loaded on start. Each module's `src/test/resources/application.yaml`
 connects to its database there with `ddl-auto: none`, `SQLServerDialect` named outright, and
@@ -136,4 +136,4 @@ Logging is set in each module's `src/test/resources/logback-spring.xml` (`org.hi
 ## Style
 
 - Separator comments (`// ---- name`) are padded to column 120, the line length of the code.
-- Shell scripts, if any are added, get lower-case, underscore-only names (`compose.sh`, `_docker_exec_sqlcmd.sh`).
+- Shell scripts, if any are added, get lower-case, underscore-only names (`_compose.sh`, `_docker_exec_sqlcmd.sh`).

@@ -4,7 +4,7 @@
 #
 # Start it from the sibling checkout, which owns the compose file:
 #
-#     ../../sqlserver-samples-persistence/compose.sh
+#     ../../sqlserver-samples-persistence/_compose.sh
 #
 # That runs onacit/mssql-sample-databases:2025-latest as the container `mssql-sample-databases`, publishes 1433, and
 # loads AdventureWorks, WideWorldImporters and FutonManufacturing on start; Ctrl-C takes it down again.

@@ -56,7 +56,7 @@ container that upstream provides, which serves the three databases on `localhost
 the tests:
 
 ```sh
-../../sqlserver-samples-persistence/compose.sh                                 # Ctrl-C takes it down
+../../sqlserver-samples-persistence/_compose.sh                                # Ctrl-C takes it down
 mvn -Dtest='*_SpringBootIT' -Dsurefire.failIfNoSpecifiedTests=false test
 mvn -pl sqlserver-samples-spring-data-adventureworks -Dtest=StoreRepository_SpringBootIT test
 ```

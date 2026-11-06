@@ -11,12 +11,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production
  * AdventureWorks loaded; see that file.
  */
 class LocationRepository_SpringBootIT
-        extends _Repository_SpringBootIT<LocationRepository, Location, Short> {
+        extends _Repository_SpringBootIT<LocationRepository, Location, Long> {
 
     /**
      * Creates a new instance.
      */
     LocationRepository_SpringBootIT() {
-        super(LocationRepository.class, Location.class, Short.class);
+        super(LocationRepository.class, Location.class, Long.class);
     }
 }

@@ -23,7 +23,6 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedItem;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSupplier;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSupplierItem;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -47,7 +46,7 @@ public class SupplierItem extends MappedSupplierItem {
      */
     public static final String ATTRIBUTE_NAME_ITEM = "item";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,53 +55,51 @@ public class SupplierItem extends MappedSupplierItem {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------------- supplier
+    // ------------------------------------------------------------------------------------ supplier
 
     /**
      * Returns the {@code Supplier} which the {@code FK_SupplierItem_Supplier} foreign key references.
      *
      * @return the {@code Supplier} referenced; {@code null} when none is.
      */
-    @Nullable
     public Supplier getSupplier() {
         return supplier;
     }
 
     /**
-     * Replaces the {@code Supplier} which the {@code FK_SupplierItem_Supplier} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Supplier} which the {@code FK_SupplierItem_Supplier} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param supplier the {@code Supplier} to reference; {@code null} for none.
      */
-    public void setSupplier(@Nullable final Supplier supplier) {
+    public void setSupplier(final Supplier supplier) {
         this.supplier = supplier;
         setSupplierId(supplier == null ? null : supplier.getSupplierId());
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_SupplierItem_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_SupplierItem_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_SupplierItem_Item} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SUPPLIER_ID,
                 referencedColumnName = MappedSupplier.COLUMN_NAME_SUPPLIER_ID,
@@ -112,7 +109,7 @@ public class SupplierItem extends MappedSupplierItem {
     )
     private Supplier supplier;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,

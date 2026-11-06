@@ -28,10 +28,12 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Person.PhoneNumberType} table.
  */
 @Entity(name = "PersonPhoneNumberType")
-@Table(schema = MappedPhoneNumberType.TABLE_SCHEMA, name = MappedPhoneNumberType.TABLE_NAME)
-public class PhoneNumberType extends MappedPhoneNumberType {
+@Table(schema = MappedPhoneNumberType.TABLE_SCHEMA, name = MappedPhoneNumberType.TABLE_NAME,
+       comment = "Type of phone number of a person.")
+public class PhoneNumberType
+        extends MappedPhoneNumberType {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

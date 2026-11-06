@@ -28,7 +28,6 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.warehouse.MappedStockItem;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.PackageType;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.StockItem;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -39,7 +38,8 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Sales.OrderLines} table.
  */
 @Entity(name = "SalesOrderLine")
-@Table(schema = MappedOrderLine.TABLE_SCHEMA, name = MappedOrderLine.TABLE_NAME)
+@Table(schema = MappedOrderLine.TABLE_SCHEMA, name = MappedOrderLine.TABLE_NAME,
+       comment = "Detail lines from customer orders")
 public class OrderLine extends MappedOrderLine {
 
     /**
@@ -66,7 +66,7 @@ public class OrderLine extends MappedOrderLine {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -75,31 +75,29 @@ public class OrderLine extends MappedOrderLine {
         super();
     }
 
-    // ----------------------------------------------------------------------------------------------------------- order
+    // --------------------------------------------------------------------------------------- order
 
     /**
      * Returns the {@code Order} which the {@code FK_Sales_OrderLines_OrderID_Sales_Orders} foreign key references.
      *
      * @return the {@code Order} referenced; {@code null} when none is.
      */
-    @Nullable
     public Order getOrder() {
         return order;
     }
 
     /**
-     * Replaces the {@code Order} which the {@code FK_Sales_OrderLines_OrderID_Sales_Orders} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * Replaces the {@code Order} which the {@code FK_Sales_OrderLines_OrderID_Sales_Orders} foreign key references, and
+     * the value of the column it consists of.
      *
      * @param order the {@code Order} to reference; {@code null} for none.
      */
-    public void setOrder(@Nullable final Order order) {
+    public void setOrder(final Order order) {
         this.order = order;
         setOrderId(order == null ? null : order.getOrderId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- stockItem
+    // ----------------------------------------------------------------------------------- stockItem
 
     /**
      * Returns the {@code StockItem} which the {@code FK_Sales_OrderLines_StockItemID_Warehouse_StockItems} foreign key
@@ -107,24 +105,22 @@ public class OrderLine extends MappedOrderLine {
      *
      * @return the {@code StockItem} referenced; {@code null} when none is.
      */
-    @Nullable
     public StockItem getStockItem() {
         return stockItem;
     }
 
     /**
-     * Replaces the {@code StockItem} which the {@code FK_Sales_OrderLines_StockItemID_Warehouse_StockItems} foreign
-     * key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code StockItem} which the {@code FK_Sales_OrderLines_StockItemID_Warehouse_StockItems} foreign key
+     * references, and the value of the column it consists of.
      *
      * @param stockItem the {@code StockItem} to reference; {@code null} for none.
      */
-    public void setStockItem(@Nullable final StockItem stockItem) {
+    public void setStockItem(final StockItem stockItem) {
         this.stockItem = stockItem;
         setStockItemId(stockItem == null ? null : stockItem.getStockItemId());
     }
 
-    // ----------------------------------------------------------------------------------------------------- packageType
+    // --------------------------------------------------------------------------------- packageType
 
     /**
      * Returns the {@code PackageType} which the {@code FK_Sales_OrderLines_PackageTypeID_Warehouse_PackageTypes}
@@ -132,48 +128,44 @@ public class OrderLine extends MappedOrderLine {
      *
      * @return the {@code PackageType} referenced; {@code null} when none is.
      */
-    @Nullable
     public PackageType getPackageType() {
         return packageType;
     }
 
     /**
      * Replaces the {@code PackageType} which the {@code FK_Sales_OrderLines_PackageTypeID_Warehouse_PackageTypes}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param packageType the {@code PackageType} to reference; {@code null} for none.
      */
-    public void setPackageType(@Nullable final PackageType packageType) {
+    public void setPackageType(final PackageType packageType) {
         this.packageType = packageType;
         setPackageTypeId(packageType == null ? null : packageType.getPackageTypeId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_OrderLines_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_OrderLines_Application_People} foreign key references, and
-     * the
-     * value of the column it consists of.
+     * the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ORDER_ID,
                 referencedColumnName = MappedOrder.COLUMN_NAME_ORDER_ID,
@@ -183,7 +175,7 @@ public class OrderLine extends MappedOrderLine {
     )
     private Order order;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STOCK_ITEM_ID,
                 referencedColumnName = MappedStockItem.COLUMN_NAME_STOCK_ITEM_ID,
@@ -193,7 +185,7 @@ public class OrderLine extends MappedOrderLine {
     )
     private StockItem stockItem;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PACKAGE_TYPE_ID,
                 referencedColumnName = MappedPackageType.COLUMN_NAME_PACKAGE_TYPE_ID,
@@ -203,7 +195,7 @@ public class OrderLine extends MappedOrderLine {
     )
     private PackageType packageType;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

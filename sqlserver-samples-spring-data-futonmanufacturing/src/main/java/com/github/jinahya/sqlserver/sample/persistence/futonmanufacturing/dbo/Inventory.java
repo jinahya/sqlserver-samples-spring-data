@@ -23,18 +23,29 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedInventory;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedItem;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedWarehouse;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code dbo.Inventory} table.
  */
 @Entity(name = "DboInventory")
-@Table(schema = MappedInventory.TABLE_SCHEMA, name = MappedInventory.TABLE_NAME)
+@Table(schema = MappedInventory.TABLE_SCHEMA,
+       name = MappedInventory.TABLE_NAME,
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "UQ_Inventory_Item_Warehouse",
+                       columnNames = {
+                               Inventory.COLUMN_NAME_ITEM_ID,
+                               Inventory.COLUMN_NAME_WAREHOUSE_ID
+                       }
+               )
+       }
+)
 public class Inventory extends MappedInventory {
 
     /**
@@ -47,7 +58,7 @@ public class Inventory extends MappedInventory {
      */
     public static final String ATTRIBUTE_NAME_WAREHOUSE = "warehouse";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,53 +67,51 @@ public class Inventory extends MappedInventory {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_Inventory_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_Inventory_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_Inventory_Item} foreign key references, and the value of the column
+     * it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- warehouse
+    // ----------------------------------------------------------------------------------- warehouse
 
     /**
      * Returns the {@code Warehouse} which the {@code FK_Inventory_Warehouse} foreign key references.
      *
      * @return the {@code Warehouse} referenced; {@code null} when none is.
      */
-    @Nullable
     public Warehouse getWarehouse() {
         return warehouse;
     }
 
     /**
-     * Replaces the {@code Warehouse} which the {@code FK_Inventory_Warehouse} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Warehouse} which the {@code FK_Inventory_Warehouse} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param warehouse the {@code Warehouse} to reference; {@code null} for none.
      */
-    public void setWarehouse(@Nullable final Warehouse warehouse) {
+    public void setWarehouse(final Warehouse warehouse) {
         this.warehouse = warehouse;
         setWarehouseId(warehouse == null ? null : warehouse.getWarehouseId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,
@@ -112,7 +121,7 @@ public class Inventory extends MappedInventory {
     )
     private Item item;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_WAREHOUSE_ID,
                 referencedColumnName = MappedWarehouse.COLUMN_NAME_WAREHOUSE_ID,

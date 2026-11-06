@@ -24,33 +24,58 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.per
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedStateProvince;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesTerritory;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.SalesTerritory;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Person.StateProvince} table.
  */
 @Entity(name = "PersonStateProvince")
-@Table(schema = MappedStateProvince.TABLE_SCHEMA, name = MappedStateProvince.TABLE_NAME)
-public class StateProvince extends MappedStateProvince {
+@Table(schema = MappedStateProvince.TABLE_SCHEMA,
+       name = MappedStateProvince.TABLE_NAME,
+       comment = "State and province lookup table.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_StateProvince_Name",
+                       columnNames = {
+                               StateProvince.COLUMN_NAME_NAME
+                       }
+               ),
+               @UniqueConstraint(
+                       name = "AK_StateProvince_rowguid",
+                       columnNames = {
+                               StateProvince.COLUMN_NAME_ROWGUID
+                       }
+               ),
+               @UniqueConstraint(
+                       name = "AK_StateProvince_StateProvinceCode_CountryRegionCode",
+                       columnNames = {
+                               StateProvince.COLUMN_NAME_STATE_PROVINCE_CODE,
+                               StateProvince.COLUMN_NAME_COUNTRY_REGION_CODE
+                       }
+               )
+       }
+)
+public class StateProvince
+        extends MappedStateProvince {
 
     /**
-     * The name of the attribute of the {@code FK_StateProvince_CountryRegion_CountryRegionCode} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_StateProvince_CountryRegion_CountryRegionCode}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_COUNTRY_REGION = "countryRegion";
 
     /**
-     * The name of the attribute of the {@code FK_StateProvince_SalesTerritory_TerritoryID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_StateProvince_SalesTerritory_TerritoryID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_TERRITORY = "territory";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -59,57 +84,55 @@ public class StateProvince extends MappedStateProvince {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------- countryRegion
+    // ------------------------------------------------------------------------------- countryRegion
 
     /**
-     * Returns the {@code CountryRegion} which the {@code FK_StateProvince_CountryRegion_CountryRegionCode} foreign key
-     * references.
+     * Returns the {@code CountryRegion} which the
+     * {@code FK_StateProvince_CountryRegion_CountryRegionCode} foreign key references.
      *
      * @return the {@code CountryRegion} referenced; {@code null} when none is.
      */
-    @Nullable
     public CountryRegion getCountryRegion() {
         return countryRegion;
     }
 
     /**
-     * Replaces the {@code CountryRegion} which the {@code FK_StateProvince_CountryRegion_CountryRegionCode} foreign
-     * key references, and the
+     * Replaces the {@code CountryRegion} which the
+     * {@code FK_StateProvince_CountryRegion_CountryRegionCode} foreign key references, and the
      * value of the column it consists of.
      *
      * @param countryRegion the {@code CountryRegion} to reference; {@code null} for none.
      */
-    public void setCountryRegion(@Nullable final CountryRegion countryRegion) {
+    public void setCountryRegion(final CountryRegion countryRegion) {
         this.countryRegion = countryRegion;
         setCountryRegionCode(countryRegion == null ? null : countryRegion.getCountryRegionCode());
     }
 
-    // ------------------------------------------------------------------------------------------------------- territory
+    // ----------------------------------------------------------------------------------- territory
 
     /**
-     * Returns the {@code SalesTerritory} which the {@code FK_StateProvince_SalesTerritory_TerritoryID} foreign key
-     * references.
+     * Returns the {@code SalesTerritory} which the
+     * {@code FK_StateProvince_SalesTerritory_TerritoryID} foreign key references.
      *
      * @return the {@code SalesTerritory} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesTerritory getTerritory() {
         return territory;
     }
 
     /**
-     * Replaces the {@code SalesTerritory} which the {@code FK_StateProvince_SalesTerritory_TerritoryID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesTerritory} which the
+     * {@code FK_StateProvince_SalesTerritory_TerritoryID} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param territory the {@code SalesTerritory} to reference; {@code null} for none.
      */
-    public void setTerritory(@Nullable final SalesTerritory territory) {
+    public void setTerritory(final SalesTerritory territory) {
         this.territory = territory;
         setTerritoryId(territory == null ? null : territory.getTerritoryId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_COUNTRY_REGION_CODE,
                 referencedColumnName = MappedCountryRegion.COLUMN_NAME_COUNTRY_REGION_CODE,
@@ -119,7 +142,7 @@ public class StateProvince extends MappedStateProvince {
     )
     private CountryRegion countryRegion;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_TERRITORY_ID,
                 referencedColumnName = MappedSalesTerritory.COLUMN_NAME_TERRITORY_ID,

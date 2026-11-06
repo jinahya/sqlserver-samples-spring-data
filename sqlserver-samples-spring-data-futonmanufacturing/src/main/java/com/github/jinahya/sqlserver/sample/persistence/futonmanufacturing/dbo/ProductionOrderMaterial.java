@@ -23,7 +23,6 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedItem;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedProductionOrder;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedProductionOrderMaterial;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -47,7 +46,7 @@ public class ProductionOrderMaterial extends MappedProductionOrderMaterial {
      */
     public static final String ATTRIBUTE_NAME_ITEM = "item";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,14 +55,13 @@ public class ProductionOrderMaterial extends MappedProductionOrderMaterial {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------- productionOrder
+    // ----------------------------------------------------------------------------- productionOrder
 
     /**
      * Returns the {@code ProductionOrder} which the {@code FK_ProdMaterial_ProdOrder} foreign key references.
      *
      * @return the {@code ProductionOrder} referenced; {@code null} when none is.
      */
-    @Nullable
     public ProductionOrder getProductionOrder() {
         return productionOrder;
     }
@@ -74,35 +72,34 @@ public class ProductionOrderMaterial extends MappedProductionOrderMaterial {
      *
      * @param productionOrder the {@code ProductionOrder} to reference; {@code null} for none.
      */
-    public void setProductionOrder(@Nullable final ProductionOrder productionOrder) {
+    public void setProductionOrder(final ProductionOrder productionOrder) {
         this.productionOrder = productionOrder;
         setProductionOrderId(productionOrder == null ? null : productionOrder.getProductionOrderId());
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_ProdMaterial_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_ProdMaterial_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_ProdMaterial_Item} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRODUCTION_ORDER_ID,
                 referencedColumnName = MappedProductionOrder.COLUMN_NAME_PRODUCTION_ORDER_ID,
@@ -112,7 +109,7 @@ public class ProductionOrderMaterial extends MappedProductionOrderMaterial {
     )
     private ProductionOrder productionOrder;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,

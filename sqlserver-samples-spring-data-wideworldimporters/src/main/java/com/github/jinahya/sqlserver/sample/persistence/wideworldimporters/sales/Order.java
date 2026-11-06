@@ -24,7 +24,6 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.applic
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedCustomer;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedOrder;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +34,8 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Sales.Orders} table.
  */
 @Entity(name = "SalesOrder")
-@Table(schema = MappedOrder.TABLE_SCHEMA, name = MappedOrder.TABLE_NAME)
+@Table(schema = MappedOrder.TABLE_SCHEMA, name = MappedOrder.TABLE_NAME,
+       comment = "Detail of customer orders")
 public class Order extends MappedOrder {
 
     /**
@@ -73,7 +73,7 @@ public class Order extends MappedOrder {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -82,31 +82,30 @@ public class Order extends MappedOrder {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------------- customer
+    // ------------------------------------------------------------------------------------ customer
 
     /**
-     * Returns the {@code Customer} which the {@code FK_Sales_Orders_CustomerID_Sales_Customers} foreign key references.
+     * Returns the {@code Customer} which the {@code FK_Sales_Orders_CustomerID_Sales_Customers} foreign key
+     * references.
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getCustomer() {
         return customer;
     }
 
     /**
      * Replaces the {@code Customer} which the {@code FK_Sales_Orders_CustomerID_Sales_Customers} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param customer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setCustomer(@Nullable final Customer customer) {
+    public void setCustomer(final Customer customer) {
         this.customer = customer;
         setCustomerId(customer == null ? null : customer.getCustomerId());
     }
 
-    // ----------------------------------------------------------------------------------------------- salespersonPerson
+    // --------------------------------------------------------------------------- salespersonPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Orders_SalespersonPersonID_Application_People} foreign key
@@ -114,24 +113,22 @@ public class Order extends MappedOrder {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getSalespersonPerson() {
         return salespersonPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Orders_SalespersonPersonID_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param salespersonPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setSalespersonPerson(@Nullable final Person salespersonPerson) {
+    public void setSalespersonPerson(final Person salespersonPerson) {
         this.salespersonPerson = salespersonPerson;
         setSalespersonPersonId(salespersonPerson == null ? null : salespersonPerson.getPersonId());
     }
 
-    // -------------------------------------------------------------------------------------------------- pickedByPerson
+    // ------------------------------------------------------------------------------ pickedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Orders_PickedByPersonID_Application_People} foreign key
@@ -139,24 +136,22 @@ public class Order extends MappedOrder {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getPickedByPerson() {
         return pickedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Orders_PickedByPersonID_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param pickedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setPickedByPerson(@Nullable final Person pickedByPerson) {
+    public void setPickedByPerson(final Person pickedByPerson) {
         this.pickedByPerson = pickedByPerson;
         setPickedByPersonId(pickedByPerson == null ? null : pickedByPerson.getPersonId());
     }
 
-    // --------------------------------------------------------------------------------------------------- contactPerson
+    // ------------------------------------------------------------------------------- contactPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Orders_ContactPersonID_Application_People} foreign key
@@ -164,55 +159,51 @@ public class Order extends MappedOrder {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getContactPerson() {
         return contactPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Orders_ContactPersonID_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param contactPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setContactPerson(@Nullable final Person contactPerson) {
+    public void setContactPerson(final Person contactPerson) {
         this.contactPerson = contactPerson;
         setContactPersonId(contactPerson == null ? null : contactPerson.getPersonId());
     }
 
-    // -------------------------------------------------------------------------------------------------- backorderOrder
+    // ------------------------------------------------------------------------------ backorderOrder
 
     /**
-     * Returns the {@code Order} which the {@code FK_Sales_Orders_BackorderOrderID_Sales_Orders} foreign key references.
+     * Returns the {@code Order} which the {@code FK_Sales_Orders_BackorderOrderID_Sales_Orders} foreign key
+     * references.
      *
      * @return the {@code Order} referenced; {@code null} when none is.
      */
-    @Nullable
     public Order getBackorderOrder() {
         return backorderOrder;
     }
 
     /**
      * Replaces the {@code Order} which the {@code FK_Sales_Orders_BackorderOrderID_Sales_Orders} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param backorderOrder the {@code Order} to reference; {@code null} for none.
      */
-    public void setBackorderOrder(@Nullable final Order backorderOrder) {
+    public void setBackorderOrder(final Order backorderOrder) {
         this.backorderOrder = backorderOrder;
         setBackorderOrderId(backorderOrder == null ? null : backorderOrder.getOrderId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Orders_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
@@ -223,12 +214,12 @@ public class Order extends MappedOrder {
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -238,7 +229,7 @@ public class Order extends MappedOrder {
     )
     private Customer customer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SALESPERSON_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -248,7 +239,7 @@ public class Order extends MappedOrder {
     )
     private Person salespersonPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PICKED_BY_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -258,7 +249,7 @@ public class Order extends MappedOrder {
     )
     private Person pickedByPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CONTACT_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -268,7 +259,7 @@ public class Order extends MappedOrder {
     )
     private Person contactPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BACKORDER_ORDER_ID,
                 referencedColumnName = MappedOrder.COLUMN_NAME_ORDER_ID,
@@ -278,7 +269,7 @@ public class Order extends MappedOrder {
     )
     private Order backorderOrder;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

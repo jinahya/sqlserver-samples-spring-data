@@ -7,12 +7,12 @@ import org.springframework.stereotype.Repository;
 /**
  * A repository for {@link Location}, the {@code Production.Location} table of AdventureWorks.
  * <p>
- * The id is {@link Short}.
+ * The id is {@link Long}.
  *
  * @see Location
  */
 @Repository
 public interface LocationRepository
-        extends _Repository<Location, Short> {
+        extends _Repository<Location, Long> {
 
 }

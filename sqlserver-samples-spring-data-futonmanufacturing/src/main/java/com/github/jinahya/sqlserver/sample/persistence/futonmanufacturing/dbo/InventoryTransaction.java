@@ -24,7 +24,6 @@ import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedItem;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedTransactionType;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedWarehouse;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -53,7 +52,7 @@ public class InventoryTransaction extends MappedInventoryTransaction {
      */
     public static final String ATTRIBUTE_NAME_TRANSACTION_TYPE = "transactionType";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -62,76 +61,73 @@ public class InventoryTransaction extends MappedInventoryTransaction {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_InvTrans_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_InvTrans_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_InvTrans_Item} foreign key references, and the value of the column
+     * it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- warehouse
+    // ----------------------------------------------------------------------------------- warehouse
 
     /**
      * Returns the {@code Warehouse} which the {@code FK_InvTrans_Warehouse} foreign key references.
      *
      * @return the {@code Warehouse} referenced; {@code null} when none is.
      */
-    @Nullable
     public Warehouse getWarehouse() {
         return warehouse;
     }
 
     /**
-     * Replaces the {@code Warehouse} which the {@code FK_InvTrans_Warehouse} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Warehouse} which the {@code FK_InvTrans_Warehouse} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param warehouse the {@code Warehouse} to reference; {@code null} for none.
      */
-    public void setWarehouse(@Nullable final Warehouse warehouse) {
+    public void setWarehouse(final Warehouse warehouse) {
         this.warehouse = warehouse;
         setWarehouseId(warehouse == null ? null : warehouse.getWarehouseId());
     }
 
-    // ------------------------------------------------------------------------------------------------- transactionType
+    // ----------------------------------------------------------------------------- transactionType
 
     /**
      * Returns the {@code TransactionType} which the {@code FK_InvTrans_Type} foreign key references.
      *
      * @return the {@code TransactionType} referenced; {@code null} when none is.
      */
-    @Nullable
     public TransactionType getTransactionType() {
         return transactionType;
     }
 
     /**
-     * Replaces the {@code TransactionType} which the {@code FK_InvTrans_Type} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code TransactionType} which the {@code FK_InvTrans_Type} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param transactionType the {@code TransactionType} to reference; {@code null} for none.
      */
-    public void setTransactionType(@Nullable final TransactionType transactionType) {
+    public void setTransactionType(final TransactionType transactionType) {
         this.transactionType = transactionType;
         setTransactionTypeId(transactionType == null ? null : transactionType.getTransactionTypeId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,
@@ -141,7 +137,7 @@ public class InventoryTransaction extends MappedInventoryTransaction {
     )
     private Item item;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_WAREHOUSE_ID,
                 referencedColumnName = MappedWarehouse.COLUMN_NAME_WAREHOUSE_ID,
@@ -151,7 +147,7 @@ public class InventoryTransaction extends MappedInventoryTransaction {
     )
     private Warehouse warehouse;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_TRANSACTION_TYPE_ID,
                 referencedColumnName = MappedTransactionType.COLUMN_NAME_TRANSACTION_TYPE_ID,

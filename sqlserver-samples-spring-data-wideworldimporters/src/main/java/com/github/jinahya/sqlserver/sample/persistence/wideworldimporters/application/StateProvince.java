@@ -23,18 +23,29 @@ package com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.appli
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedCountry;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedStateProvince;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Application.StateProvinces} table.
  */
 @Entity(name = "ApplicationStateProvince")
-@Table(schema = MappedStateProvince.TABLE_SCHEMA, name = MappedStateProvince.TABLE_NAME)
+@Table(schema = MappedStateProvince.TABLE_SCHEMA,
+       name = MappedStateProvince.TABLE_NAME,
+       comment = "States or provinces that contain cities (including geographic location)",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "UQ_Application_StateProvinces_StateProvinceName",
+                       columnNames = {
+                               StateProvince.COLUMN_NAME_STATE_PROVINCE_NAME
+                       }
+               )
+       }
+)
 public class StateProvince extends MappedStateProvince {
 
     /**
@@ -49,7 +60,7 @@ public class StateProvince extends MappedStateProvince {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -58,7 +69,7 @@ public class StateProvince extends MappedStateProvince {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------------- country
+    // ------------------------------------------------------------------------------------- country
 
     /**
      * Returns the {@code Country} which the {@code FK_Application_StateProvinces_CountryID_Application_Countries}
@@ -66,24 +77,22 @@ public class StateProvince extends MappedStateProvince {
      *
      * @return the {@code Country} referenced; {@code null} when none is.
      */
-    @Nullable
     public Country getCountry() {
         return country;
     }
 
     /**
      * Replaces the {@code Country} which the {@code FK_Application_StateProvinces_CountryID_Application_Countries}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param country the {@code Country} to reference; {@code null} for none.
      */
-    public void setCountry(@Nullable final Country country) {
+    public void setCountry(final Country country) {
         this.country = country;
         setCountryId(country == null ? null : country.getCountryId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Application_StateProvinces_Application_People} foreign key
@@ -91,24 +100,22 @@ public class StateProvince extends MappedStateProvince {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Application_StateProvinces_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_COUNTRY_ID,
                 referencedColumnName = MappedCountry.COLUMN_NAME_COUNTRY_ID,
@@ -118,7 +125,7 @@ public class StateProvince extends MappedStateProvince {
     )
     private Country country;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

@@ -28,10 +28,12 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code dbo.AWBuildVersion} table.
  */
 @Entity(name = "DboAwBuildVersion")
-@Table(schema = MappedAwBuildVersion.TABLE_SCHEMA, name = MappedAwBuildVersion.TABLE_NAME)
-public class AwBuildVersion extends MappedAwBuildVersion {
+@Table(schema = MappedAwBuildVersion.TABLE_SCHEMA, name = MappedAwBuildVersion.TABLE_NAME,
+       comment = "Current version number of the AdventureWorks 2025 sample database. ")
+public class AwBuildVersion
+        extends MappedAwBuildVersion {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 /**
  * A repository for {@link JobCandidate}, the {@code HumanResources.JobCandidate} table of AdventureWorks.
  * <p>
- * The id is {@link Integer}.
+ * The id is {@link Long}.
  *
  * @see JobCandidate
  */

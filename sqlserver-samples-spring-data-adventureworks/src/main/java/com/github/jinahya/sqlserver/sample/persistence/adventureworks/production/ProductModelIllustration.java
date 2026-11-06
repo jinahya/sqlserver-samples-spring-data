@@ -23,36 +23,67 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.productio
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedIllustration;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductModel;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductModelIllustration;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductModelIllustrationId;
-import jakarta.annotation.Nullable;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.ProductModelIllustrationId;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.Objects;
 
 /**
  * An entity which maps the {@code Production.ProductModelIllustration} table.
+ * <p>
+ * Each attribute of the embedded {@link ProductModelIllustrationId} is derived, with
+ * {@link MapsId @MapsId}, from the association which references the same column.
  */
 @Entity(name = "ProductionProductModelIllustration")
-@Table(schema = MappedProductModelIllustration.TABLE_SCHEMA, name = MappedProductModelIllustration.TABLE_NAME)
-@IdClass(MappedProductModelIllustrationId.class)
-public class ProductModelIllustration extends MappedProductModelIllustration {
+@Table(schema = MappedProductModelIllustration.TABLE_SCHEMA,
+       name = MappedProductModelIllustration.TABLE_NAME,
+       comment = "Cross-reference table mapping product models and illustrations.")
+public class ProductModelIllustration
+        extends MappedProductModelIllustration {
 
     /**
-     * The name of the attribute of the {@code FK_ProductModelIllustration_ProductModel_ProductModelID} foreign key.
-     * The value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_ProductModelIllustration_ProductModel_ProductModelID} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_PRODUCT_MODEL = "productModel";
 
     /**
-     * The name of the attribute of the {@code FK_ProductModelIllustration_Illustration_IllustrationID} foreign key.
-     * The value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_ProductModelIllustration_Illustration_IllustrationID} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_ILLUSTRATION = "illustration";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // ---------------------------------------------------------------------- STATIC_FACTORY_METHODS
+
+    /**
+     * Creates a new instance which references {@code productModel} and {@code illustration}.
+     *
+     * @param productModel the {@code ProductModel} to reference.
+     * @param illustration the {@code Illustration} to reference.
+     * @return a new instance which references {@code productModel} and {@code illustration}.
+     * @throws NullPointerException if any of the arguments is {@code null}.
+     */
+    public static ProductModelIllustration of(final ProductModel productModel,
+                                              final Illustration illustration) {
+        Objects.requireNonNull(productModel, "productModel is null");
+        Objects.requireNonNull(illustration, "illustration is null");
+        final var instance = new ProductModelIllustration();
+        instance.productModel = productModel;
+        instance.illustration = illustration;
+        return instance;
+    }
+
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -61,72 +92,70 @@ public class ProductModelIllustration extends MappedProductModelIllustration {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------------- productModel
+    // ----------------------------------------------------------------------------------------- id_
 
     /**
-     * Returns the {@code ProductModel} which the {@code FK_ProductModelIllustration_ProductModel_ProductModelID}
-     * foreign key references.
+     * Returns current value of {@value #ATTRIBUTE_NAME_ID_} attribute.
+     *
+     * @return current value of {@value #ATTRIBUTE_NAME_ID_} attribute.
+     */
+    @Override
+    protected ProductModelIllustrationId getId_() {
+        return id_;
+    }
+
+    // -------------------------------------------------------------------------------- productModel
+
+    /**
+     * Returns the {@code ProductModel} which the
+     * {@code FK_ProductModelIllustration_ProductModel_ProductModelID} foreign key references.
      *
      * @return the {@code ProductModel} referenced; {@code null} when none is.
      */
-    @Nullable
     public ProductModel getProductModel() {
         return productModel;
     }
 
-    /**
-     * Replaces the {@code ProductModel} which the {@code FK_ProductModelIllustration_ProductModel_ProductModelID}
-     * foreign key references, and the
-     * value of the column it consists of.
-     *
-     * @param productModel the {@code ProductModel} to reference; {@code null} for none.
-     */
-    public void setProductModel(@Nullable final ProductModel productModel) {
-        this.productModel = productModel;
-        setProductModelId(productModel == null ? null : productModel.getProductModelId());
-    }
-
-    // ---------------------------------------------------------------------------------------------------- illustration
+    // -------------------------------------------------------------------------------- illustration
 
     /**
-     * Returns the {@code Illustration} which the {@code FK_ProductModelIllustration_Illustration_IllustrationID}
-     * foreign key references.
+     * Returns the {@code Illustration} which the
+     * {@code FK_ProductModelIllustration_Illustration_IllustrationID} foreign key references.
      *
      * @return the {@code Illustration} referenced; {@code null} when none is.
      */
-    @Nullable
     public Illustration getIllustration() {
         return illustration;
     }
 
-    /**
-     * Replaces the {@code Illustration} which the {@code FK_ProductModelIllustration_Illustration_IllustrationID}
-     * foreign key references, and the
-     * value of the column it consists of.
-     *
-     * @param illustration the {@code Illustration} to reference; {@code null} for none.
-     */
-    public void setIllustration(@Nullable final Illustration illustration) {
-        this.illustration = illustration;
-        setIllustrationId(illustration == null ? null : illustration.getIllustrationId());
-    }
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @EmbeddedId
+    private ProductModelIllustrationId id_;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @MapsId(ProductModelIllustrationId.ATTRIBUTE_NAME_PRODUCT_MODEL_ID)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRODUCT_MODEL_ID,
                 referencedColumnName = MappedProductModel.COLUMN_NAME_PRODUCT_MODEL_ID,
                 nullable = false,
-                insertable = false,
+                insertable = true,
                 updatable = false
     )
     private ProductModel productModel;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @MapsId(ProductModelIllustrationId.ATTRIBUTE_NAME_ILLUSTRATION_ID)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ILLUSTRATION_ID,
                 referencedColumnName = MappedIllustration.COLUMN_NAME_ILLUSTRATION_ID,
                 nullable = false,
-                insertable = false,
+                insertable = true,
                 updatable = false
     )
     private Illustration illustration;

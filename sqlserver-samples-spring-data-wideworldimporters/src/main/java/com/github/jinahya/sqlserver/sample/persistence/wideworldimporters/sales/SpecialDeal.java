@@ -30,7 +30,7 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.warehouse.MappedStockItem;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.StockGroup;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.StockItem;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -41,7 +41,23 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Sales.SpecialDeals} table.
  */
 @Entity(name = "SalesSpecialDeal")
-@Table(schema = MappedSpecialDeal.TABLE_SCHEMA, name = MappedSpecialDeal.TABLE_NAME)
+@Table(schema = MappedSpecialDeal.TABLE_SCHEMA,
+       name = MappedSpecialDeal.TABLE_NAME,
+       comment = "Special pricing (can include fixed prices, discount $ or discount %)",
+       check = {
+               @CheckConstraint(
+                       name = "CK_Sales_SpecialDeals_Exactly_One_NOT_NULL_Pricing_Option_Is_Required",
+                       constraint = "(((case when [DiscountAmount] IS NULL then (0) else (1) "
+                               + "end+case when [DiscountPercentage] IS NULL then (0) else (1) "
+                               + "end)+case when [UnitPrice] IS NULL then (0) else (1) end)=(1))"
+               ),
+               @CheckConstraint(
+                       name = "CK_Sales_SpecialDeals_Unit_Price_Deal_Requires_Special_StockItem",
+                       constraint = "([StockItemID] IS NOT NULL AND [UnitPrice] IS NOT NULL OR "
+                               + "[UnitPrice] IS NULL)"
+               )
+       }
+)
 public class SpecialDeal extends MappedSpecialDeal {
 
     /**
@@ -80,7 +96,7 @@ public class SpecialDeal extends MappedSpecialDeal {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -89,7 +105,7 @@ public class SpecialDeal extends MappedSpecialDeal {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------- stockItem
+    // ----------------------------------------------------------------------------------- stockItem
 
     /**
      * Returns the {@code StockItem} which the {@code FK_Sales_SpecialDeals_StockItemID_Warehouse_StockItems} foreign
@@ -97,24 +113,22 @@ public class SpecialDeal extends MappedSpecialDeal {
      *
      * @return the {@code StockItem} referenced; {@code null} when none is.
      */
-    @Nullable
     public StockItem getStockItem() {
         return stockItem;
     }
 
     /**
      * Replaces the {@code StockItem} which the {@code FK_Sales_SpecialDeals_StockItemID_Warehouse_StockItems} foreign
-     * key references, and the
-     * value of the column it consists of.
+     * key references, and the value of the column it consists of.
      *
      * @param stockItem the {@code StockItem} to reference; {@code null} for none.
      */
-    public void setStockItem(@Nullable final StockItem stockItem) {
+    public void setStockItem(final StockItem stockItem) {
         this.stockItem = stockItem;
         setStockItemId(stockItem == null ? null : stockItem.getStockItemId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- customer
+    // ------------------------------------------------------------------------------------ customer
 
     /**
      * Returns the {@code Customer} which the {@code FK_Sales_SpecialDeals_CustomerID_Sales_Customers} foreign key
@@ -122,24 +136,22 @@ public class SpecialDeal extends MappedSpecialDeal {
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getCustomer() {
         return customer;
     }
 
     /**
      * Replaces the {@code Customer} which the {@code FK_Sales_SpecialDeals_CustomerID_Sales_Customers} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param customer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setCustomer(@Nullable final Customer customer) {
+    public void setCustomer(final Customer customer) {
         this.customer = customer;
         setCustomerId(customer == null ? null : customer.getCustomerId());
     }
 
-    // ----------------------------------------------------------------------------------------------------- buyingGroup
+    // --------------------------------------------------------------------------------- buyingGroup
 
     /**
      * Returns the {@code BuyingGroup} which the {@code FK_Sales_SpecialDeals_BuyingGroupID_Sales_BuyingGroups} foreign
@@ -147,98 +159,91 @@ public class SpecialDeal extends MappedSpecialDeal {
      *
      * @return the {@code BuyingGroup} referenced; {@code null} when none is.
      */
-    @Nullable
     public BuyingGroup getBuyingGroup() {
         return buyingGroup;
     }
 
     /**
-     * Replaces the {@code BuyingGroup} which the {@code FK_Sales_SpecialDeals_BuyingGroupID_Sales_BuyingGroups}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code BuyingGroup} which the {@code FK_Sales_SpecialDeals_BuyingGroupID_Sales_BuyingGroups} foreign
+     * key references, and the value of the column it consists of.
      *
      * @param buyingGroup the {@code BuyingGroup} to reference; {@code null} for none.
      */
-    public void setBuyingGroup(@Nullable final BuyingGroup buyingGroup) {
+    public void setBuyingGroup(final BuyingGroup buyingGroup) {
         this.buyingGroup = buyingGroup;
         setBuyingGroupId(buyingGroup == null ? null : buyingGroup.getBuyingGroupId());
     }
 
-    // ------------------------------------------------------------------------------------------------ customerCategory
+    // ---------------------------------------------------------------------------- customerCategory
 
     /**
-     * Returns the {@code CustomerCategory} which the {@code
-     * FK_Sales_SpecialDeals_CustomerCategoryID_Sales_CustomerCategories} foreign key references.
+     * Returns the {@code CustomerCategory} which the
+     * {@code FK_Sales_SpecialDeals_CustomerCategoryID_Sales_CustomerCategories} foreign key references.
      *
      * @return the {@code CustomerCategory} referenced; {@code null} when none is.
      */
-    @Nullable
     public CustomerCategory getCustomerCategory() {
         return customerCategory;
     }
 
     /**
-     * Replaces the {@code CustomerCategory} which the {@code
-     * FK_Sales_SpecialDeals_CustomerCategoryID_Sales_CustomerCategories} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code CustomerCategory} which the
+     * {@code FK_Sales_SpecialDeals_CustomerCategoryID_Sales_CustomerCategories} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param customerCategory the {@code CustomerCategory} to reference; {@code null} for none.
      */
-    public void setCustomerCategory(@Nullable final CustomerCategory customerCategory) {
+    public void setCustomerCategory(final CustomerCategory customerCategory) {
         this.customerCategory = customerCategory;
         setCustomerCategoryId(customerCategory == null ? null : customerCategory.getCustomerCategoryId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ stockGroup
+    // ---------------------------------------------------------------------------------- stockGroup
 
     /**
-     * Returns the {@code StockGroup} which the {@code FK_Sales_SpecialDeals_StockGroupID_Warehouse_StockGroups}
-     * foreign key references.
+     * Returns the {@code StockGroup} which the {@code FK_Sales_SpecialDeals_StockGroupID_Warehouse_StockGroups} foreign
+     * key references.
      *
      * @return the {@code StockGroup} referenced; {@code null} when none is.
      */
-    @Nullable
     public StockGroup getStockGroup() {
         return stockGroup;
     }
 
     /**
      * Replaces the {@code StockGroup} which the {@code FK_Sales_SpecialDeals_StockGroupID_Warehouse_StockGroups}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param stockGroup the {@code StockGroup} to reference; {@code null} for none.
      */
-    public void setStockGroup(@Nullable final StockGroup stockGroup) {
+    public void setStockGroup(final StockGroup stockGroup) {
         this.stockGroup = stockGroup;
         setStockGroupId(stockGroup == null ? null : stockGroup.getStockGroupId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_SpecialDeals_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_SpecialDeals_Application_People} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STOCK_ITEM_ID,
                 referencedColumnName = MappedStockItem.COLUMN_NAME_STOCK_ITEM_ID,
@@ -248,7 +253,7 @@ public class SpecialDeal extends MappedSpecialDeal {
     )
     private StockItem stockItem;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -258,7 +263,7 @@ public class SpecialDeal extends MappedSpecialDeal {
     )
     private Customer customer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUYING_GROUP_ID,
                 referencedColumnName = MappedBuyingGroup.COLUMN_NAME_BUYING_GROUP_ID,
@@ -268,7 +273,7 @@ public class SpecialDeal extends MappedSpecialDeal {
     )
     private BuyingGroup buyingGroup;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_CATEGORY_ID,
                 referencedColumnName = MappedCustomerCategory.COLUMN_NAME_CUSTOMER_CATEGORY_ID,
@@ -278,7 +283,7 @@ public class SpecialDeal extends MappedSpecialDeal {
     )
     private CustomerCategory customerCategory;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STOCK_GROUP_ID,
                 referencedColumnName = MappedStockGroup.COLUMN_NAME_STOCK_GROUP_ID,
@@ -288,7 +293,7 @@ public class SpecialDeal extends MappedSpecialDeal {
     )
     private StockGroup stockGroup;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

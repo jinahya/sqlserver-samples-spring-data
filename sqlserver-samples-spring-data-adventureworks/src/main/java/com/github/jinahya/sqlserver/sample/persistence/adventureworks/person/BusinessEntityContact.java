@@ -20,46 +20,91 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.person;
  * #L%
  */
 
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.BusinessEntityContactId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedBusinessEntity;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedBusinessEntityContact;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedBusinessEntityContactId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedContactType;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedPerson;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.Objects;
 
 /**
  * An entity which maps the {@code Person.BusinessEntityContact} table.
+ * <p>
+ * Each attribute of the embedded {@link BusinessEntityContactId} is derived, with
+ * {@link MapsId @MapsId}, from the association which references the same column.
  */
 @Entity(name = "PersonBusinessEntityContact")
-@Table(schema = MappedBusinessEntityContact.TABLE_SCHEMA, name = MappedBusinessEntityContact.TABLE_NAME)
-@IdClass(MappedBusinessEntityContactId.class)
-public class BusinessEntityContact extends MappedBusinessEntityContact {
+@Table(schema = MappedBusinessEntityContact.TABLE_SCHEMA,
+       name = MappedBusinessEntityContact.TABLE_NAME,
+       comment = "Cross-reference table mapping stores, vendors, and employees to people",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_BusinessEntityContact_rowguid",
+                       columnNames = {
+                               BusinessEntityContact.COLUMN_NAME_ROWGUID
+                       }
+               )
+       }
+)
+public class BusinessEntityContact
+        extends MappedBusinessEntityContact {
 
     /**
-     * The name of the attribute of the {@code FK_BusinessEntityContact_Person_PersonID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_BusinessEntityContact_Person_PersonID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_PERSON = "person";
 
     /**
-     * The name of the attribute of the {@code FK_BusinessEntityContact_ContactType_ContactTypeID} foreign key. The
-     * value is {@value}.
+     * The name of the attribute of the {@code FK_BusinessEntityContact_ContactType_ContactTypeID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_CONTACT_TYPE = "contactType";
 
     /**
-     * The name of the attribute of the {@code FK_BusinessEntityContact_BusinessEntity_BusinessEntityID} foreign key.
-     * The value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_BusinessEntityContact_BusinessEntity_BusinessEntityID} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_BUSINESS_ENTITY = "businessEntity";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // ---------------------------------------------------------------------- STATIC_FACTORY_METHODS
+
+    /**
+     * Creates a new instance which references the specified business entity, person and contact
+     * type.
+     *
+     * @param businessEntity the {@code BusinessEntity} to reference.
+     * @param person         the {@code Person} to reference.
+     * @param contactType    the {@code ContactType} to reference.
+     * @return a new instance which references {@code businessEntity}, {@code person} and
+     *         {@code contactType}.
+     * @throws NullPointerException if any of the arguments is {@code null}.
+     */
+    public static BusinessEntityContact of(final BusinessEntity businessEntity, final Person person,
+                                           final ContactType contactType) {
+        Objects.requireNonNull(businessEntity, "businessEntity is null");
+        Objects.requireNonNull(person, "person is null");
+        Objects.requireNonNull(contactType, "contactType is null");
+        final var instance = new BusinessEntityContact();
+        instance.businessEntity = businessEntity;
+        instance.person = person;
+        instance.contactType = contactType;
+        return instance;
+    }
+
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -68,107 +113,90 @@ public class BusinessEntityContact extends MappedBusinessEntityContact {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------------------- person
+    // ----------------------------------------------------------------------------------------- id_
 
     /**
-     * Returns the {@code Person} which the {@code FK_BusinessEntityContact_Person_PersonID} foreign key references.
+     * Returns current value of {@value #ATTRIBUTE_NAME_ID_} attribute.
+     *
+     * @return current value of {@value #ATTRIBUTE_NAME_ID_} attribute.
+     */
+    @Override
+    protected BusinessEntityContactId getId_() {
+        return id_;
+    }
+
+    // -------------------------------------------------------------------------------------- person
+
+    /**
+     * Returns the {@code Person} which the {@code FK_BusinessEntityContact_Person_PersonID} foreign
+     * key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getPerson() {
         return person;
     }
 
-    /**
-     * Replaces the {@code Person} which the {@code FK_BusinessEntityContact_Person_PersonID} foreign key references,
-     * and the
-     * value of the column it consists of.
-     *
-     * @param person the {@code Person} to reference; {@code null} for none.
-     */
-    public void setPerson(@Nullable final Person person) {
-        this.person = person;
-        setPersonId(person == null ? null : person.getBusinessEntityId());
-    }
-
-    // ----------------------------------------------------------------------------------------------------- contactType
+    // --------------------------------------------------------------------------------- contactType
 
     /**
-     * Returns the {@code ContactType} which the {@code FK_BusinessEntityContact_ContactType_ContactTypeID} foreign key
-     * references.
+     * Returns the {@code ContactType} which the
+     * {@code FK_BusinessEntityContact_ContactType_ContactTypeID} foreign key references.
      *
      * @return the {@code ContactType} referenced; {@code null} when none is.
      */
-    @Nullable
     public ContactType getContactType() {
         return contactType;
     }
 
-    /**
-     * Replaces the {@code ContactType} which the {@code FK_BusinessEntityContact_ContactType_ContactTypeID} foreign
-     * key references, and the
-     * value of the column it consists of.
-     *
-     * @param contactType the {@code ContactType} to reference; {@code null} for none.
-     */
-    public void setContactType(@Nullable final ContactType contactType) {
-        this.contactType = contactType;
-        setContactTypeId(contactType == null ? null : contactType.getContactTypeId());
-    }
-
-    // -------------------------------------------------------------------------------------------------- businessEntity
+    // ------------------------------------------------------------------------------ businessEntity
 
     /**
-     * Returns the {@code BusinessEntity} which the {@code FK_BusinessEntityContact_BusinessEntity_BusinessEntityID}
-     * foreign key references.
+     * Returns the {@code BusinessEntity} which the
+     * {@code FK_BusinessEntityContact_BusinessEntity_BusinessEntityID} foreign key references.
      *
      * @return the {@code BusinessEntity} referenced; {@code null} when none is.
      */
-    @Nullable
     public BusinessEntity getBusinessEntity() {
         return businessEntity;
     }
 
-    /**
-     * Replaces the {@code BusinessEntity} which the {@code FK_BusinessEntityContact_BusinessEntity_BusinessEntityID}
-     * foreign key references, and the
-     * value of the column it consists of.
-     *
-     * @param businessEntity the {@code BusinessEntity} to reference; {@code null} for none.
-     */
-    public void setBusinessEntity(@Nullable final BusinessEntity businessEntity) {
-        this.businessEntity = businessEntity;
-        setBusinessEntityId(businessEntity == null ? null : businessEntity.getBusinessEntityId());
-    }
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @EmbeddedId
+    private BusinessEntityContactId id_;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @MapsId(BusinessEntityContactId.ATTRIBUTE_NAME_PERSON_ID)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_BUSINESS_ENTITY_ID,
-                nullable = false,
-                insertable = false,
-                updatable = false
+                nullable = false
     )
     private Person person;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @MapsId(BusinessEntityContactId.ATTRIBUTE_NAME_CONTACT_TYPE_ID)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CONTACT_TYPE_ID,
                 referencedColumnName = MappedContactType.COLUMN_NAME_CONTACT_TYPE_ID,
-                nullable = false,
-                insertable = false,
-                updatable = false
+                nullable = false
     )
     private ContactType contactType;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @MapsId(BusinessEntityContactId.ATTRIBUTE_NAME_BUSINESS_ENTITY_ID)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUSINESS_ENTITY_ID,
                 referencedColumnName = MappedBusinessEntity.COLUMN_NAME_BUSINESS_ENTITY_ID,
-                nullable = false,
-                insertable = false,
-                updatable = false
+                nullable = false
     )
     private BusinessEntity businessEntity;
 }

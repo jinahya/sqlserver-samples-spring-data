@@ -22,27 +22,46 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.productio
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductCategory;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductSubcategory;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Production.ProductSubcategory} table.
  */
 @Entity(name = "ProductionProductSubcategory")
-@Table(schema = MappedProductSubcategory.TABLE_SCHEMA, name = MappedProductSubcategory.TABLE_NAME)
-public class ProductSubcategory extends MappedProductSubcategory {
+@Table(schema = MappedProductSubcategory.TABLE_SCHEMA,
+       name = MappedProductSubcategory.TABLE_NAME,
+       comment = "Product subcategories. See ProductCategory table.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_ProductSubcategory_Name",
+                       columnNames = {
+                               ProductSubcategory.COLUMN_NAME_NAME
+                       }
+               ),
+               @UniqueConstraint(
+                       name = "AK_ProductSubcategory_rowguid",
+                       columnNames = {
+                               ProductSubcategory.COLUMN_NAME_ROWGUID
+                       }
+               )
+       }
+)
+public class ProductSubcategory
+        extends MappedProductSubcategory {
 
     /**
-     * The name of the attribute of the {@code FK_ProductSubcategory_ProductCategory_ProductCategoryID} foreign key.
-     * The value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_ProductSubcategory_ProductCategory_ProductCategoryID} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_PRODUCT_CATEGORY = "productCategory";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -51,32 +70,32 @@ public class ProductSubcategory extends MappedProductSubcategory {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------- productCategory
+    // ----------------------------------------------------------------------------- productCategory
 
     /**
-     * Returns the {@code ProductCategory} which the {@code FK_ProductSubcategory_ProductCategory_ProductCategoryID}
-     * foreign key references.
+     * Returns the {@code ProductCategory} which the
+     * {@code FK_ProductSubcategory_ProductCategory_ProductCategoryID} foreign key references.
      *
      * @return the {@code ProductCategory} referenced; {@code null} when none is.
      */
-    @Nullable
     public ProductCategory getProductCategory() {
         return productCategory;
     }
 
     /**
-     * Replaces the {@code ProductCategory} which the {@code FK_ProductSubcategory_ProductCategory_ProductCategoryID}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code ProductCategory} which the
+     * {@code FK_ProductSubcategory_ProductCategory_ProductCategoryID} foreign key references, and
+     * the value of the column it consists of.
      *
      * @param productCategory the {@code ProductCategory} to reference; {@code null} for none.
      */
-    public void setProductCategory(@Nullable final ProductCategory productCategory) {
+    public void setProductCategory(final ProductCategory productCategory) {
         this.productCategory = productCategory;
-        setProductCategoryId(productCategory == null ? null : productCategory.getProductCategoryId());
+        setProductCategoryId(
+                productCategory == null ? null : productCategory.getProductCategoryId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRODUCT_CATEGORY_ID,
                 referencedColumnName = MappedProductCategory.COLUMN_NAME_PRODUCT_CATEGORY_ID,

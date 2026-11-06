@@ -20,7 +20,7 @@ One module per sample database, each depending on its upstream module only
 
 ## The entities
 
-Upstream publishes mapped superclasses (`MappedStore`, ...), their id classes (`MappedSalesOrderDetailId`, ...), their
+Upstream publishes mapped superclasses (`MappedStore`, ...), their id classes (`SalesOrderDetailId`, ...), their
 static metamodel and a converter, and keeps its entities in its test sources: which associations to map, and how, is an
 application's decision. This project is that application. Each module's entities, in
 `com.github.jinahya.sqlserver.sample.persistence.<db>.<schema>`, one package per schema, are copies of

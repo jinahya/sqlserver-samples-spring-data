@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesTerritoryHistoryId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.SalesTerritoryHistoryId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.SalesTerritoryHistory;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data.SalesTerritoryHistoryRepository;
 
@@ -13,12 +13,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data
  */
 class SalesTerritoryHistoryRepository_SpringBootIT
         extends _Repository_SpringBootIT<SalesTerritoryHistoryRepository, SalesTerritoryHistory,
-                                         MappedSalesTerritoryHistoryId> {
+                                         SalesTerritoryHistoryId> {
 
     /**
      * Creates a new instance.
      */
     SalesTerritoryHistoryRepository_SpringBootIT() {
-        super(SalesTerritoryHistoryRepository.class, SalesTerritoryHistory.class, MappedSalesTerritoryHistoryId.class);
+        super(SalesTerritoryHistoryRepository.class, SalesTerritoryHistory.class, SalesTerritoryHistoryId.class);
     }
 }

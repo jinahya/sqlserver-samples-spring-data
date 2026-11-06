@@ -28,10 +28,12 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Production.Illustration} table.
  */
 @Entity(name = "ProductionIllustration")
-@Table(schema = MappedIllustration.TABLE_SCHEMA, name = MappedIllustration.TABLE_NAME)
-public class Illustration extends MappedIllustration {
+@Table(schema = MappedIllustration.TABLE_SCHEMA, name = MappedIllustration.TABLE_NAME,
+       comment = "Bicycle assembly diagrams.")
+public class Illustration
+        extends MappedIllustration {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

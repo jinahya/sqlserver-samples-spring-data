@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 /**
  * A repository for {@link DatabaseLog}, the {@code dbo.DatabaseLog} table of AdventureWorks.
  * <p>
- * The id is {@link Integer}.
+ * The id is {@link Long}.
  *
  * @see DatabaseLog
  */

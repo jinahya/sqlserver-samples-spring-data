@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 /**
  * A repository for {@link AwBuildVersion}, the {@code dbo.AWBuildVersion} table of AdventureWorks.
  * <p>
- * The id is {@link Short}.
+ * The id is {@link Long}.
  *
  * @see AwBuildVersion
  */

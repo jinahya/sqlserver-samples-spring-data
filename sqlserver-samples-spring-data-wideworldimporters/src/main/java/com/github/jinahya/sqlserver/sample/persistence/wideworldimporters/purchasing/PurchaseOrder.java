@@ -26,7 +26,6 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.purchasing.MappedPurchaseOrder;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.purchasing.MappedSupplier;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -37,7 +36,8 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Purchasing.PurchaseOrders} table.
  */
 @Entity(name = "PurchasingPurchaseOrder")
-@Table(schema = MappedPurchaseOrder.TABLE_SCHEMA, name = MappedPurchaseOrder.TABLE_NAME)
+@Table(schema = MappedPurchaseOrder.TABLE_SCHEMA, name = MappedPurchaseOrder.TABLE_NAME,
+       comment = "Details of supplier purchase orders")
 public class PurchaseOrder extends MappedPurchaseOrder {
 
     /**
@@ -47,8 +47,9 @@ public class PurchaseOrder extends MappedPurchaseOrder {
     public static final String ATTRIBUTE_NAME_SUPPLIER = "supplier";
 
     /**
-     * The name of the attribute of the {@code
-     * FK_Purchasing_PurchaseOrders_DeliveryMethodID_Application_DeliveryMethods} foreign key. The value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_Purchasing_PurchaseOrders_DeliveryMethodID_Application_DeliveryMethods} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_DELIVERY_METHOD = "deliveryMethod";
 
@@ -64,7 +65,7 @@ public class PurchaseOrder extends MappedPurchaseOrder {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -73,7 +74,7 @@ public class PurchaseOrder extends MappedPurchaseOrder {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------------- supplier
+    // ------------------------------------------------------------------------------------ supplier
 
     /**
      * Returns the {@code Supplier} which the {@code FK_Purchasing_PurchaseOrders_SupplierID_Purchasing_Suppliers}
@@ -81,49 +82,46 @@ public class PurchaseOrder extends MappedPurchaseOrder {
      *
      * @return the {@code Supplier} referenced; {@code null} when none is.
      */
-    @Nullable
     public Supplier getSupplier() {
         return supplier;
     }
 
     /**
      * Replaces the {@code Supplier} which the {@code FK_Purchasing_PurchaseOrders_SupplierID_Purchasing_Suppliers}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param supplier the {@code Supplier} to reference; {@code null} for none.
      */
-    public void setSupplier(@Nullable final Supplier supplier) {
+    public void setSupplier(final Supplier supplier) {
         this.supplier = supplier;
         setSupplierId(supplier == null ? null : supplier.getSupplierId());
     }
 
-    // -------------------------------------------------------------------------------------------------- deliveryMethod
+    // ------------------------------------------------------------------------------ deliveryMethod
 
     /**
-     * Returns the {@code DeliveryMethod} which the {@code
-     * FK_Purchasing_PurchaseOrders_DeliveryMethodID_Application_DeliveryMethods} foreign key references.
+     * Returns the {@code DeliveryMethod} which the
+     * {@code FK_Purchasing_PurchaseOrders_DeliveryMethodID_Application_DeliveryMethods} foreign key references.
      *
      * @return the {@code DeliveryMethod} referenced; {@code null} when none is.
      */
-    @Nullable
     public DeliveryMethod getDeliveryMethod() {
         return deliveryMethod;
     }
 
     /**
-     * Replaces the {@code DeliveryMethod} which the {@code
-     * FK_Purchasing_PurchaseOrders_DeliveryMethodID_Application_DeliveryMethods} foreign key references, and the
+     * Replaces the {@code DeliveryMethod} which the
+     * {@code FK_Purchasing_PurchaseOrders_DeliveryMethodID_Application_DeliveryMethods} foreign key references, and the
      * value of the column it consists of.
      *
      * @param deliveryMethod the {@code DeliveryMethod} to reference; {@code null} for none.
      */
-    public void setDeliveryMethod(@Nullable final DeliveryMethod deliveryMethod) {
+    public void setDeliveryMethod(final DeliveryMethod deliveryMethod) {
         this.deliveryMethod = deliveryMethod;
         setDeliveryMethodId(deliveryMethod == null ? null : deliveryMethod.getDeliveryMethodId());
     }
 
-    // --------------------------------------------------------------------------------------------------- contactPerson
+    // ------------------------------------------------------------------------------- contactPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Purchasing_PurchaseOrders_ContactPersonID_Application_People}
@@ -131,24 +129,22 @@ public class PurchaseOrder extends MappedPurchaseOrder {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getContactPerson() {
         return contactPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Purchasing_PurchaseOrders_ContactPersonID_Application_People}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param contactPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setContactPerson(@Nullable final Person contactPerson) {
+    public void setContactPerson(final Person contactPerson) {
         this.contactPerson = contactPerson;
         setContactPersonId(contactPerson == null ? null : contactPerson.getPersonId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Purchasing_PurchaseOrders_Application_People} foreign key
@@ -156,24 +152,22 @@ public class PurchaseOrder extends MappedPurchaseOrder {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Purchasing_PurchaseOrders_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SUPPLIER_ID,
                 referencedColumnName = MappedSupplier.COLUMN_NAME_SUPPLIER_ID,
@@ -183,7 +177,7 @@ public class PurchaseOrder extends MappedPurchaseOrder {
     )
     private Supplier supplier;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_DELIVERY_METHOD_ID,
                 referencedColumnName = MappedDeliveryMethod.COLUMN_NAME_DELIVERY_METHOD_ID,
@@ -193,7 +187,7 @@ public class PurchaseOrder extends MappedPurchaseOrder {
     )
     private DeliveryMethod deliveryMethod;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CONTACT_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -203,7 +197,7 @@ public class PurchaseOrder extends MappedPurchaseOrder {
     )
     private Person contactPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

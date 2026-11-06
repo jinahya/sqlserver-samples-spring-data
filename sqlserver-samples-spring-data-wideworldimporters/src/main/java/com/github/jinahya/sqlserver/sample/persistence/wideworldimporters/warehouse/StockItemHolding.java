@@ -24,7 +24,6 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.applic
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.warehouse.MappedStockItem;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.warehouse.MappedStockItemHolding;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +34,8 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Warehouse.StockItemHoldings} table.
  */
 @Entity(name = "WarehouseStockItemHolding")
-@Table(schema = MappedStockItemHolding.TABLE_SCHEMA, name = MappedStockItemHolding.TABLE_NAME)
+@Table(schema = MappedStockItemHolding.TABLE_SCHEMA, name = MappedStockItemHolding.TABLE_NAME,
+       comment = "Non-temporal attributes for stock items")
 public class StockItemHolding extends MappedStockItemHolding {
 
     /**
@@ -45,12 +45,12 @@ public class StockItemHolding extends MappedStockItemHolding {
     public static final String ATTRIBUTE_NAME_STOCK_ITEM = "stockItem";
 
     /**
-     * The name of the attribute of the {@code FK_Warehouse_StockItemHoldings_Application_People} foreign key. The
-     * value is {@value}.
+     * The name of the attribute of the {@code FK_Warehouse_StockItemHoldings_Application_People} foreign key. The value
+     * is {@value}.
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -59,32 +59,31 @@ public class StockItemHolding extends MappedStockItemHolding {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------- stockItem
+    // ----------------------------------------------------------------------------------- stockItem
 
     /**
-     * Returns the {@code StockItem} which the {@code
-     * PKFK_Warehouse_StockItemHoldings_StockItemID_Warehouse_StockItems} foreign key references.
+     * Returns the {@code StockItem} which the {@code PKFK_Warehouse_StockItemHoldings_StockItemID_Warehouse_StockItems}
+     * foreign key references.
      *
      * @return the {@code StockItem} referenced; {@code null} when none is.
      */
-    @Nullable
     public StockItem getStockItem() {
         return stockItem;
     }
 
     /**
-     * Replaces the {@code StockItem} which the {@code
-     * PKFK_Warehouse_StockItemHoldings_StockItemID_Warehouse_StockItems} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code StockItem} which the
+     * {@code PKFK_Warehouse_StockItemHoldings_StockItemID_Warehouse_StockItems} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param stockItem the {@code StockItem} to reference; {@code null} for none.
      */
-    public void setStockItem(@Nullable final StockItem stockItem) {
+    public void setStockItem(final StockItem stockItem) {
         this.stockItem = stockItem;
         setStockItemId(stockItem == null ? null : stockItem.getStockItemId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Warehouse_StockItemHoldings_Application_People} foreign key
@@ -92,24 +91,22 @@ public class StockItemHolding extends MappedStockItemHolding {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Warehouse_StockItemHoldings_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STOCK_ITEM_ID,
                 referencedColumnName = MappedStockItem.COLUMN_NAME_STOCK_ITEM_ID,
@@ -119,7 +116,7 @@ public class StockItemHolding extends MappedStockItemHolding {
     )
     private StockItem stockItem;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

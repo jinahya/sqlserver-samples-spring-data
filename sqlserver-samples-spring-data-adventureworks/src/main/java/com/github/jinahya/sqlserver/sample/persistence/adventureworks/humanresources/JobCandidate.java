@@ -22,7 +22,6 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanreso
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployee;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedJobCandidate;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -33,16 +32,18 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code HumanResources.JobCandidate} table.
  */
 @Entity(name = "HumanResourcesJobCandidate")
-@Table(schema = MappedJobCandidate.TABLE_SCHEMA, name = MappedJobCandidate.TABLE_NAME)
-public class JobCandidate extends MappedJobCandidate {
+@Table(schema = MappedJobCandidate.TABLE_SCHEMA, name = MappedJobCandidate.TABLE_NAME,
+       comment = "Résumés submitted to Human Resources by job applicants.")
+public class JobCandidate
+        extends MappedJobCandidate {
 
     /**
-     * The name of the attribute of the {@code FK_JobCandidate_Employee_BusinessEntityID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_JobCandidate_Employee_BusinessEntityID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_BUSINESS_ENTITY = "businessEntity";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -51,31 +52,30 @@ public class JobCandidate extends MappedJobCandidate {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------- businessEntity
+    // ------------------------------------------------------------------------------ businessEntity
 
     /**
-     * Returns the {@code Employee} which the {@code FK_JobCandidate_Employee_BusinessEntityID} foreign key references.
+     * Returns the {@code Employee} which the {@code FK_JobCandidate_Employee_BusinessEntityID}
+     * foreign key references.
      *
      * @return the {@code Employee} referenced; {@code null} when none is.
      */
-    @Nullable
     public Employee getBusinessEntity() {
         return businessEntity;
     }
 
     /**
-     * Replaces the {@code Employee} which the {@code FK_JobCandidate_Employee_BusinessEntityID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Employee} which the {@code FK_JobCandidate_Employee_BusinessEntityID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param businessEntity the {@code Employee} to reference; {@code null} for none.
      */
-    public void setBusinessEntity(@Nullable final Employee businessEntity) {
+    public void setBusinessEntity(final Employee businessEntity) {
         this.businessEntity = businessEntity;
         setBusinessEntityId(businessEntity == null ? null : businessEntity.getBusinessEntityId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUSINESS_ENTITY_ID,
                 referencedColumnName = MappedEmployee.COLUMN_NAME_BUSINESS_ENTITY_ID,

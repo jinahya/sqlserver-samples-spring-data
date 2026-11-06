@@ -24,32 +24,45 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.per
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesPerson;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedStore;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.BusinessEntity;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.Store} table.
  */
 @Entity(name = "SalesStore")
-@Table(schema = MappedStore.TABLE_SCHEMA, name = MappedStore.TABLE_NAME)
-public class Store extends MappedStore {
+@Table(schema = MappedStore.TABLE_SCHEMA,
+       name = MappedStore.TABLE_NAME,
+       comment = "Customers (resellers) of Adventure Works products.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_Store_rowguid",
+                       columnNames = {
+                               Store.COLUMN_NAME_ROWGUID
+                       }
+               )
+       }
+)
+public class Store
+        extends MappedStore {
 
     /**
-     * The name of the attribute of the {@code FK_Store_BusinessEntity_BusinessEntityID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_Store_BusinessEntity_BusinessEntityID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_BUSINESS_ENTITY = "businessEntity";
 
     /**
-     * The name of the attribute of the {@code FK_Store_SalesPerson_SalesPersonID} foreign key. The value is {@value}.
+     * The name of the attribute of the {@code FK_Store_SalesPerson_SalesPersonID} foreign key. The
+     * value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_SALES_PERSON = "salesPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -58,56 +71,54 @@ public class Store extends MappedStore {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------- businessEntity
+    // ------------------------------------------------------------------------------ businessEntity
 
     /**
-     * Returns the {@code BusinessEntity} which the {@code FK_Store_BusinessEntity_BusinessEntityID} foreign key
-     * references.
+     * Returns the {@code BusinessEntity} which the {@code FK_Store_BusinessEntity_BusinessEntityID}
+     * foreign key references.
      *
      * @return the {@code BusinessEntity} referenced; {@code null} when none is.
      */
-    @Nullable
     public BusinessEntity getBusinessEntity() {
         return businessEntity;
     }
 
     /**
-     * Replaces the {@code BusinessEntity} which the {@code FK_Store_BusinessEntity_BusinessEntityID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code BusinessEntity} which the
+     * {@code FK_Store_BusinessEntity_BusinessEntityID} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param businessEntity the {@code BusinessEntity} to reference; {@code null} for none.
      */
-    public void setBusinessEntity(@Nullable final BusinessEntity businessEntity) {
+    public void setBusinessEntity(final BusinessEntity businessEntity) {
         this.businessEntity = businessEntity;
         setBusinessEntityId(businessEntity == null ? null : businessEntity.getBusinessEntityId());
     }
 
-    // ----------------------------------------------------------------------------------------------------- salesPerson
+    // --------------------------------------------------------------------------------- salesPerson
 
     /**
-     * Returns the {@code SalesPerson} which the {@code FK_Store_SalesPerson_SalesPersonID} foreign key references.
+     * Returns the {@code SalesPerson} which the {@code FK_Store_SalesPerson_SalesPersonID} foreign
+     * key references.
      *
      * @return the {@code SalesPerson} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesPerson getSalesPerson() {
         return salesPerson;
     }
 
     /**
-     * Replaces the {@code SalesPerson} which the {@code FK_Store_SalesPerson_SalesPersonID} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesPerson} which the {@code FK_Store_SalesPerson_SalesPersonID} foreign
+     * key references, and the value of the column it consists of.
      *
      * @param salesPerson the {@code SalesPerson} to reference; {@code null} for none.
      */
-    public void setSalesPerson(@Nullable final SalesPerson salesPerson) {
+    public void setSalesPerson(final SalesPerson salesPerson) {
         this.salesPerson = salesPerson;
         setSalesPersonId(salesPerson == null ? null : salesPerson.getBusinessEntityId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUSINESS_ENTITY_ID,
                 referencedColumnName = MappedBusinessEntity.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -117,7 +128,7 @@ public class Store extends MappedStore {
     )
     private BusinessEntity businessEntity;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SALES_PERSON_ID,
                 referencedColumnName = MappedSalesPerson.COLUMN_NAME_BUSINESS_ENTITY_ID,

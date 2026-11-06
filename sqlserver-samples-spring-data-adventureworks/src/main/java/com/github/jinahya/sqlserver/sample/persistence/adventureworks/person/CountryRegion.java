@@ -23,15 +23,28 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.person;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedCountryRegion;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Person.CountryRegion} table.
  */
 @Entity(name = "PersonCountryRegion")
-@Table(schema = MappedCountryRegion.TABLE_SCHEMA, name = MappedCountryRegion.TABLE_NAME)
-public class CountryRegion extends MappedCountryRegion {
+@Table(schema = MappedCountryRegion.TABLE_SCHEMA,
+       name = MappedCountryRegion.TABLE_NAME,
+       comment = "Lookup table containing the ISO standard codes for countries and regions.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_CountryRegion_Name",
+                       columnNames = {
+                               CountryRegion.COLUMN_NAME_NAME
+                       }
+               )
+       }
+)
+public class CountryRegion
+        extends MappedCountryRegion {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

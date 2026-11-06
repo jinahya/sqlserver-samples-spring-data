@@ -2,7 +2,7 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanreso
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanresources.EmployeeDepartmentHistory;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployeeDepartmentHistoryId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.EmployeeDepartmentHistoryId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanresources.data.EmployeeDepartmentHistoryRepository;
 
 /**
@@ -13,13 +13,13 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanresou
  */
 class EmployeeDepartmentHistoryRepository_SpringBootIT
         extends _Repository_SpringBootIT<EmployeeDepartmentHistoryRepository, EmployeeDepartmentHistory,
-                                         MappedEmployeeDepartmentHistoryId> {
+                                         EmployeeDepartmentHistoryId> {
 
     /**
      * Creates a new instance.
      */
     EmployeeDepartmentHistoryRepository_SpringBootIT() {
         super(EmployeeDepartmentHistoryRepository.class, EmployeeDepartmentHistory.class,
-              MappedEmployeeDepartmentHistoryId.class);
+              EmployeeDepartmentHistoryId.class);
     }
 }

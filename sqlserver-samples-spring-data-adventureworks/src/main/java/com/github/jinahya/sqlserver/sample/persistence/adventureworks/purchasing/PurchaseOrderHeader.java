@@ -25,7 +25,7 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.hum
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.purchasing.MappedPurchaseOrderHeader;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.purchasing.MappedShipMethod;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.purchasing.MappedVendor;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -36,28 +36,54 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Purchasing.PurchaseOrderHeader} table.
  */
 @Entity(name = "PurchasingPurchaseOrderHeader")
-@Table(schema = MappedPurchaseOrderHeader.TABLE_SCHEMA, name = MappedPurchaseOrderHeader.TABLE_NAME)
-public class PurchaseOrderHeader extends MappedPurchaseOrderHeader {
+@Table(schema = MappedPurchaseOrderHeader.TABLE_SCHEMA,
+       name = MappedPurchaseOrderHeader.TABLE_NAME,
+       comment = "General purchase order information. See PurchaseOrderDetail.",
+       check = {
+               @CheckConstraint(
+                       name = "CK_PurchaseOrderHeader_Freight",
+                       constraint = "([Freight]>=(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_PurchaseOrderHeader_ShipDate",
+                       constraint = "([ShipDate]>=[OrderDate] OR [ShipDate] IS NULL)"
+               ),
+               @CheckConstraint(
+                       name = "CK_PurchaseOrderHeader_Status",
+                       constraint = "([Status]>=(1) AND [Status]<=(4))"
+               ),
+               @CheckConstraint(
+                       name = "CK_PurchaseOrderHeader_SubTotal",
+                       constraint = "([SubTotal]>=(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_PurchaseOrderHeader_TaxAmt",
+                       constraint = "([TaxAmt]>=(0.00))"
+               )
+       }
+)
+public class PurchaseOrderHeader
+        extends MappedPurchaseOrderHeader {
 
     /**
-     * The name of the attribute of the {@code FK_PurchaseOrderHeader_Employee_EmployeeID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_PurchaseOrderHeader_Employee_EmployeeID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_EMPLOYEE = "employee";
 
     /**
-     * The name of the attribute of the {@code FK_PurchaseOrderHeader_Vendor_VendorID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_PurchaseOrderHeader_Vendor_VendorID} foreign key.
+     * The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_VENDOR = "vendor";
 
     /**
-     * The name of the attribute of the {@code FK_PurchaseOrderHeader_ShipMethod_ShipMethodID} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_PurchaseOrderHeader_ShipMethod_ShipMethodID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_SHIP_METHOD = "shipMethod";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -66,80 +92,77 @@ public class PurchaseOrderHeader extends MappedPurchaseOrderHeader {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------------- employee
+    // ------------------------------------------------------------------------------------ employee
 
     /**
-     * Returns the {@code Employee} which the {@code FK_PurchaseOrderHeader_Employee_EmployeeID} foreign key references.
+     * Returns the {@code Employee} which the {@code FK_PurchaseOrderHeader_Employee_EmployeeID}
+     * foreign key references.
      *
      * @return the {@code Employee} referenced; {@code null} when none is.
      */
-    @Nullable
     public Employee getEmployee() {
         return employee;
     }
 
     /**
-     * Replaces the {@code Employee} which the {@code FK_PurchaseOrderHeader_Employee_EmployeeID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Employee} which the {@code FK_PurchaseOrderHeader_Employee_EmployeeID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param employee the {@code Employee} to reference; {@code null} for none.
      */
-    public void setEmployee(@Nullable final Employee employee) {
+    public void setEmployee(final Employee employee) {
         this.employee = employee;
         setEmployeeId(employee == null ? null : employee.getBusinessEntityId());
     }
 
-    // ---------------------------------------------------------------------------------------------------------- vendor
+    // -------------------------------------------------------------------------------------- vendor
 
     /**
-     * Returns the {@code Vendor} which the {@code FK_PurchaseOrderHeader_Vendor_VendorID} foreign key references.
+     * Returns the {@code Vendor} which the {@code FK_PurchaseOrderHeader_Vendor_VendorID} foreign
+     * key references.
      *
      * @return the {@code Vendor} referenced; {@code null} when none is.
      */
-    @Nullable
     public Vendor getVendor() {
         return vendor;
     }
 
     /**
-     * Replaces the {@code Vendor} which the {@code FK_PurchaseOrderHeader_Vendor_VendorID} foreign key references, and
-     * the
-     * value of the column it consists of.
+     * Replaces the {@code Vendor} which the {@code FK_PurchaseOrderHeader_Vendor_VendorID} foreign
+     * key references, and the value of the column it consists of.
      *
      * @param vendor the {@code Vendor} to reference; {@code null} for none.
      */
-    public void setVendor(@Nullable final Vendor vendor) {
+    public void setVendor(final Vendor vendor) {
         this.vendor = vendor;
         setVendorId(vendor == null ? null : vendor.getBusinessEntityId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ shipMethod
+    // ---------------------------------------------------------------------------------- shipMethod
 
     /**
-     * Returns the {@code ShipMethod} which the {@code FK_PurchaseOrderHeader_ShipMethod_ShipMethodID} foreign key
-     * references.
+     * Returns the {@code ShipMethod} which the
+     * {@code FK_PurchaseOrderHeader_ShipMethod_ShipMethodID} foreign key references.
      *
      * @return the {@code ShipMethod} referenced; {@code null} when none is.
      */
-    @Nullable
     public ShipMethod getShipMethod() {
         return shipMethod;
     }
 
     /**
-     * Replaces the {@code ShipMethod} which the {@code FK_PurchaseOrderHeader_ShipMethod_ShipMethodID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code ShipMethod} which the
+     * {@code FK_PurchaseOrderHeader_ShipMethod_ShipMethodID} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param shipMethod the {@code ShipMethod} to reference; {@code null} for none.
      */
-    public void setShipMethod(@Nullable final ShipMethod shipMethod) {
+    public void setShipMethod(final ShipMethod shipMethod) {
         this.shipMethod = shipMethod;
         setShipMethodId(shipMethod == null ? null : shipMethod.getShipMethodId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_EMPLOYEE_ID,
                 referencedColumnName = MappedEmployee.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -149,7 +172,7 @@ public class PurchaseOrderHeader extends MappedPurchaseOrderHeader {
     )
     private Employee employee;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_VENDOR_ID,
                 referencedColumnName = MappedVendor.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -159,7 +182,7 @@ public class PurchaseOrderHeader extends MappedPurchaseOrderHeader {
     )
     private Vendor vendor;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SHIP_METHOD_ID,
                 referencedColumnName = MappedShipMethod.COLUMN_NAME_SHIP_METHOD_ID,

@@ -34,7 +34,6 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.purcha
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.purchasing.Supplier;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.sales.Customer;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.sales.Invoice;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -45,7 +44,8 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Warehouse.StockItemTransactions} table.
  */
 @Entity(name = "WarehouseStockItemTransaction")
-@Table(schema = MappedStockItemTransaction.TABLE_SCHEMA, name = MappedStockItemTransaction.TABLE_NAME)
+@Table(schema = MappedStockItemTransaction.TABLE_SCHEMA, name = MappedStockItemTransaction.TABLE_NAME,
+       comment = "Transactions covering all movements of all stock items")
 public class StockItemTransaction extends MappedStockItemTransaction {
 
     /**
@@ -55,9 +55,9 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     public static final String ATTRIBUTE_NAME_STOCK_ITEM = "stockItem";
 
     /**
-     * The name of the attribute of the {@code
-     * FK_Warehouse_StockItemTransactions_TransactionTypeID_Application_TransactionTypes} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the
+     * {@code FK_Warehouse_StockItemTransactions_TransactionTypeID_Application_TransactionTypes} foreign key. The value
+     * is {@value}.
      */
     public static final String ATTRIBUTE_NAME_TRANSACTION_TYPE = "transactionType";
 
@@ -68,8 +68,8 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     public static final String ATTRIBUTE_NAME_CUSTOMER = "customer";
 
     /**
-     * The name of the attribute of the {@code FK_Warehouse_StockItemTransactions_InvoiceID_Sales_Invoices} foreign
-     * key. The value is {@value}.
+     * The name of the attribute of the {@code FK_Warehouse_StockItemTransactions_InvoiceID_Sales_Invoices} foreign key.
+     * The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_INVOICE = "invoice";
 
@@ -80,8 +80,8 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     public static final String ATTRIBUTE_NAME_SUPPLIER = "supplier";
 
     /**
-     * The name of the attribute of the {@code
-     * FK_Warehouse_StockItemTransactions_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key. The value is
+     * The name of the attribute of the
+     * {@code FK_Warehouse_StockItemTransactions_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key. The value is
      * {@value}.
      */
     public static final String ATTRIBUTE_NAME_PURCHASE_ORDER = "purchaseOrder";
@@ -92,7 +92,7 @@ public class StockItemTransaction extends MappedStockItemTransaction {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -101,58 +101,56 @@ public class StockItemTransaction extends MappedStockItemTransaction {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------- stockItem
+    // ----------------------------------------------------------------------------------- stockItem
 
     /**
-     * Returns the {@code StockItem} which the {@code
-     * FK_Warehouse_StockItemTransactions_StockItemID_Warehouse_StockItems} foreign key references.
+     * Returns the {@code StockItem} which the
+     * {@code FK_Warehouse_StockItemTransactions_StockItemID_Warehouse_StockItems} foreign key references.
      *
      * @return the {@code StockItem} referenced; {@code null} when none is.
      */
-    @Nullable
     public StockItem getStockItem() {
         return stockItem;
     }
 
     /**
-     * Replaces the {@code StockItem} which the {@code
-     * FK_Warehouse_StockItemTransactions_StockItemID_Warehouse_StockItems} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code StockItem} which the
+     * {@code FK_Warehouse_StockItemTransactions_StockItemID_Warehouse_StockItems} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param stockItem the {@code StockItem} to reference; {@code null} for none.
      */
-    public void setStockItem(@Nullable final StockItem stockItem) {
+    public void setStockItem(final StockItem stockItem) {
         this.stockItem = stockItem;
         setStockItemId(stockItem == null ? null : stockItem.getStockItemId());
     }
 
-    // ------------------------------------------------------------------------------------------------- transactionType
+    // ----------------------------------------------------------------------------- transactionType
 
     /**
-     * Returns the {@code TransactionType} which the {@code
-     * FK_Warehouse_StockItemTransactions_TransactionTypeID_Application_TransactionTypes} foreign key references.
+     * Returns the {@code TransactionType} which the
+     * {@code FK_Warehouse_StockItemTransactions_TransactionTypeID_Application_TransactionTypes} foreign key
+     * references.
      *
      * @return the {@code TransactionType} referenced; {@code null} when none is.
      */
-    @Nullable
     public TransactionType getTransactionType() {
         return transactionType;
     }
 
     /**
-     * Replaces the {@code TransactionType} which the {@code
-     * FK_Warehouse_StockItemTransactions_TransactionTypeID_Application_TransactionTypes} foreign key references, and
-     * the
-     * value of the column it consists of.
+     * Replaces the {@code TransactionType} which the
+     * {@code FK_Warehouse_StockItemTransactions_TransactionTypeID_Application_TransactionTypes} foreign key references,
+     * and the value of the column it consists of.
      *
      * @param transactionType the {@code TransactionType} to reference; {@code null} for none.
      */
-    public void setTransactionType(@Nullable final TransactionType transactionType) {
+    public void setTransactionType(final TransactionType transactionType) {
         this.transactionType = transactionType;
         setTransactionTypeId(transactionType == null ? null : transactionType.getTransactionTypeId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- customer
+    // ------------------------------------------------------------------------------------ customer
 
     /**
      * Returns the {@code Customer} which the {@code FK_Warehouse_StockItemTransactions_CustomerID_Sales_Customers}
@@ -160,99 +158,93 @@ public class StockItemTransaction extends MappedStockItemTransaction {
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getCustomer() {
         return customer;
     }
 
     /**
      * Replaces the {@code Customer} which the {@code FK_Warehouse_StockItemTransactions_CustomerID_Sales_Customers}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param customer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setCustomer(@Nullable final Customer customer) {
+    public void setCustomer(final Customer customer) {
         this.customer = customer;
         setCustomerId(customer == null ? null : customer.getCustomerId());
     }
 
-    // --------------------------------------------------------------------------------------------------------- invoice
+    // ------------------------------------------------------------------------------------- invoice
 
     /**
-     * Returns the {@code Invoice} which the {@code FK_Warehouse_StockItemTransactions_InvoiceID_Sales_Invoices}
-     * foreign key references.
+     * Returns the {@code Invoice} which the {@code FK_Warehouse_StockItemTransactions_InvoiceID_Sales_Invoices} foreign
+     * key references.
      *
      * @return the {@code Invoice} referenced; {@code null} when none is.
      */
-    @Nullable
     public Invoice getInvoice() {
         return invoice;
     }
 
     /**
      * Replaces the {@code Invoice} which the {@code FK_Warehouse_StockItemTransactions_InvoiceID_Sales_Invoices}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param invoice the {@code Invoice} to reference; {@code null} for none.
      */
-    public void setInvoice(@Nullable final Invoice invoice) {
+    public void setInvoice(final Invoice invoice) {
         this.invoice = invoice;
         setInvoiceId(invoice == null ? null : invoice.getInvoiceId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- supplier
+    // ------------------------------------------------------------------------------------ supplier
 
     /**
-     * Returns the {@code Supplier} which the {@code
-     * FK_Warehouse_StockItemTransactions_SupplierID_Purchasing_Suppliers} foreign key references.
+     * Returns the {@code Supplier} which the {@code FK_Warehouse_StockItemTransactions_SupplierID_Purchasing_Suppliers}
+     * foreign key references.
      *
      * @return the {@code Supplier} referenced; {@code null} when none is.
      */
-    @Nullable
     public Supplier getSupplier() {
         return supplier;
     }
 
     /**
-     * Replaces the {@code Supplier} which the {@code
-     * FK_Warehouse_StockItemTransactions_SupplierID_Purchasing_Suppliers} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Supplier} which the
+     * {@code FK_Warehouse_StockItemTransactions_SupplierID_Purchasing_Suppliers} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param supplier the {@code Supplier} to reference; {@code null} for none.
      */
-    public void setSupplier(@Nullable final Supplier supplier) {
+    public void setSupplier(final Supplier supplier) {
         this.supplier = supplier;
         setSupplierId(supplier == null ? null : supplier.getSupplierId());
     }
 
-    // --------------------------------------------------------------------------------------------------- purchaseOrder
+    // ------------------------------------------------------------------------------- purchaseOrder
 
     /**
-     * Returns the {@code PurchaseOrder} which the {@code
-     * FK_Warehouse_StockItemTransactions_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references.
+     * Returns the {@code PurchaseOrder} which the
+     * {@code FK_Warehouse_StockItemTransactions_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references.
      *
      * @return the {@code PurchaseOrder} referenced; {@code null} when none is.
      */
-    @Nullable
     public PurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
     /**
-     * Replaces the {@code PurchaseOrder} which the {@code
-     * FK_Warehouse_StockItemTransactions_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code PurchaseOrder} which the
+     * {@code FK_Warehouse_StockItemTransactions_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references, and
+     * the value of the column it consists of.
      *
      * @param purchaseOrder the {@code PurchaseOrder} to reference; {@code null} for none.
      */
-    public void setPurchaseOrder(@Nullable final PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(final PurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
         setPurchaseOrderId(purchaseOrder == null ? null : purchaseOrder.getPurchaseOrderId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Warehouse_StockItemTransactions_Application_People} foreign key
@@ -260,24 +252,22 @@ public class StockItemTransaction extends MappedStockItemTransaction {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Warehouse_StockItemTransactions_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STOCK_ITEM_ID,
                 referencedColumnName = MappedStockItem.COLUMN_NAME_STOCK_ITEM_ID,
@@ -287,7 +277,7 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     )
     private StockItem stockItem;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_TRANSACTION_TYPE_ID,
                 referencedColumnName = MappedTransactionType.COLUMN_NAME_TRANSACTION_TYPE_ID,
@@ -297,7 +287,7 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     )
     private TransactionType transactionType;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -307,7 +297,7 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     )
     private Customer customer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_INVOICE_ID,
                 referencedColumnName = MappedInvoice.COLUMN_NAME_INVOICE_ID,
@@ -317,7 +307,7 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     )
     private Invoice invoice;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SUPPLIER_ID,
                 referencedColumnName = MappedSupplier.COLUMN_NAME_SUPPLIER_ID,
@@ -327,7 +317,7 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     )
     private Supplier supplier;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PURCHASE_ORDER_ID,
                 referencedColumnName = MappedPurchaseOrder.COLUMN_NAME_PURCHASE_ORDER_ID,
@@ -337,7 +327,7 @@ public class StockItemTransaction extends MappedStockItemTransaction {
     )
     private PurchaseOrder purchaseOrder;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

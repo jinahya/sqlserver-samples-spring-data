@@ -22,27 +22,49 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.person;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedAddress;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedStateProvince;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Person.Address} table.
  */
 @Entity(name = "PersonAddress")
-@Table(schema = MappedAddress.TABLE_SCHEMA, name = MappedAddress.TABLE_NAME)
-public class Address extends MappedAddress {
+@Table(schema = MappedAddress.TABLE_SCHEMA,
+       name = MappedAddress.TABLE_NAME,
+       comment = "Street address information for customers, employees, and vendors.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_Address_rowguid",
+                       columnNames = {
+                               Address.COLUMN_NAME_ROWGUID
+                       }
+               ),
+               @UniqueConstraint(
+                       name = "IX_Address_AddressLine1_AddressLine2_City_StateProvinceID_PostalCode",
+                       columnNames = {
+                               Address.COLUMN_NAME_ADDRESS_LINE_1,
+                               Address.COLUMN_NAME_ADDRESS_LINE_2,
+                               Address.COLUMN_NAME_CITY,
+                               Address.COLUMN_NAME_STATE_PROVINCE_ID,
+                               Address.COLUMN_NAME_POSTAL_CODE
+                       }
+               )
+       }
+)
+public class Address
+        extends MappedAddress {
 
     /**
-     * The name of the attribute of the {@code FK_Address_StateProvince_StateProvinceID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_Address_StateProvince_StateProvinceID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_STATE_PROVINCE = "stateProvince";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -51,32 +73,30 @@ public class Address extends MappedAddress {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------- stateProvince
+    // ------------------------------------------------------------------------------- stateProvince
 
     /**
-     * Returns the {@code StateProvince} which the {@code FK_Address_StateProvince_StateProvinceID} foreign key
-     * references.
+     * Returns the {@code StateProvince} which the {@code FK_Address_StateProvince_StateProvinceID}
+     * foreign key references.
      *
      * @return the {@code StateProvince} referenced; {@code null} when none is.
      */
-    @Nullable
     public StateProvince getStateProvince() {
         return stateProvince;
     }
 
     /**
-     * Replaces the {@code StateProvince} which the {@code FK_Address_StateProvince_StateProvinceID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code StateProvince} which the {@code FK_Address_StateProvince_StateProvinceID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param stateProvince the {@code StateProvince} to reference; {@code null} for none.
      */
-    public void setStateProvince(@Nullable final StateProvince stateProvince) {
+    public void setStateProvince(final StateProvince stateProvince) {
         this.stateProvince = stateProvince;
         setStateProvinceId(stateProvince == null ? null : stateProvince.getStateProvinceId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STATE_PROVINCE_ID,
                 referencedColumnName = MappedStateProvince.COLUMN_NAME_STATE_PROVINCE_ID,

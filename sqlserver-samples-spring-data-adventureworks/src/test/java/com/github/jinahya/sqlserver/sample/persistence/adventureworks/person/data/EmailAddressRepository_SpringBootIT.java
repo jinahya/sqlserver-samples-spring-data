@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedEmailAddressId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.EmailAddressId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.EmailAddress;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.data.EmailAddressRepository;
 
@@ -12,12 +12,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.dat
  * AdventureWorks loaded; see that file.
  */
 class EmailAddressRepository_SpringBootIT
-        extends _Repository_SpringBootIT<EmailAddressRepository, EmailAddress, MappedEmailAddressId> {
+        extends _Repository_SpringBootIT<EmailAddressRepository, EmailAddress, EmailAddressId> {
 
     /**
      * Creates a new instance.
      */
     EmailAddressRepository_SpringBootIT() {
-        super(EmailAddressRepository.class, EmailAddress.class, MappedEmailAddressId.class);
+        super(EmailAddressRepository.class, EmailAddress.class, EmailAddressId.class);
     }
 }

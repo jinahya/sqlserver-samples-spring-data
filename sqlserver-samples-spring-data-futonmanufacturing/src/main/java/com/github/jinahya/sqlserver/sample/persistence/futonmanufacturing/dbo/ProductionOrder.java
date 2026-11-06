@@ -24,18 +24,27 @@ import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedProductionOrder;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedWarehouse;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedWorkCenter;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code dbo.ProductionOrder} table.
  */
 @Entity(name = "DboProductionOrder")
-@Table(schema = MappedProductionOrder.TABLE_SCHEMA, name = MappedProductionOrder.TABLE_NAME)
+@Table(schema = MappedProductionOrder.TABLE_SCHEMA,
+       name = MappedProductionOrder.TABLE_NAME,
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       columnNames = {
+                               ProductionOrder.COLUMN_NAME_WORK_ORDER_NUMBER
+                       }
+               )
+       }
+)
 public class ProductionOrder extends MappedProductionOrder {
 
     /**
@@ -53,7 +62,7 @@ public class ProductionOrder extends MappedProductionOrder {
      */
     public static final String ATTRIBUTE_NAME_WORK_CENTER = "workCenter";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -62,76 +71,73 @@ public class ProductionOrder extends MappedProductionOrder {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_ProdOrder_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_ProdOrder_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_ProdOrder_Item} foreign key references, and the value of the column
+     * it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- warehouse
+    // ----------------------------------------------------------------------------------- warehouse
 
     /**
      * Returns the {@code Warehouse} which the {@code FK_ProdOrder_Warehouse} foreign key references.
      *
      * @return the {@code Warehouse} referenced; {@code null} when none is.
      */
-    @Nullable
     public Warehouse getWarehouse() {
         return warehouse;
     }
 
     /**
-     * Replaces the {@code Warehouse} which the {@code FK_ProdOrder_Warehouse} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Warehouse} which the {@code FK_ProdOrder_Warehouse} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param warehouse the {@code Warehouse} to reference; {@code null} for none.
      */
-    public void setWarehouse(@Nullable final Warehouse warehouse) {
+    public void setWarehouse(final Warehouse warehouse) {
         this.warehouse = warehouse;
         setWarehouseId(warehouse == null ? null : warehouse.getWarehouseId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ workCenter
+    // ---------------------------------------------------------------------------------- workCenter
 
     /**
      * Returns the {@code WorkCenter} which the {@code FK_ProdOrder_WorkCenter} foreign key references.
      *
      * @return the {@code WorkCenter} referenced; {@code null} when none is.
      */
-    @Nullable
     public WorkCenter getWorkCenter() {
         return workCenter;
     }
 
     /**
-     * Replaces the {@code WorkCenter} which the {@code FK_ProdOrder_WorkCenter} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code WorkCenter} which the {@code FK_ProdOrder_WorkCenter} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param workCenter the {@code WorkCenter} to reference; {@code null} for none.
      */
-    public void setWorkCenter(@Nullable final WorkCenter workCenter) {
+    public void setWorkCenter(final WorkCenter workCenter) {
         this.workCenter = workCenter;
         setWorkCenterId(workCenter == null ? null : workCenter.getWorkCenterId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,
@@ -141,7 +147,7 @@ public class ProductionOrder extends MappedProductionOrder {
     )
     private Item item;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_WAREHOUSE_ID,
                 referencedColumnName = MappedWarehouse.COLUMN_NAME_WAREHOUSE_ID,
@@ -151,7 +157,7 @@ public class ProductionOrder extends MappedProductionOrder {
     )
     private Warehouse warehouse;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_WORK_CENTER_ID,
                 referencedColumnName = MappedWorkCenter.COLUMN_NAME_WORK_CENTER_ID,

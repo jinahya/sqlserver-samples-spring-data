@@ -21,7 +21,7 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.productio
  */
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductAndDescriptionView;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductAndDescriptionViewId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.ProductAndDescriptionViewId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
@@ -32,11 +32,13 @@ import jakarta.persistence.Table;
  * A view is read, not written; the entity maps no association.
  */
 @Entity(name = "ProductionProductAndDescriptionView")
-@Table(schema = MappedProductAndDescriptionView.TABLE_SCHEMA, name = MappedProductAndDescriptionView.TABLE_NAME)
-@IdClass(MappedProductAndDescriptionViewId.class)
-public class ProductAndDescriptionView extends MappedProductAndDescriptionView {
+@Table(schema = MappedProductAndDescriptionView.TABLE_SCHEMA,
+       name = MappedProductAndDescriptionView.TABLE_NAME)
+@IdClass(ProductAndDescriptionViewId.class)
+public class ProductAndDescriptionView
+        extends MappedProductAndDescriptionView {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

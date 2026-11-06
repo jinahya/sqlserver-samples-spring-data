@@ -30,10 +30,11 @@ import jakarta.persistence.Table;
  * A view is read, not written; the entity maps no association.
  */
 @Entity(name = "DboSalesCustomerLifetimeValueView")
-@Table(schema = MappedSalesCustomerLifetimeValueView.TABLE_SCHEMA, name = MappedSalesCustomerLifetimeValueView.TABLE_NAME)
+@Table(schema = MappedSalesCustomerLifetimeValueView.TABLE_SCHEMA,
+       name = MappedSalesCustomerLifetimeValueView.TABLE_NAME)
 public class SalesCustomerLifetimeValueView extends MappedSalesCustomerLifetimeValueView {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

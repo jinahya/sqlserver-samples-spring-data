@@ -23,7 +23,6 @@ package com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.appli
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedCity;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedSystemParameter;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -34,7 +33,8 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Application.SystemParameters} table.
  */
 @Entity(name = "ApplicationSystemParameter")
-@Table(schema = MappedSystemParameter.TABLE_SCHEMA, name = MappedSystemParameter.TABLE_NAME)
+@Table(schema = MappedSystemParameter.TABLE_SCHEMA, name = MappedSystemParameter.TABLE_NAME,
+       comment = "Any configurable parameters for the whole system")
 public class SystemParameter extends MappedSystemParameter {
 
     /**
@@ -55,7 +55,7 @@ public class SystemParameter extends MappedSystemParameter {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -64,7 +64,7 @@ public class SystemParameter extends MappedSystemParameter {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------------- deliveryCity
+    // -------------------------------------------------------------------------------- deliveryCity
 
     /**
      * Returns the {@code City} which the {@code FK_Application_SystemParameters_DeliveryCityID_Application_Cities}
@@ -72,24 +72,22 @@ public class SystemParameter extends MappedSystemParameter {
      *
      * @return the {@code City} referenced; {@code null} when none is.
      */
-    @Nullable
     public City getDeliveryCity() {
         return deliveryCity;
     }
 
     /**
      * Replaces the {@code City} which the {@code FK_Application_SystemParameters_DeliveryCityID_Application_Cities}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param deliveryCity the {@code City} to reference; {@code null} for none.
      */
-    public void setDeliveryCity(@Nullable final City deliveryCity) {
+    public void setDeliveryCity(final City deliveryCity) {
         this.deliveryCity = deliveryCity;
         setDeliveryCityId(deliveryCity == null ? null : deliveryCity.getCityId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ postalCity
+    // ---------------------------------------------------------------------------------- postalCity
 
     /**
      * Returns the {@code City} which the {@code FK_Application_SystemParameters_PostalCityID_Application_Cities}
@@ -97,24 +95,22 @@ public class SystemParameter extends MappedSystemParameter {
      *
      * @return the {@code City} referenced; {@code null} when none is.
      */
-    @Nullable
     public City getPostalCity() {
         return postalCity;
     }
 
     /**
      * Replaces the {@code City} which the {@code FK_Application_SystemParameters_PostalCityID_Application_Cities}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param postalCity the {@code City} to reference; {@code null} for none.
      */
-    public void setPostalCity(@Nullable final City postalCity) {
+    public void setPostalCity(final City postalCity) {
         this.postalCity = postalCity;
         setPostalCityId(postalCity == null ? null : postalCity.getCityId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Application_SystemParameters_Application_People} foreign key
@@ -122,24 +118,22 @@ public class SystemParameter extends MappedSystemParameter {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Application_SystemParameters_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_DELIVERY_CITY_ID,
                 referencedColumnName = MappedCity.COLUMN_NAME_CITY_ID,
@@ -149,7 +143,7 @@ public class SystemParameter extends MappedSystemParameter {
     )
     private City deliveryCity;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_POSTAL_CITY_ID,
                 referencedColumnName = MappedCity.COLUMN_NAME_CITY_ID,
@@ -159,7 +153,7 @@ public class SystemParameter extends MappedSystemParameter {
     )
     private City postalCity;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

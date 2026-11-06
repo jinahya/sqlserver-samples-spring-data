@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductModelIllustrationId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.ProductModelIllustrationId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.ProductModelIllustration;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.data.ProductModelIllustrationRepository;
 
@@ -13,13 +13,13 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production
  */
 class ProductModelIllustrationRepository_SpringBootIT
         extends _Repository_SpringBootIT<ProductModelIllustrationRepository, ProductModelIllustration,
-                                         MappedProductModelIllustrationId> {
+                                         ProductModelIllustrationId> {
 
     /**
      * Creates a new instance.
      */
     ProductModelIllustrationRepository_SpringBootIT() {
         super(ProductModelIllustrationRepository.class, ProductModelIllustration.class,
-              MappedProductModelIllustrationId.class);
+              ProductModelIllustrationId.class);
     }
 }

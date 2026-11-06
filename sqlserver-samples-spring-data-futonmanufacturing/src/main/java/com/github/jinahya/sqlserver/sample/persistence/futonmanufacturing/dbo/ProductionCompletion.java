@@ -23,7 +23,6 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedProductionCompletion;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedProductionOrder;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedWorkCenter;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -47,7 +46,7 @@ public class ProductionCompletion extends MappedProductionCompletion {
      */
     public static final String ATTRIBUTE_NAME_WORK_CENTER = "workCenter";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,14 +55,13 @@ public class ProductionCompletion extends MappedProductionCompletion {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------- productionOrder
+    // ----------------------------------------------------------------------------- productionOrder
 
     /**
      * Returns the {@code ProductionOrder} which the {@code FK_Completion_ProdOrder} foreign key references.
      *
      * @return the {@code ProductionOrder} referenced; {@code null} when none is.
      */
-    @Nullable
     public ProductionOrder getProductionOrder() {
         return productionOrder;
     }
@@ -74,35 +72,34 @@ public class ProductionCompletion extends MappedProductionCompletion {
      *
      * @param productionOrder the {@code ProductionOrder} to reference; {@code null} for none.
      */
-    public void setProductionOrder(@Nullable final ProductionOrder productionOrder) {
+    public void setProductionOrder(final ProductionOrder productionOrder) {
         this.productionOrder = productionOrder;
         setProductionOrderId(productionOrder == null ? null : productionOrder.getProductionOrderId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ workCenter
+    // ---------------------------------------------------------------------------------- workCenter
 
     /**
      * Returns the {@code WorkCenter} which the {@code FK_Completion_WorkCenter} foreign key references.
      *
      * @return the {@code WorkCenter} referenced; {@code null} when none is.
      */
-    @Nullable
     public WorkCenter getWorkCenter() {
         return workCenter;
     }
 
     /**
-     * Replaces the {@code WorkCenter} which the {@code FK_Completion_WorkCenter} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code WorkCenter} which the {@code FK_Completion_WorkCenter} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param workCenter the {@code WorkCenter} to reference; {@code null} for none.
      */
-    public void setWorkCenter(@Nullable final WorkCenter workCenter) {
+    public void setWorkCenter(final WorkCenter workCenter) {
         this.workCenter = workCenter;
         setWorkCenterId(workCenter == null ? null : workCenter.getWorkCenterId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRODUCTION_ORDER_ID,
                 referencedColumnName = MappedProductionOrder.COLUMN_NAME_PRODUCTION_ORDER_ID,
@@ -112,7 +109,7 @@ public class ProductionCompletion extends MappedProductionCompletion {
     )
     private ProductionOrder productionOrder;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_WORK_CENTER_ID,
                 referencedColumnName = MappedWorkCenter.COLUMN_NAME_WORK_CENTER_ID,

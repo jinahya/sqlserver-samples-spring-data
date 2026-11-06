@@ -24,7 +24,6 @@ import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesOrderDetail;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesReturn;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesReturnDetail;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -53,7 +52,7 @@ public class SalesReturnDetail extends MappedSalesReturnDetail {
      */
     public static final String ATTRIBUTE_NAME_ITEM = "item";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -62,37 +61,35 @@ public class SalesReturnDetail extends MappedSalesReturnDetail {
         super();
     }
 
-    // ----------------------------------------------------------------------------------------------- returnSalesReturn
+    // --------------------------------------------------------------------------- returnSalesReturn
 
     /**
      * Returns the {@code SalesReturn} which the {@code FK_ReturnDetail_Return} foreign key references.
      *
      * @return the {@code SalesReturn} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesReturn getReturnSalesReturn() {
         return returnSalesReturn;
     }
 
     /**
-     * Replaces the {@code SalesReturn} which the {@code FK_ReturnDetail_Return} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesReturn} which the {@code FK_ReturnDetail_Return} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param returnSalesReturn the {@code SalesReturn} to reference; {@code null} for none.
      */
-    public void setReturnSalesReturn(@Nullable final SalesReturn returnSalesReturn) {
+    public void setReturnSalesReturn(final SalesReturn returnSalesReturn) {
         this.returnSalesReturn = returnSalesReturn;
         setReturnId(returnSalesReturn == null ? null : returnSalesReturn.getReturnId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- soDetail
+    // ------------------------------------------------------------------------------------ soDetail
 
     /**
      * Returns the {@code SalesOrderDetail} which the {@code FK_ReturnDetail_SODetail} foreign key references.
      *
      * @return the {@code SalesOrderDetail} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesOrderDetail getSoDetail() {
         return soDetail;
     }
@@ -103,35 +100,34 @@ public class SalesReturnDetail extends MappedSalesReturnDetail {
      *
      * @param soDetail the {@code SalesOrderDetail} to reference; {@code null} for none.
      */
-    public void setSoDetail(@Nullable final SalesOrderDetail soDetail) {
+    public void setSoDetail(final SalesOrderDetail soDetail) {
         this.soDetail = soDetail;
         setSoDetailId(soDetail == null ? null : soDetail.getSoDetailId());
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_ReturnDetail_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_ReturnDetail_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_ReturnDetail_Item} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_RETURN_ID,
                 referencedColumnName = MappedSalesReturn.COLUMN_NAME_RETURN_ID,
@@ -141,7 +137,7 @@ public class SalesReturnDetail extends MappedSalesReturnDetail {
     )
     private SalesReturn returnSalesReturn;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SO_DETAIL_ID,
                 referencedColumnName = MappedSalesOrderDetail.COLUMN_NAME_SO_DETAIL_ID,
@@ -151,7 +147,7 @@ public class SalesReturnDetail extends MappedSalesReturnDetail {
     )
     private SalesOrderDetail soDetail;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,

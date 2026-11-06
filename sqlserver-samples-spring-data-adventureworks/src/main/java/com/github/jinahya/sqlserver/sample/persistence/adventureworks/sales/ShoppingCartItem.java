@@ -23,7 +23,7 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProduct;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedShoppingCartItem;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.Product;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -34,16 +34,26 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Sales.ShoppingCartItem} table.
  */
 @Entity(name = "SalesShoppingCartItem")
-@Table(schema = MappedShoppingCartItem.TABLE_SCHEMA, name = MappedShoppingCartItem.TABLE_NAME)
-public class ShoppingCartItem extends MappedShoppingCartItem {
+@Table(schema = MappedShoppingCartItem.TABLE_SCHEMA,
+       name = MappedShoppingCartItem.TABLE_NAME,
+       comment = "Contains online customer orders until the order is submitted or cancelled.",
+       check = {
+               @CheckConstraint(
+                       name = "CK_ShoppingCartItem_Quantity",
+                       constraint = "([Quantity]>=(1))"
+               )
+       }
+)
+public class ShoppingCartItem
+        extends MappedShoppingCartItem {
 
     /**
-     * The name of the attribute of the {@code FK_ShoppingCartItem_Product_ProductID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_ShoppingCartItem_Product_ProductID} foreign key.
+     * The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_PRODUCT = "product";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -52,31 +62,30 @@ public class ShoppingCartItem extends MappedShoppingCartItem {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------------- product
+    // ------------------------------------------------------------------------------------- product
 
     /**
-     * Returns the {@code Product} which the {@code FK_ShoppingCartItem_Product_ProductID} foreign key references.
+     * Returns the {@code Product} which the {@code FK_ShoppingCartItem_Product_ProductID} foreign
+     * key references.
      *
      * @return the {@code Product} referenced; {@code null} when none is.
      */
-    @Nullable
     public Product getProduct() {
         return product;
     }
 
     /**
-     * Replaces the {@code Product} which the {@code FK_ShoppingCartItem_Product_ProductID} foreign key references, and
-     * the
-     * value of the column it consists of.
+     * Replaces the {@code Product} which the {@code FK_ShoppingCartItem_Product_ProductID} foreign
+     * key references, and the value of the column it consists of.
      *
      * @param product the {@code Product} to reference; {@code null} for none.
      */
-    public void setProduct(@Nullable final Product product) {
+    public void setProduct(final Product product) {
         this.product = product;
         setProductId(product == null ? null : product.getProductId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRODUCT_ID,
                 referencedColumnName = MappedProduct.COLUMN_NAME_PRODUCT_ID,

@@ -30,69 +30,114 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sal
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesTerritory;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.Address;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.purchasing.ShipMethod;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.SalesOrderHeader} table.
  */
 @Entity(name = "SalesSalesOrderHeader")
-@Table(schema = MappedSalesOrderHeader.TABLE_SCHEMA, name = MappedSalesOrderHeader.TABLE_NAME)
-public class SalesOrderHeader extends MappedSalesOrderHeader {
+@Table(schema = MappedSalesOrderHeader.TABLE_SCHEMA,
+       name = MappedSalesOrderHeader.TABLE_NAME,
+       comment = "General sales order information.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_SalesOrderHeader_rowguid",
+                       columnNames = {
+                               SalesOrderHeader.COLUMN_NAME_ROWGUID
+                       }
+               ),
+               @UniqueConstraint(
+                       name = "AK_SalesOrderHeader_SalesOrderNumber",
+                       columnNames = {
+                               SalesOrderHeader.COLUMN_NAME_SALES_ORDER_NUMBER
+                       }
+               )
+       },
+       check = {
+               @CheckConstraint(
+                       name = "CK_SalesOrderHeader_DueDate",
+                       constraint = "([DueDate]>=[OrderDate])"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesOrderHeader_Freight",
+                       constraint = "([Freight]>=(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesOrderHeader_ShipDate",
+                       constraint = "([ShipDate]>=[OrderDate] OR [ShipDate] IS NULL)"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesOrderHeader_Status",
+                       constraint = "([Status]>=(0) AND [Status]<=(8))"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesOrderHeader_SubTotal",
+                       constraint = "([SubTotal]>=(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesOrderHeader_TaxAmt",
+                       constraint = "([TaxAmt]>=(0.00))"
+               )
+       }
+)
+public class SalesOrderHeader
+        extends MappedSalesOrderHeader {
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_Address_BillToAddressID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_Address_BillToAddressID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_BILL_TO_ADDRESS = "billToAddress";
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_Address_ShipToAddressID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_Address_ShipToAddressID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_SHIP_TO_ADDRESS = "shipToAddress";
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_CreditCard_CreditCardID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_CreditCard_CreditCardID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_CREDIT_CARD = "creditCard";
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_CurrencyRate_CurrencyRateID} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_CurrencyRate_CurrencyRateID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_CURRENCY_RATE = "currencyRate";
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_Customer_CustomerID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_Customer_CustomerID} foreign key.
+     * The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_CUSTOMER = "customer";
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_SalesPerson_SalesPersonID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_SalesPerson_SalesPersonID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_SALES_PERSON = "salesPerson";
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_ShipMethod_ShipMethodID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_ShipMethod_ShipMethodID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_SHIP_METHOD = "shipMethod";
 
     /**
-     * The name of the attribute of the {@code FK_SalesOrderHeader_SalesTerritory_TerritoryID} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_SalesOrderHeader_SalesTerritory_TerritoryID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_TERRITORY = "territory";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -101,204 +146,194 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------- billToAddress
+    // ------------------------------------------------------------------------------- billToAddress
 
     /**
-     * Returns the {@code Address} which the {@code FK_SalesOrderHeader_Address_BillToAddressID} foreign key references.
+     * Returns the {@code Address} which the {@code FK_SalesOrderHeader_Address_BillToAddressID}
+     * foreign key references.
      *
      * @return the {@code Address} referenced; {@code null} when none is.
      */
-    @Nullable
     public Address getBillToAddress() {
         return billToAddress;
     }
 
     /**
-     * Replaces the {@code Address} which the {@code FK_SalesOrderHeader_Address_BillToAddressID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Address} which the {@code FK_SalesOrderHeader_Address_BillToAddressID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param billToAddress the {@code Address} to reference; {@code null} for none.
      */
-    public void setBillToAddress(@Nullable final Address billToAddress) {
+    public void setBillToAddress(final Address billToAddress) {
         this.billToAddress = billToAddress;
         setBillToAddressId(billToAddress == null ? null : billToAddress.getAddressId());
     }
 
-    // --------------------------------------------------------------------------------------------------- shipToAddress
+    // ------------------------------------------------------------------------------- shipToAddress
 
     /**
-     * Returns the {@code Address} which the {@code FK_SalesOrderHeader_Address_ShipToAddressID} foreign key references.
+     * Returns the {@code Address} which the {@code FK_SalesOrderHeader_Address_ShipToAddressID}
+     * foreign key references.
      *
      * @return the {@code Address} referenced; {@code null} when none is.
      */
-    @Nullable
     public Address getShipToAddress() {
         return shipToAddress;
     }
 
     /**
-     * Replaces the {@code Address} which the {@code FK_SalesOrderHeader_Address_ShipToAddressID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Address} which the {@code FK_SalesOrderHeader_Address_ShipToAddressID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param shipToAddress the {@code Address} to reference; {@code null} for none.
      */
-    public void setShipToAddress(@Nullable final Address shipToAddress) {
+    public void setShipToAddress(final Address shipToAddress) {
         this.shipToAddress = shipToAddress;
         setShipToAddressId(shipToAddress == null ? null : shipToAddress.getAddressId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ creditCard
+    // ---------------------------------------------------------------------------------- creditCard
 
     /**
-     * Returns the {@code CreditCard} which the {@code FK_SalesOrderHeader_CreditCard_CreditCardID} foreign key
-     * references.
+     * Returns the {@code CreditCard} which the {@code FK_SalesOrderHeader_CreditCard_CreditCardID}
+     * foreign key references.
      *
      * @return the {@code CreditCard} referenced; {@code null} when none is.
      */
-    @Nullable
     public CreditCard getCreditCard() {
         return creditCard;
     }
 
     /**
-     * Replaces the {@code CreditCard} which the {@code FK_SalesOrderHeader_CreditCard_CreditCardID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code CreditCard} which the {@code FK_SalesOrderHeader_CreditCard_CreditCardID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param creditCard the {@code CreditCard} to reference; {@code null} for none.
      */
-    public void setCreditCard(@Nullable final CreditCard creditCard) {
+    public void setCreditCard(final CreditCard creditCard) {
         this.creditCard = creditCard;
         setCreditCardId(creditCard == null ? null : creditCard.getCreditCardId());
     }
 
-    // ---------------------------------------------------------------------------------------------------- currencyRate
+    // -------------------------------------------------------------------------------- currencyRate
 
     /**
-     * Returns the {@code CurrencyRate} which the {@code FK_SalesOrderHeader_CurrencyRate_CurrencyRateID} foreign key
-     * references.
+     * Returns the {@code CurrencyRate} which the
+     * {@code FK_SalesOrderHeader_CurrencyRate_CurrencyRateID} foreign key references.
      *
      * @return the {@code CurrencyRate} referenced; {@code null} when none is.
      */
-    @Nullable
     public CurrencyRate getCurrencyRate() {
         return currencyRate;
     }
 
     /**
-     * Replaces the {@code CurrencyRate} which the {@code FK_SalesOrderHeader_CurrencyRate_CurrencyRateID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code CurrencyRate} which the
+     * {@code FK_SalesOrderHeader_CurrencyRate_CurrencyRateID} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param currencyRate the {@code CurrencyRate} to reference; {@code null} for none.
      */
-    public void setCurrencyRate(@Nullable final CurrencyRate currencyRate) {
+    public void setCurrencyRate(final CurrencyRate currencyRate) {
         this.currencyRate = currencyRate;
         setCurrencyRateId(currencyRate == null ? null : currencyRate.getCurrencyRateId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- customer
+    // ------------------------------------------------------------------------------------ customer
 
     /**
-     * Returns the {@code Customer} which the {@code FK_SalesOrderHeader_Customer_CustomerID} foreign key references.
+     * Returns the {@code Customer} which the {@code FK_SalesOrderHeader_Customer_CustomerID}
+     * foreign key references.
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getCustomer() {
         return customer;
     }
 
     /**
-     * Replaces the {@code Customer} which the {@code FK_SalesOrderHeader_Customer_CustomerID} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * Replaces the {@code Customer} which the {@code FK_SalesOrderHeader_Customer_CustomerID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param customer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setCustomer(@Nullable final Customer customer) {
+    public void setCustomer(final Customer customer) {
         this.customer = customer;
         setCustomerId(customer == null ? null : customer.getCustomerId());
     }
 
-    // ----------------------------------------------------------------------------------------------------- salesPerson
+    // --------------------------------------------------------------------------------- salesPerson
 
     /**
-     * Returns the {@code SalesPerson} which the {@code FK_SalesOrderHeader_SalesPerson_SalesPersonID} foreign key
-     * references.
+     * Returns the {@code SalesPerson} which the
+     * {@code FK_SalesOrderHeader_SalesPerson_SalesPersonID} foreign key references.
      *
      * @return the {@code SalesPerson} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesPerson getSalesPerson() {
         return salesPerson;
     }
 
     /**
-     * Replaces the {@code SalesPerson} which the {@code FK_SalesOrderHeader_SalesPerson_SalesPersonID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesPerson} which the
+     * {@code FK_SalesOrderHeader_SalesPerson_SalesPersonID} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param salesPerson the {@code SalesPerson} to reference; {@code null} for none.
      */
-    public void setSalesPerson(@Nullable final SalesPerson salesPerson) {
+    public void setSalesPerson(final SalesPerson salesPerson) {
         this.salesPerson = salesPerson;
         setSalesPersonId(salesPerson == null ? null : salesPerson.getBusinessEntityId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ shipMethod
+    // ---------------------------------------------------------------------------------- shipMethod
 
     /**
-     * Returns the {@code ShipMethod} which the {@code FK_SalesOrderHeader_ShipMethod_ShipMethodID} foreign key
-     * references.
+     * Returns the {@code ShipMethod} which the {@code FK_SalesOrderHeader_ShipMethod_ShipMethodID}
+     * foreign key references.
      *
      * @return the {@code ShipMethod} referenced; {@code null} when none is.
      */
-    @Nullable
     public ShipMethod getShipMethod() {
         return shipMethod;
     }
 
     /**
-     * Replaces the {@code ShipMethod} which the {@code FK_SalesOrderHeader_ShipMethod_ShipMethodID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code ShipMethod} which the {@code FK_SalesOrderHeader_ShipMethod_ShipMethodID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param shipMethod the {@code ShipMethod} to reference; {@code null} for none.
      */
-    public void setShipMethod(@Nullable final ShipMethod shipMethod) {
+    public void setShipMethod(final ShipMethod shipMethod) {
         this.shipMethod = shipMethod;
         setShipMethodId(shipMethod == null ? null : shipMethod.getShipMethodId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- territory
+    // ----------------------------------------------------------------------------------- territory
 
     /**
-     * Returns the {@code SalesTerritory} which the {@code FK_SalesOrderHeader_SalesTerritory_TerritoryID} foreign key
-     * references.
+     * Returns the {@code SalesTerritory} which the
+     * {@code FK_SalesOrderHeader_SalesTerritory_TerritoryID} foreign key references.
      *
      * @return the {@code SalesTerritory} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesTerritory getTerritory() {
         return territory;
     }
 
     /**
-     * Replaces the {@code SalesTerritory} which the {@code FK_SalesOrderHeader_SalesTerritory_TerritoryID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesTerritory} which the
+     * {@code FK_SalesOrderHeader_SalesTerritory_TerritoryID} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param territory the {@code SalesTerritory} to reference; {@code null} for none.
      */
-    public void setTerritory(@Nullable final SalesTerritory territory) {
+    public void setTerritory(final SalesTerritory territory) {
         this.territory = territory;
         setTerritoryId(territory == null ? null : territory.getTerritoryId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BILL_TO_ADDRESS_ID,
                 referencedColumnName = MappedAddress.COLUMN_NAME_ADDRESS_ID,
@@ -308,7 +343,7 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
     )
     private Address billToAddress;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SHIP_TO_ADDRESS_ID,
                 referencedColumnName = MappedAddress.COLUMN_NAME_ADDRESS_ID,
@@ -318,7 +353,7 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
     )
     private Address shipToAddress;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CREDIT_CARD_ID,
                 referencedColumnName = MappedCreditCard.COLUMN_NAME_CREDIT_CARD_ID,
@@ -328,7 +363,7 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
     )
     private CreditCard creditCard;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CURRENCY_RATE_ID,
                 referencedColumnName = MappedCurrencyRate.COLUMN_NAME_CURRENCY_RATE_ID,
@@ -338,7 +373,7 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
     )
     private CurrencyRate currencyRate;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -348,7 +383,7 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
     )
     private Customer customer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SALES_PERSON_ID,
                 referencedColumnName = MappedSalesPerson.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -358,7 +393,7 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
     )
     private SalesPerson salesPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SHIP_METHOD_ID,
                 referencedColumnName = MappedShipMethod.COLUMN_NAME_SHIP_METHOD_ID,
@@ -368,7 +403,7 @@ public class SalesOrderHeader extends MappedSalesOrderHeader {
     )
     private ShipMethod shipMethod;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_TERRITORY_ID,
                 referencedColumnName = MappedSalesTerritory.COLUMN_NAME_TERRITORY_ID,

@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedPersonCreditCardId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.PersonCreditCardId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.PersonCreditCard;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data.PersonCreditCardRepository;
 
@@ -12,12 +12,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data
  * AdventureWorks loaded; see that file.
  */
 class PersonCreditCardRepository_SpringBootIT
-        extends _Repository_SpringBootIT<PersonCreditCardRepository, PersonCreditCard, MappedPersonCreditCardId> {
+        extends _Repository_SpringBootIT<PersonCreditCardRepository, PersonCreditCard, PersonCreditCardId> {
 
     /**
      * Creates a new instance.
      */
     PersonCreditCardRepository_SpringBootIT() {
-        super(PersonCreditCardRepository.class, PersonCreditCard.class, MappedPersonCreditCardId.class);
+        super(PersonCreditCardRepository.class, PersonCreditCard.class, PersonCreditCardId.class);
     }
 }

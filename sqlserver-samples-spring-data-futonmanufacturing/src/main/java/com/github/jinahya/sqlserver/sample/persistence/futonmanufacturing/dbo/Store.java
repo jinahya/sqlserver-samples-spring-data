@@ -22,18 +22,27 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesChannel;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedStore;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code dbo.Store} table.
  */
 @Entity(name = "DboStore")
-@Table(schema = MappedStore.TABLE_SCHEMA, name = MappedStore.TABLE_NAME)
+@Table(schema = MappedStore.TABLE_SCHEMA,
+       name = MappedStore.TABLE_NAME,
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       columnNames = {
+                               Store.COLUMN_NAME_STORE_CODE
+                       }
+               )
+       }
+)
 public class Store extends MappedStore {
 
     /**
@@ -41,7 +50,7 @@ public class Store extends MappedStore {
      */
     public static final String ATTRIBUTE_NAME_SALES_CHANNEL = "salesChannel";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -50,30 +59,29 @@ public class Store extends MappedStore {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------------- salesChannel
+    // -------------------------------------------------------------------------------- salesChannel
 
     /**
      * Returns the {@code SalesChannel} which the {@code FK_Store_SalesChannel} foreign key references.
      *
      * @return the {@code SalesChannel} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesChannel getSalesChannel() {
         return salesChannel;
     }
 
     /**
-     * Replaces the {@code SalesChannel} which the {@code FK_Store_SalesChannel} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesChannel} which the {@code FK_Store_SalesChannel} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param salesChannel the {@code SalesChannel} to reference; {@code null} for none.
      */
-    public void setSalesChannel(@Nullable final SalesChannel salesChannel) {
+    public void setSalesChannel(final SalesChannel salesChannel) {
         this.salesChannel = salesChannel;
         setSalesChannelId(salesChannel == null ? null : salesChannel.getSalesChannelId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SALES_CHANNEL_ID,
                 referencedColumnName = MappedSalesChannel.COLUMN_NAME_SALES_CHANNEL_ID,

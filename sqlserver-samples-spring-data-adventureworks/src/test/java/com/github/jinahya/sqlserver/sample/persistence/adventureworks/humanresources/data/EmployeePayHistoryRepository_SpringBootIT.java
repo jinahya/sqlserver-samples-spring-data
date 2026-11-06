@@ -2,7 +2,7 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanreso
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanresources.EmployeePayHistory;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployeePayHistoryId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.EmployeePayHistoryId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanresources.data.EmployeePayHistoryRepository;
 
 /**
@@ -12,12 +12,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanresou
  * AdventureWorks loaded; see that file.
  */
 class EmployeePayHistoryRepository_SpringBootIT
-        extends _Repository_SpringBootIT<EmployeePayHistoryRepository, EmployeePayHistory, MappedEmployeePayHistoryId> {
+        extends _Repository_SpringBootIT<EmployeePayHistoryRepository, EmployeePayHistory, EmployeePayHistoryId> {
 
     /**
      * Creates a new instance.
      */
     EmployeePayHistoryRepository_SpringBootIT() {
-        super(EmployeePayHistoryRepository.class, EmployeePayHistory.class, MappedEmployeePayHistoryId.class);
+        super(EmployeePayHistoryRepository.class, EmployeePayHistory.class, EmployeePayHistoryId.class);
     }
 }

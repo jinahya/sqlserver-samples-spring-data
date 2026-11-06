@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedBusinessEntityContactId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.BusinessEntityContactId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.BusinessEntityContact;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.data.BusinessEntityContactRepository;
 
@@ -13,12 +13,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.dat
  */
 class BusinessEntityContactRepository_SpringBootIT
         extends _Repository_SpringBootIT<BusinessEntityContactRepository, BusinessEntityContact,
-                                         MappedBusinessEntityContactId> {
+                                         BusinessEntityContactId> {
 
     /**
      * Creates a new instance.
      */
     BusinessEntityContactRepository_SpringBootIT() {
-        super(BusinessEntityContactRepository.class, BusinessEntityContact.class, MappedBusinessEntityContactId.class);
+        super(BusinessEntityContactRepository.class, BusinessEntityContact.class, BusinessEntityContactId.class);
     }
 }

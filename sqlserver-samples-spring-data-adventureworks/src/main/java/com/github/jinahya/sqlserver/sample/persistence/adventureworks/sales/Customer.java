@@ -25,37 +25,57 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sal
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesTerritory;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedStore;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.Person;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.Customer} table.
  */
 @Entity(name = "SalesCustomer")
-@Table(schema = MappedCustomer.TABLE_SCHEMA, name = MappedCustomer.TABLE_NAME)
-public class Customer extends MappedCustomer {
+@Table(schema = MappedCustomer.TABLE_SCHEMA,
+       name = MappedCustomer.TABLE_NAME,
+       comment = "Current customer information. Also see the Person and Store tables.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_Customer_AccountNumber",
+                       columnNames = {
+                               Customer.COLUMN_NAME_ACCOUNT_NUMBER
+                       }
+               ),
+               @UniqueConstraint(
+                       name = "AK_Customer_rowguid",
+                       columnNames = {
+                               Customer.COLUMN_NAME_ROWGUID
+                       }
+               )
+       }
+)
+public class Customer
+        extends MappedCustomer {
 
     /**
-     * The name of the attribute of the {@code FK_Customer_Person_PersonID} foreign key. The value is {@value}.
+     * The name of the attribute of the {@code FK_Customer_Person_PersonID} foreign key. The value
+     * is {@value}.
      */
     public static final String ATTRIBUTE_NAME_PERSON = "person";
 
     /**
-     * The name of the attribute of the {@code FK_Customer_Store_StoreID} foreign key. The value is {@value}.
+     * The name of the attribute of the {@code FK_Customer_Store_StoreID} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_STORE = "store";
 
     /**
-     * The name of the attribute of the {@code FK_Customer_SalesTerritory_TerritoryID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_Customer_SalesTerritory_TerritoryID} foreign key.
+     * The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_TERRITORY = "territory";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -64,78 +84,76 @@ public class Customer extends MappedCustomer {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------------------- person
+    // -------------------------------------------------------------------------------------- person
 
     /**
-     * Returns the {@code Person} which the {@code FK_Customer_Person_PersonID} foreign key references.
+     * Returns the {@code Person} which the {@code FK_Customer_Person_PersonID} foreign key
+     * references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getPerson() {
         return person;
     }
 
     /**
-     * Replaces the {@code Person} which the {@code FK_Customer_Person_PersonID} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Person} which the {@code FK_Customer_Person_PersonID} foreign key
+     * references, and the value of the column it consists of.
      *
      * @param person the {@code Person} to reference; {@code null} for none.
      */
-    public void setPerson(@Nullable final Person person) {
+    public void setPerson(final Person person) {
         this.person = person;
         setPersonId(person == null ? null : person.getBusinessEntityId());
     }
 
-    // ----------------------------------------------------------------------------------------------------------- store
+    // --------------------------------------------------------------------------------------- store
 
     /**
-     * Returns the {@code Store} which the {@code FK_Customer_Store_StoreID} foreign key references.
+     * Returns the {@code Store} which the {@code FK_Customer_Store_StoreID} foreign key
+     * references.
      *
      * @return the {@code Store} referenced; {@code null} when none is.
      */
-    @Nullable
     public Store getStore() {
         return store;
     }
 
     /**
-     * Replaces the {@code Store} which the {@code FK_Customer_Store_StoreID} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Store} which the {@code FK_Customer_Store_StoreID} foreign key
+     * references, and the value of the column it consists of.
      *
      * @param store the {@code Store} to reference; {@code null} for none.
      */
-    public void setStore(@Nullable final Store store) {
+    public void setStore(final Store store) {
         this.store = store;
         setStoreId(store == null ? null : store.getBusinessEntityId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- territory
+    // ----------------------------------------------------------------------------------- territory
 
     /**
-     * Returns the {@code SalesTerritory} which the {@code FK_Customer_SalesTerritory_TerritoryID} foreign key
-     * references.
+     * Returns the {@code SalesTerritory} which the {@code FK_Customer_SalesTerritory_TerritoryID}
+     * foreign key references.
      *
      * @return the {@code SalesTerritory} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesTerritory getTerritory() {
         return territory;
     }
 
     /**
-     * Replaces the {@code SalesTerritory} which the {@code FK_Customer_SalesTerritory_TerritoryID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesTerritory} which the {@code FK_Customer_SalesTerritory_TerritoryID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param territory the {@code SalesTerritory} to reference; {@code null} for none.
      */
-    public void setTerritory(@Nullable final SalesTerritory territory) {
+    public void setTerritory(final SalesTerritory territory) {
         this.territory = territory;
         setTerritoryId(territory == null ? null : territory.getTerritoryId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -145,7 +163,7 @@ public class Customer extends MappedCustomer {
     )
     private Person person;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STORE_ID,
                 referencedColumnName = MappedStore.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -155,7 +173,7 @@ public class Customer extends MappedCustomer {
     )
     private Store store;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_TERRITORY_ID,
                 referencedColumnName = MappedSalesTerritory.COLUMN_NAME_TERRITORY_ID,

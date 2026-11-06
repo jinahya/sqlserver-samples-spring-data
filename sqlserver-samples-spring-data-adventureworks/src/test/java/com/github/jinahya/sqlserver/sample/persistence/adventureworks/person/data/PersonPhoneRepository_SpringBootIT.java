@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedPersonPhoneId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.PersonPhoneId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.PersonPhone;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.data.PersonPhoneRepository;
 
@@ -12,12 +12,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.dat
  * AdventureWorks loaded; see that file.
  */
 class PersonPhoneRepository_SpringBootIT
-        extends _Repository_SpringBootIT<PersonPhoneRepository, PersonPhone, MappedPersonPhoneId> {
+        extends _Repository_SpringBootIT<PersonPhoneRepository, PersonPhone, PersonPhoneId> {
 
     /**
      * Creates a new instance.
      */
     PersonPhoneRepository_SpringBootIT() {
-        super(PersonPhoneRepository.class, PersonPhone.class, MappedPersonPhoneId.class);
+        super(PersonPhoneRepository.class, PersonPhone.class, PersonPhoneId.class);
     }
 }

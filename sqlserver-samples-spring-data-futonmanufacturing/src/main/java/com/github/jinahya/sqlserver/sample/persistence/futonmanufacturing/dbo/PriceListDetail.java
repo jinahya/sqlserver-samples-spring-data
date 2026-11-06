@@ -23,7 +23,6 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedItem;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedPriceList;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedPriceListDetail;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -47,7 +46,7 @@ public class PriceListDetail extends MappedPriceListDetail {
      */
     public static final String ATTRIBUTE_NAME_ITEM = "item";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,14 +55,13 @@ public class PriceListDetail extends MappedPriceListDetail {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------- priceList
+    // ----------------------------------------------------------------------------------- priceList
 
     /**
      * Returns the {@code PriceList} which the {@code FK_PriceListDetail_PriceList} foreign key references.
      *
      * @return the {@code PriceList} referenced; {@code null} when none is.
      */
-    @Nullable
     public PriceList getPriceList() {
         return priceList;
     }
@@ -74,35 +72,34 @@ public class PriceListDetail extends MappedPriceListDetail {
      *
      * @param priceList the {@code PriceList} to reference; {@code null} for none.
      */
-    public void setPriceList(@Nullable final PriceList priceList) {
+    public void setPriceList(final PriceList priceList) {
         this.priceList = priceList;
         setPriceListId(priceList == null ? null : priceList.getPriceListId());
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_PriceListDetail_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_PriceListDetail_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_PriceListDetail_Item} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRICE_LIST_ID,
                 referencedColumnName = MappedPriceList.COLUMN_NAME_PRICE_LIST_ID,
@@ -112,7 +109,7 @@ public class PriceListDetail extends MappedPriceListDetail {
     )
     private PriceList priceList;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,

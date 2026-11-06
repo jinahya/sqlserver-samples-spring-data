@@ -30,10 +30,12 @@ import jakarta.persistence.Table;
  * A view is read, not written; the entity maps no association.
  */
 @Entity(name = "ProductionProductModelCatalogDescriptionView")
-@Table(schema = MappedProductModelCatalogDescriptionView.TABLE_SCHEMA, name = MappedProductModelCatalogDescriptionView.TABLE_NAME)
-public class ProductModelCatalogDescriptionView extends MappedProductModelCatalogDescriptionView {
+@Table(schema = MappedProductModelCatalogDescriptionView.TABLE_SCHEMA,
+       name = MappedProductModelCatalogDescriptionView.TABLE_NAME)
+public class ProductModelCatalogDescriptionView
+        extends MappedProductModelCatalogDescriptionView {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

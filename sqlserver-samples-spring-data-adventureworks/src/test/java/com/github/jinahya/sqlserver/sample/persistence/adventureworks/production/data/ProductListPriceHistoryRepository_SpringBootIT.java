@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductListPriceHistoryId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.ProductListPriceHistoryId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.ProductListPriceHistory;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.data.ProductListPriceHistoryRepository;
 
@@ -13,13 +13,13 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production
  */
 class ProductListPriceHistoryRepository_SpringBootIT
         extends _Repository_SpringBootIT<ProductListPriceHistoryRepository, ProductListPriceHistory,
-                                         MappedProductListPriceHistoryId> {
+                                         ProductListPriceHistoryId> {
 
     /**
      * Creates a new instance.
      */
     ProductListPriceHistoryRepository_SpringBootIT() {
         super(ProductListPriceHistoryRepository.class, ProductListPriceHistory.class,
-              MappedProductListPriceHistoryId.class);
+              ProductListPriceHistoryId.class);
     }
 }

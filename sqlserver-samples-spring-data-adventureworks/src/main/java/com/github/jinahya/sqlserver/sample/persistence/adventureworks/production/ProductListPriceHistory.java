@@ -22,30 +22,70 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.productio
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProduct;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductListPriceHistory;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductListPriceHistoryId;
-import jakarta.annotation.Nullable;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.ProductListPriceHistoryId;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * An entity which maps the {@code Production.ProductListPriceHistory} table.
  */
 @Entity(name = "ProductionProductListPriceHistory")
-@Table(schema = MappedProductListPriceHistory.TABLE_SCHEMA, name = MappedProductListPriceHistory.TABLE_NAME)
-@IdClass(MappedProductListPriceHistoryId.class)
-public class ProductListPriceHistory extends MappedProductListPriceHistory {
+@Table(schema = MappedProductListPriceHistory.TABLE_SCHEMA,
+       name = MappedProductListPriceHistory.TABLE_NAME,
+       comment = "Changes in the list price of a product over time.",
+       check = {
+               @CheckConstraint(
+                       name = "CK_ProductListPriceHistory_EndDate",
+                       constraint = "([EndDate]>=[StartDate] OR [EndDate] IS NULL)"
+               ),
+               @CheckConstraint(
+                       name = "CK_ProductListPriceHistory_ListPrice",
+                       constraint = "([ListPrice]>(0.00))"
+               )
+       }
+)
+@IdClass(ProductListPriceHistoryId.class)
+public class ProductListPriceHistory
+        extends MappedProductListPriceHistory {
 
     /**
-     * The name of the attribute of the {@code FK_ProductListPriceHistory_Product_ProductID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_ProductListPriceHistory_Product_ProductID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_PRODUCT = "product";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // ---------------------------------------------------------------------- STATIC_FACTORY_METHODS
+
+    /**
+     * Creates a new instance which references {@code product}, with {@code startDate}.
+     *
+     * @param product   the {@code Product} to reference.
+     * @param startDate the value of the {@value #COLUMN_NAME_START_DATE} column.
+     * @return a new instance which references {@code product}, with {@code startDate}.
+     * @throws NullPointerException if any of the arguments is {@code null}.
+     */
+    public static ProductListPriceHistory of(final Product product,
+                                             final LocalDateTime startDate) {
+        Objects.requireNonNull(product, "product is null");
+        Objects.requireNonNull(startDate, "startDate is null");
+        final var instance = new ProductListPriceHistory();
+        instance.setProduct(product);
+        instance.setStartDate(startDate);
+        return instance;
+    }
+
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -54,32 +94,32 @@ public class ProductListPriceHistory extends MappedProductListPriceHistory {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------------- product
+    // ------------------------------------------------------------------------------------- product
 
     /**
-     * Returns the {@code Product} which the {@code FK_ProductListPriceHistory_Product_ProductID} foreign key
-     * references.
+     * Returns the {@code Product} which the {@code FK_ProductListPriceHistory_Product_ProductID}
+     * foreign key references.
      *
      * @return the {@code Product} referenced; {@code null} when none is.
      */
-    @Nullable
     public Product getProduct() {
         return product;
     }
 
     /**
-     * Replaces the {@code Product} which the {@code FK_ProductListPriceHistory_Product_ProductID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Product} which the {@code FK_ProductListPriceHistory_Product_ProductID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param product the {@code Product} to reference; {@code null} for none.
      */
-    public void setProduct(@Nullable final Product product) {
+    private void setProduct(final Product product) {
         this.product = product;
-        setProductId(product == null ? null : product.getProductId());
+        setProductId(Optional.ofNullable(product).map(Product::getProductId).orElse(null));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRODUCT_ID,
                 referencedColumnName = MappedProduct.COLUMN_NAME_PRODUCT_ID,

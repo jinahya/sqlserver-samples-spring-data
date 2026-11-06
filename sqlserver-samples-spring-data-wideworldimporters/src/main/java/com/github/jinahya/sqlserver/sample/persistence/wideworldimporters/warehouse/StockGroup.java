@@ -23,18 +23,29 @@ package com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.wareh
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.application.Person;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.warehouse.MappedStockGroup;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Warehouse.StockGroups} table.
  */
 @Entity(name = "WarehouseStockGroup")
-@Table(schema = MappedStockGroup.TABLE_SCHEMA, name = MappedStockGroup.TABLE_NAME)
+@Table(schema = MappedStockGroup.TABLE_SCHEMA,
+       name = MappedStockGroup.TABLE_NAME,
+       comment = "Groups for categorizing stock items (ie: novelties, toys, edible novelties, etc.)",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "UQ_Warehouse_StockGroups_StockGroupName",
+                       columnNames = {
+                               StockGroup.COLUMN_NAME_STOCK_GROUP_NAME
+                       }
+               )
+       }
+)
 public class StockGroup extends MappedStockGroup {
 
     /**
@@ -43,7 +54,7 @@ public class StockGroup extends MappedStockGroup {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -52,31 +63,29 @@ public class StockGroup extends MappedStockGroup {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Warehouse_StockGroups_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
-     * Replaces the {@code Person} which the {@code FK_Warehouse_StockGroups_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Person} which the {@code FK_Warehouse_StockGroups_Application_People} foreign key references,
+     * and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

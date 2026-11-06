@@ -21,7 +21,6 @@ package com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.appli
  */
 
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -32,7 +31,8 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Application.People} table.
  */
 @Entity(name = "ApplicationPerson")
-@Table(schema = MappedPerson.TABLE_SCHEMA, name = MappedPerson.TABLE_NAME)
+@Table(schema = MappedPerson.TABLE_SCHEMA, name = MappedPerson.TABLE_NAME,
+       comment = "People known to the application (staff, customer contacts, supplier contacts)")
 public class Person extends MappedPerson {
 
     /**
@@ -41,7 +41,7 @@ public class Person extends MappedPerson {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -50,31 +50,29 @@ public class Person extends MappedPerson {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Application_People_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Application_People_Application_People} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

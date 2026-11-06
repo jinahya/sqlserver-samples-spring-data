@@ -28,7 +28,6 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.warehouse.MappedStockItem;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.PackageType;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.StockItem;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -39,12 +38,14 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Purchasing.PurchaseOrderLines} table.
  */
 @Entity(name = "PurchasingPurchaseOrderLine")
-@Table(schema = MappedPurchaseOrderLine.TABLE_SCHEMA, name = MappedPurchaseOrderLine.TABLE_NAME)
+@Table(schema = MappedPurchaseOrderLine.TABLE_SCHEMA, name = MappedPurchaseOrderLine.TABLE_NAME,
+       comment = "Detail lines from supplier purchase orders")
 public class PurchaseOrderLine extends MappedPurchaseOrderLine {
 
     /**
-     * The name of the attribute of the {@code
-     * FK_Purchasing_PurchaseOrderLines_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key. The value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_Purchasing_PurchaseOrderLines_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_PURCHASE_ORDER = "purchaseOrder";
 
@@ -66,7 +67,7 @@ public class PurchaseOrderLine extends MappedPurchaseOrderLine {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -75,82 +76,79 @@ public class PurchaseOrderLine extends MappedPurchaseOrderLine {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------- purchaseOrder
+    // ------------------------------------------------------------------------------- purchaseOrder
 
     /**
-     * Returns the {@code PurchaseOrder} which the {@code
-     * FK_Purchasing_PurchaseOrderLines_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references.
+     * Returns the {@code PurchaseOrder} which the
+     * {@code FK_Purchasing_PurchaseOrderLines_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references.
      *
      * @return the {@code PurchaseOrder} referenced; {@code null} when none is.
      */
-    @Nullable
     public PurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
     /**
-     * Replaces the {@code PurchaseOrder} which the {@code
-     * FK_Purchasing_PurchaseOrderLines_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code PurchaseOrder} which the
+     * {@code FK_Purchasing_PurchaseOrderLines_PurchaseOrderID_Purchasing_PurchaseOrders} foreign key references, and
+     * the value of the column it consists of.
      *
      * @param purchaseOrder the {@code PurchaseOrder} to reference; {@code null} for none.
      */
-    public void setPurchaseOrder(@Nullable final PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(final PurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
         setPurchaseOrderId(purchaseOrder == null ? null : purchaseOrder.getPurchaseOrderId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- stockItem
+    // ----------------------------------------------------------------------------------- stockItem
 
     /**
-     * Returns the {@code StockItem} which the {@code
-     * FK_Purchasing_PurchaseOrderLines_StockItemID_Warehouse_StockItems} foreign key references.
+     * Returns the {@code StockItem} which the {@code FK_Purchasing_PurchaseOrderLines_StockItemID_Warehouse_StockItems}
+     * foreign key references.
      *
      * @return the {@code StockItem} referenced; {@code null} when none is.
      */
-    @Nullable
     public StockItem getStockItem() {
         return stockItem;
     }
 
     /**
-     * Replaces the {@code StockItem} which the {@code
-     * FK_Purchasing_PurchaseOrderLines_StockItemID_Warehouse_StockItems} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code StockItem} which the
+     * {@code FK_Purchasing_PurchaseOrderLines_StockItemID_Warehouse_StockItems} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param stockItem the {@code StockItem} to reference; {@code null} for none.
      */
-    public void setStockItem(@Nullable final StockItem stockItem) {
+    public void setStockItem(final StockItem stockItem) {
         this.stockItem = stockItem;
         setStockItemId(stockItem == null ? null : stockItem.getStockItemId());
     }
 
-    // ----------------------------------------------------------------------------------------------------- packageType
+    // --------------------------------------------------------------------------------- packageType
 
     /**
-     * Returns the {@code PackageType} which the {@code
-     * FK_Purchasing_PurchaseOrderLines_PackageTypeID_Warehouse_PackageTypes} foreign key references.
+     * Returns the {@code PackageType} which the
+     * {@code FK_Purchasing_PurchaseOrderLines_PackageTypeID_Warehouse_PackageTypes} foreign key references.
      *
      * @return the {@code PackageType} referenced; {@code null} when none is.
      */
-    @Nullable
     public PackageType getPackageType() {
         return packageType;
     }
 
     /**
-     * Replaces the {@code PackageType} which the {@code
-     * FK_Purchasing_PurchaseOrderLines_PackageTypeID_Warehouse_PackageTypes} foreign key references, and the
+     * Replaces the {@code PackageType} which the
+     * {@code FK_Purchasing_PurchaseOrderLines_PackageTypeID_Warehouse_PackageTypes} foreign key references, and the
      * value of the column it consists of.
      *
      * @param packageType the {@code PackageType} to reference; {@code null} for none.
      */
-    public void setPackageType(@Nullable final PackageType packageType) {
+    public void setPackageType(final PackageType packageType) {
         this.packageType = packageType;
         setPackageTypeId(packageType == null ? null : packageType.getPackageTypeId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Purchasing_PurchaseOrderLines_Application_People} foreign key
@@ -158,24 +156,22 @@ public class PurchaseOrderLine extends MappedPurchaseOrderLine {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Purchasing_PurchaseOrderLines_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PURCHASE_ORDER_ID,
                 referencedColumnName = MappedPurchaseOrder.COLUMN_NAME_PURCHASE_ORDER_ID,
@@ -185,7 +181,7 @@ public class PurchaseOrderLine extends MappedPurchaseOrderLine {
     )
     private PurchaseOrder purchaseOrder;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STOCK_ITEM_ID,
                 referencedColumnName = MappedStockItem.COLUMN_NAME_STOCK_ITEM_ID,
@@ -195,7 +191,7 @@ public class PurchaseOrderLine extends MappedPurchaseOrderLine {
     )
     private StockItem stockItem;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PACKAGE_TYPE_ID,
                 referencedColumnName = MappedPackageType.COLUMN_NAME_PACKAGE_TYPE_ID,
@@ -205,7 +201,7 @@ public class PurchaseOrderLine extends MappedPurchaseOrderLine {
     )
     private PackageType packageType;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

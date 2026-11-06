@@ -23,27 +23,53 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedStateProvince;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesTaxRate;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.StateProvince;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.SalesTaxRate} table.
  */
 @Entity(name = "SalesSalesTaxRate")
-@Table(schema = MappedSalesTaxRate.TABLE_SCHEMA, name = MappedSalesTaxRate.TABLE_NAME)
-public class SalesTaxRate extends MappedSalesTaxRate {
+@Table(schema = MappedSalesTaxRate.TABLE_SCHEMA,
+       name = MappedSalesTaxRate.TABLE_NAME,
+       comment = "Tax rate lookup table.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_SalesTaxRate_rowguid",
+                       columnNames = {
+                               SalesTaxRate.COLUMN_NAME_ROWGUID
+                       }
+               ),
+               @UniqueConstraint(
+                       name = "AK_SalesTaxRate_StateProvinceID_TaxType",
+                       columnNames = {
+                               SalesTaxRate.COLUMN_NAME_STATE_PROVINCE_ID,
+                               SalesTaxRate.COLUMN_NAME_TAX_TYPE
+                       }
+               )
+       },
+       check = {
+               @CheckConstraint(
+                       name = "CK_SalesTaxRate_TaxType",
+                       constraint = "([TaxType]>=(1) AND [TaxType]<=(3))"
+               )
+       }
+)
+public class SalesTaxRate
+        extends MappedSalesTaxRate {
 
     /**
-     * The name of the attribute of the {@code FK_SalesTaxRate_StateProvince_StateProvinceID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesTaxRate_StateProvince_StateProvinceID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_STATE_PROVINCE = "stateProvince";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -52,32 +78,31 @@ public class SalesTaxRate extends MappedSalesTaxRate {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------- stateProvince
+    // ------------------------------------------------------------------------------- stateProvince
 
     /**
-     * Returns the {@code StateProvince} which the {@code FK_SalesTaxRate_StateProvince_StateProvinceID} foreign key
-     * references.
+     * Returns the {@code StateProvince} which the
+     * {@code FK_SalesTaxRate_StateProvince_StateProvinceID} foreign key references.
      *
      * @return the {@code StateProvince} referenced; {@code null} when none is.
      */
-    @Nullable
     public StateProvince getStateProvince() {
         return stateProvince;
     }
 
     /**
-     * Replaces the {@code StateProvince} which the {@code FK_SalesTaxRate_StateProvince_StateProvinceID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code StateProvince} which the
+     * {@code FK_SalesTaxRate_StateProvince_StateProvinceID} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param stateProvince the {@code StateProvince} to reference; {@code null} for none.
      */
-    public void setStateProvince(@Nullable final StateProvince stateProvince) {
+    public void setStateProvince(final StateProvince stateProvince) {
         this.stateProvince = stateProvince;
         setStateProvinceId(stateProvince == null ? null : stateProvince.getStateProvinceId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STATE_PROVINCE_ID,
                 referencedColumnName = MappedStateProvince.COLUMN_NAME_STATE_PROVINCE_ID,

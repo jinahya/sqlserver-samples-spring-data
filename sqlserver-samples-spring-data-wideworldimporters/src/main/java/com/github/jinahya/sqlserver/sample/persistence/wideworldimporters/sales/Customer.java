@@ -29,18 +29,29 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedBuyingGroup;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedCustomer;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedCustomerCategory;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.Customers} table.
  */
 @Entity(name = "SalesCustomer")
-@Table(schema = MappedCustomer.TABLE_SCHEMA, name = MappedCustomer.TABLE_NAME)
+@Table(schema = MappedCustomer.TABLE_SCHEMA,
+       name = MappedCustomer.TABLE_NAME,
+       comment = "Main entity tables for customers (organizations or individuals)",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "UQ_Sales_Customers_CustomerName",
+                       columnNames = {
+                               Customer.COLUMN_NAME_CUSTOMER_NAME
+                       }
+               )
+       }
+)
 public class Customer extends MappedCustomer {
 
     /**
@@ -97,7 +108,7 @@ public class Customer extends MappedCustomer {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -106,7 +117,7 @@ public class Customer extends MappedCustomer {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------- billToCustomer
+    // ------------------------------------------------------------------------------ billToCustomer
 
     /**
      * Returns the {@code Customer} which the {@code FK_Sales_Customers_BillToCustomerID_Sales_Customers} foreign key
@@ -114,99 +125,92 @@ public class Customer extends MappedCustomer {
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getBillToCustomer() {
         return billToCustomer;
     }
 
     /**
      * Replaces the {@code Customer} which the {@code FK_Sales_Customers_BillToCustomerID_Sales_Customers} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param billToCustomer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setBillToCustomer(@Nullable final Customer billToCustomer) {
+    public void setBillToCustomer(final Customer billToCustomer) {
         this.billToCustomer = billToCustomer;
         setBillToCustomerId(billToCustomer == null ? null : billToCustomer.getCustomerId());
     }
 
-    // ------------------------------------------------------------------------------------------------ customerCategory
+    // ---------------------------------------------------------------------------- customerCategory
 
     /**
-     * Returns the {@code CustomerCategory} which the {@code
-     * FK_Sales_Customers_CustomerCategoryID_Sales_CustomerCategories} foreign key references.
+     * Returns the {@code CustomerCategory} which the
+     * {@code FK_Sales_Customers_CustomerCategoryID_Sales_CustomerCategories} foreign key references.
      *
      * @return the {@code CustomerCategory} referenced; {@code null} when none is.
      */
-    @Nullable
     public CustomerCategory getCustomerCategory() {
         return customerCategory;
     }
 
     /**
-     * Replaces the {@code CustomerCategory} which the {@code
-     * FK_Sales_Customers_CustomerCategoryID_Sales_CustomerCategories} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code CustomerCategory} which the
+     * {@code FK_Sales_Customers_CustomerCategoryID_Sales_CustomerCategories} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param customerCategory the {@code CustomerCategory} to reference; {@code null} for none.
      */
-    public void setCustomerCategory(@Nullable final CustomerCategory customerCategory) {
+    public void setCustomerCategory(final CustomerCategory customerCategory) {
         this.customerCategory = customerCategory;
         setCustomerCategoryId(customerCategory == null ? null : customerCategory.getCustomerCategoryId());
     }
 
-    // ----------------------------------------------------------------------------------------------------- buyingGroup
+    // --------------------------------------------------------------------------------- buyingGroup
 
     /**
-     * Returns the {@code BuyingGroup} which the {@code FK_Sales_Customers_BuyingGroupID_Sales_BuyingGroups} foreign
-     * key references.
+     * Returns the {@code BuyingGroup} which the {@code FK_Sales_Customers_BuyingGroupID_Sales_BuyingGroups} foreign key
+     * references.
      *
      * @return the {@code BuyingGroup} referenced; {@code null} when none is.
      */
-    @Nullable
     public BuyingGroup getBuyingGroup() {
         return buyingGroup;
     }
 
     /**
      * Replaces the {@code BuyingGroup} which the {@code FK_Sales_Customers_BuyingGroupID_Sales_BuyingGroups} foreign
-     * key references, and the
-     * value of the column it consists of.
+     * key references, and the value of the column it consists of.
      *
      * @param buyingGroup the {@code BuyingGroup} to reference; {@code null} for none.
      */
-    public void setBuyingGroup(@Nullable final BuyingGroup buyingGroup) {
+    public void setBuyingGroup(final BuyingGroup buyingGroup) {
         this.buyingGroup = buyingGroup;
         setBuyingGroupId(buyingGroup == null ? null : buyingGroup.getBuyingGroupId());
     }
 
-    // -------------------------------------------------------------------------------------------- primaryContactPerson
+    // ------------------------------------------------------------------------ primaryContactPerson
 
     /**
-     * Returns the {@code Person} which the {@code FK_Sales_Customers_PrimaryContactPersonID_Application_People}
-     * foreign key references.
+     * Returns the {@code Person} which the {@code FK_Sales_Customers_PrimaryContactPersonID_Application_People} foreign
+     * key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getPrimaryContactPerson() {
         return primaryContactPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Customers_PrimaryContactPersonID_Application_People}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param primaryContactPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setPrimaryContactPerson(@Nullable final Person primaryContactPerson) {
+    public void setPrimaryContactPerson(final Person primaryContactPerson) {
         this.primaryContactPerson = primaryContactPerson;
         setPrimaryContactPersonId(primaryContactPerson == null ? null : primaryContactPerson.getPersonId());
     }
 
-    // ------------------------------------------------------------------------------------------ alternateContactPerson
+    // ---------------------------------------------------------------------- alternateContactPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Customers_AlternateContactPersonID_Application_People}
@@ -214,49 +218,46 @@ public class Customer extends MappedCustomer {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getAlternateContactPerson() {
         return alternateContactPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Customers_AlternateContactPersonID_Application_People}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param alternateContactPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setAlternateContactPerson(@Nullable final Person alternateContactPerson) {
+    public void setAlternateContactPerson(final Person alternateContactPerson) {
         this.alternateContactPerson = alternateContactPerson;
         setAlternateContactPersonId(alternateContactPerson == null ? null : alternateContactPerson.getPersonId());
     }
 
-    // -------------------------------------------------------------------------------------------------- deliveryMethod
+    // ------------------------------------------------------------------------------ deliveryMethod
 
     /**
-     * Returns the {@code DeliveryMethod} which the {@code
-     * FK_Sales_Customers_DeliveryMethodID_Application_DeliveryMethods} foreign key references.
+     * Returns the {@code DeliveryMethod} which the
+     * {@code FK_Sales_Customers_DeliveryMethodID_Application_DeliveryMethods} foreign key references.
      *
      * @return the {@code DeliveryMethod} referenced; {@code null} when none is.
      */
-    @Nullable
     public DeliveryMethod getDeliveryMethod() {
         return deliveryMethod;
     }
 
     /**
-     * Replaces the {@code DeliveryMethod} which the {@code
-     * FK_Sales_Customers_DeliveryMethodID_Application_DeliveryMethods} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code DeliveryMethod} which the
+     * {@code FK_Sales_Customers_DeliveryMethodID_Application_DeliveryMethods} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param deliveryMethod the {@code DeliveryMethod} to reference; {@code null} for none.
      */
-    public void setDeliveryMethod(@Nullable final DeliveryMethod deliveryMethod) {
+    public void setDeliveryMethod(final DeliveryMethod deliveryMethod) {
         this.deliveryMethod = deliveryMethod;
         setDeliveryMethodId(deliveryMethod == null ? null : deliveryMethod.getDeliveryMethodId());
     }
 
-    // ---------------------------------------------------------------------------------------------------- deliveryCity
+    // -------------------------------------------------------------------------------- deliveryCity
 
     /**
      * Returns the {@code City} which the {@code FK_Sales_Customers_DeliveryCityID_Application_Cities} foreign key
@@ -264,24 +265,22 @@ public class Customer extends MappedCustomer {
      *
      * @return the {@code City} referenced; {@code null} when none is.
      */
-    @Nullable
     public City getDeliveryCity() {
         return deliveryCity;
     }
 
     /**
      * Replaces the {@code City} which the {@code FK_Sales_Customers_DeliveryCityID_Application_Cities} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param deliveryCity the {@code City} to reference; {@code null} for none.
      */
-    public void setDeliveryCity(@Nullable final City deliveryCity) {
+    public void setDeliveryCity(final City deliveryCity) {
         this.deliveryCity = deliveryCity;
         setDeliveryCityId(deliveryCity == null ? null : deliveryCity.getCityId());
     }
 
-    // ------------------------------------------------------------------------------------------------------ postalCity
+    // ---------------------------------------------------------------------------------- postalCity
 
     /**
      * Returns the {@code City} which the {@code FK_Sales_Customers_PostalCityID_Application_Cities} foreign key
@@ -289,48 +288,44 @@ public class Customer extends MappedCustomer {
      *
      * @return the {@code City} referenced; {@code null} when none is.
      */
-    @Nullable
     public City getPostalCity() {
         return postalCity;
     }
 
     /**
      * Replaces the {@code City} which the {@code FK_Sales_Customers_PostalCityID_Application_Cities} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param postalCity the {@code City} to reference; {@code null} for none.
      */
-    public void setPostalCity(@Nullable final City postalCity) {
+    public void setPostalCity(final City postalCity) {
         this.postalCity = postalCity;
         setPostalCityId(postalCity == null ? null : postalCity.getCityId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Customers_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Customers_Application_People} foreign key references, and
-     * the
-     * value of the column it consists of.
+     * the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BILL_TO_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -340,7 +335,7 @@ public class Customer extends MappedCustomer {
     )
     private Customer billToCustomer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_CATEGORY_ID,
                 referencedColumnName = MappedCustomerCategory.COLUMN_NAME_CUSTOMER_CATEGORY_ID,
@@ -350,7 +345,7 @@ public class Customer extends MappedCustomer {
     )
     private CustomerCategory customerCategory;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUYING_GROUP_ID,
                 referencedColumnName = MappedBuyingGroup.COLUMN_NAME_BUYING_GROUP_ID,
@@ -360,7 +355,7 @@ public class Customer extends MappedCustomer {
     )
     private BuyingGroup buyingGroup;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PRIMARY_CONTACT_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -370,7 +365,7 @@ public class Customer extends MappedCustomer {
     )
     private Person primaryContactPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ALTERNATE_CONTACT_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -380,7 +375,7 @@ public class Customer extends MappedCustomer {
     )
     private Person alternateContactPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_DELIVERY_METHOD_ID,
                 referencedColumnName = MappedDeliveryMethod.COLUMN_NAME_DELIVERY_METHOD_ID,
@@ -390,7 +385,7 @@ public class Customer extends MappedCustomer {
     )
     private DeliveryMethod deliveryMethod;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_DELIVERY_CITY_ID,
                 referencedColumnName = MappedCity.COLUMN_NAME_CITY_ID,
@@ -400,7 +395,7 @@ public class Customer extends MappedCustomer {
     )
     private City deliveryCity;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_POSTAL_CITY_ID,
                 referencedColumnName = MappedCity.COLUMN_NAME_CITY_ID,
@@ -410,7 +405,7 @@ public class Customer extends MappedCustomer {
     )
     private City postalCity;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

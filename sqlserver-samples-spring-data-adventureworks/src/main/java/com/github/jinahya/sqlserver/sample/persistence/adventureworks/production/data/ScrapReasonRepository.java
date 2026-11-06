@@ -7,12 +7,12 @@ import org.springframework.stereotype.Repository;
 /**
  * A repository for {@link ScrapReason}, the {@code Production.ScrapReason} table of AdventureWorks.
  * <p>
- * The id is {@link Short}.
+ * The id is {@link Long}.
  *
  * @see ScrapReason
  */
 @Repository
 public interface ScrapReasonRepository
-        extends _Repository<ScrapReason, Short> {
+        extends _Repository<ScrapReason, Long> {
 
 }

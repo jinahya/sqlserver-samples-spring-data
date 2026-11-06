@@ -24,33 +24,68 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanresou
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployee;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesPerson;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedSalesTerritory;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.SalesPerson} table.
  */
 @Entity(name = "SalesSalesPerson")
-@Table(schema = MappedSalesPerson.TABLE_SCHEMA, name = MappedSalesPerson.TABLE_NAME)
-public class SalesPerson extends MappedSalesPerson {
+@Table(schema = MappedSalesPerson.TABLE_SCHEMA,
+       name = MappedSalesPerson.TABLE_NAME,
+       comment = "Sales representative current information.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_SalesPerson_rowguid",
+                       columnNames = {
+                               SalesPerson.COLUMN_NAME_ROWGUID
+                       }
+               )
+       },
+       check = {
+               @CheckConstraint(
+                       name = "CK_SalesPerson_Bonus",
+                       constraint = "([Bonus]>=(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesPerson_CommissionPct",
+                       constraint = "([CommissionPct]>=(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesPerson_SalesLastYear",
+                       constraint = "([SalesLastYear]>=(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesPerson_SalesQuota",
+                       constraint = "([SalesQuota]>(0.00))"
+               ),
+               @CheckConstraint(
+                       name = "CK_SalesPerson_SalesYTD",
+                       constraint = "([SalesYTD]>=(0.00))"
+               )
+       }
+)
+public class SalesPerson
+        extends MappedSalesPerson {
 
     /**
-     * The name of the attribute of the {@code FK_SalesPerson_Employee_BusinessEntityID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesPerson_Employee_BusinessEntityID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_BUSINESS_ENTITY = "businessEntity";
 
     /**
-     * The name of the attribute of the {@code FK_SalesPerson_SalesTerritory_TerritoryID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_SalesPerson_SalesTerritory_TerritoryID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_TERRITORY = "territory";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -59,56 +94,54 @@ public class SalesPerson extends MappedSalesPerson {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------- businessEntity
+    // ------------------------------------------------------------------------------ businessEntity
 
     /**
-     * Returns the {@code Employee} which the {@code FK_SalesPerson_Employee_BusinessEntityID} foreign key references.
+     * Returns the {@code Employee} which the {@code FK_SalesPerson_Employee_BusinessEntityID}
+     * foreign key references.
      *
      * @return the {@code Employee} referenced; {@code null} when none is.
      */
-    @Nullable
     public Employee getBusinessEntity() {
         return businessEntity;
     }
 
     /**
-     * Replaces the {@code Employee} which the {@code FK_SalesPerson_Employee_BusinessEntityID} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * Replaces the {@code Employee} which the {@code FK_SalesPerson_Employee_BusinessEntityID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param businessEntity the {@code Employee} to reference; {@code null} for none.
      */
-    public void setBusinessEntity(@Nullable final Employee businessEntity) {
+    public void setBusinessEntity(final Employee businessEntity) {
         this.businessEntity = businessEntity;
         setBusinessEntityId(businessEntity == null ? null : businessEntity.getBusinessEntityId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- territory
+    // ----------------------------------------------------------------------------------- territory
 
     /**
-     * Returns the {@code SalesTerritory} which the {@code FK_SalesPerson_SalesTerritory_TerritoryID} foreign key
-     * references.
+     * Returns the {@code SalesTerritory} which the
+     * {@code FK_SalesPerson_SalesTerritory_TerritoryID} foreign key references.
      *
      * @return the {@code SalesTerritory} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesTerritory getTerritory() {
         return territory;
     }
 
     /**
-     * Replaces the {@code SalesTerritory} which the {@code FK_SalesPerson_SalesTerritory_TerritoryID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesTerritory} which the
+     * {@code FK_SalesPerson_SalesTerritory_TerritoryID} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param territory the {@code SalesTerritory} to reference; {@code null} for none.
      */
-    public void setTerritory(@Nullable final SalesTerritory territory) {
+    public void setTerritory(final SalesTerritory territory) {
         this.territory = territory;
         setTerritoryId(territory == null ? null : territory.getTerritoryId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUSINESS_ENTITY_ID,
                 referencedColumnName = MappedEmployee.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -118,7 +151,7 @@ public class SalesPerson extends MappedSalesPerson {
     )
     private Employee businessEntity;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_TERRITORY_ID,
                 referencedColumnName = MappedSalesTerritory.COLUMN_NAME_TERRITORY_ID,

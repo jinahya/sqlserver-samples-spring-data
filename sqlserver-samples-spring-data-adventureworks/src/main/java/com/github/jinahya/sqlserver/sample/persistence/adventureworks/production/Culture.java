@@ -23,15 +23,29 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.productio
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedCulture;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Production.Culture} table.
  */
 @Entity(name = "ProductionCulture")
-@Table(schema = MappedCulture.TABLE_SCHEMA, name = MappedCulture.TABLE_NAME)
-public class Culture extends MappedCulture {
+@Table(schema = MappedCulture.TABLE_SCHEMA,
+       name = MappedCulture.TABLE_NAME,
+       comment = "Lookup table containing the languages in which some AdventureWorks data is "
+                 + "stored.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_Culture_Name",
+                       columnNames = {
+                               Culture.COLUMN_NAME_NAME
+                       }
+               )
+       }
+)
+public class Culture
+        extends MappedCulture {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

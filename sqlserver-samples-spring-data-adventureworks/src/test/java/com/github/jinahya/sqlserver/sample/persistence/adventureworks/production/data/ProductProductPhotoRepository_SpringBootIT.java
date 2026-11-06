@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.MappedProductProductPhotoId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.production.ProductProductPhotoId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.ProductProductPhoto;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production.data.ProductProductPhotoRepository;
 
@@ -13,12 +13,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production
  */
 class ProductProductPhotoRepository_SpringBootIT
         extends _Repository_SpringBootIT<ProductProductPhotoRepository, ProductProductPhoto,
-                                         MappedProductProductPhotoId> {
+                                         ProductProductPhotoId> {
 
     /**
      * Creates a new instance.
      */
     ProductProductPhotoRepository_SpringBootIT() {
-        super(ProductProductPhotoRepository.class, ProductProductPhoto.class, MappedProductProductPhotoId.class);
+        super(ProductProductPhotoRepository.class, ProductProductPhoto.class, ProductProductPhotoId.class);
     }
 }

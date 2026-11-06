@@ -28,7 +28,6 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.warehouse.MappedStockItem;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.PackageType;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.warehouse.StockItem;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -39,12 +38,13 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Sales.InvoiceLines} table.
  */
 @Entity(name = "SalesInvoiceLine")
-@Table(schema = MappedInvoiceLine.TABLE_SCHEMA, name = MappedInvoiceLine.TABLE_NAME)
+@Table(schema = MappedInvoiceLine.TABLE_SCHEMA, name = MappedInvoiceLine.TABLE_NAME,
+       comment = "Detail lines from customer invoices")
 public class InvoiceLine extends MappedInvoiceLine {
 
     /**
-     * The name of the attribute of the {@code FK_Sales_InvoiceLines_InvoiceID_Sales_Invoices} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_Sales_InvoiceLines_InvoiceID_Sales_Invoices} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_INVOICE = "invoice";
 
@@ -66,7 +66,7 @@ public class InvoiceLine extends MappedInvoiceLine {
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -75,7 +75,7 @@ public class InvoiceLine extends MappedInvoiceLine {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------------- invoice
+    // ------------------------------------------------------------------------------------- invoice
 
     /**
      * Returns the {@code Invoice} which the {@code FK_Sales_InvoiceLines_InvoiceID_Sales_Invoices} foreign key
@@ -83,24 +83,22 @@ public class InvoiceLine extends MappedInvoiceLine {
      *
      * @return the {@code Invoice} referenced; {@code null} when none is.
      */
-    @Nullable
     public Invoice getInvoice() {
         return invoice;
     }
 
     /**
      * Replaces the {@code Invoice} which the {@code FK_Sales_InvoiceLines_InvoiceID_Sales_Invoices} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param invoice the {@code Invoice} to reference; {@code null} for none.
      */
-    public void setInvoice(@Nullable final Invoice invoice) {
+    public void setInvoice(final Invoice invoice) {
         this.invoice = invoice;
         setInvoiceId(invoice == null ? null : invoice.getInvoiceId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- stockItem
+    // ----------------------------------------------------------------------------------- stockItem
 
     /**
      * Returns the {@code StockItem} which the {@code FK_Sales_InvoiceLines_StockItemID_Warehouse_StockItems} foreign
@@ -108,24 +106,22 @@ public class InvoiceLine extends MappedInvoiceLine {
      *
      * @return the {@code StockItem} referenced; {@code null} when none is.
      */
-    @Nullable
     public StockItem getStockItem() {
         return stockItem;
     }
 
     /**
      * Replaces the {@code StockItem} which the {@code FK_Sales_InvoiceLines_StockItemID_Warehouse_StockItems} foreign
-     * key references, and the
-     * value of the column it consists of.
+     * key references, and the value of the column it consists of.
      *
      * @param stockItem the {@code StockItem} to reference; {@code null} for none.
      */
-    public void setStockItem(@Nullable final StockItem stockItem) {
+    public void setStockItem(final StockItem stockItem) {
         this.stockItem = stockItem;
         setStockItemId(stockItem == null ? null : stockItem.getStockItemId());
     }
 
-    // ----------------------------------------------------------------------------------------------------- packageType
+    // --------------------------------------------------------------------------------- packageType
 
     /**
      * Returns the {@code PackageType} which the {@code FK_Sales_InvoiceLines_PackageTypeID_Warehouse_PackageTypes}
@@ -133,48 +129,44 @@ public class InvoiceLine extends MappedInvoiceLine {
      *
      * @return the {@code PackageType} referenced; {@code null} when none is.
      */
-    @Nullable
     public PackageType getPackageType() {
         return packageType;
     }
 
     /**
      * Replaces the {@code PackageType} which the {@code FK_Sales_InvoiceLines_PackageTypeID_Warehouse_PackageTypes}
-     * foreign key references, and the
-     * value of the column it consists of.
+     * foreign key references, and the value of the column it consists of.
      *
      * @param packageType the {@code PackageType} to reference; {@code null} for none.
      */
-    public void setPackageType(@Nullable final PackageType packageType) {
+    public void setPackageType(final PackageType packageType) {
         this.packageType = packageType;
         setPackageTypeId(packageType == null ? null : packageType.getPackageTypeId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_InvoiceLines_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_InvoiceLines_Application_People} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_INVOICE_ID,
                 referencedColumnName = MappedInvoice.COLUMN_NAME_INVOICE_ID,
@@ -184,7 +176,7 @@ public class InvoiceLine extends MappedInvoiceLine {
     )
     private Invoice invoice;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_STOCK_ITEM_ID,
                 referencedColumnName = MappedStockItem.COLUMN_NAME_STOCK_ITEM_ID,
@@ -194,7 +186,7 @@ public class InvoiceLine extends MappedInvoiceLine {
     )
     private StockItem stockItem;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PACKAGE_TYPE_ID,
                 referencedColumnName = MappedPackageType.COLUMN_NAME_PACKAGE_TYPE_ID,
@@ -204,7 +196,7 @@ public class InvoiceLine extends MappedInvoiceLine {
     )
     private PackageType packageType;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

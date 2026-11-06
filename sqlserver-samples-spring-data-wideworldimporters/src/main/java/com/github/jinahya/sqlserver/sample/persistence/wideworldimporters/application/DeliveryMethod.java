@@ -22,27 +22,39 @@ package com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.appli
 
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedDeliveryMethod;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Application.DeliveryMethods} table.
  */
 @Entity(name = "ApplicationDeliveryMethod")
-@Table(schema = MappedDeliveryMethod.TABLE_SCHEMA, name = MappedDeliveryMethod.TABLE_NAME)
+@Table(schema = MappedDeliveryMethod.TABLE_SCHEMA,
+       name = MappedDeliveryMethod.TABLE_NAME,
+       comment = "Ways that stock items can be delivered (ie: truck/van, post, pickup, courier, "
+                 + "etc.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "UQ_Application_DeliveryMethods_DeliveryMethodName",
+                       columnNames = {
+                               DeliveryMethod.COLUMN_NAME_DELIVERY_METHOD_NAME
+                       }
+               )
+       }
+)
 public class DeliveryMethod extends MappedDeliveryMethod {
 
     /**
-     * The name of the attribute of the {@code FK_Application_DeliveryMethods_Application_People} foreign key. The
-     * value is {@value}.
+     * The name of the attribute of the {@code FK_Application_DeliveryMethods_Application_People} foreign key. The value
+     * is {@value}.
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -51,7 +63,7 @@ public class DeliveryMethod extends MappedDeliveryMethod {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Application_DeliveryMethods_Application_People} foreign key
@@ -59,24 +71,22 @@ public class DeliveryMethod extends MappedDeliveryMethod {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Application_DeliveryMethods_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

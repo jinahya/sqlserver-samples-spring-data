@@ -23,15 +23,29 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.person;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedBusinessEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Person.BusinessEntity} table.
  */
 @Entity(name = "PersonBusinessEntity")
-@Table(schema = MappedBusinessEntity.TABLE_SCHEMA, name = MappedBusinessEntity.TABLE_NAME)
-public class BusinessEntity extends MappedBusinessEntity {
+@Table(schema = MappedBusinessEntity.TABLE_SCHEMA,
+       name = MappedBusinessEntity.TABLE_NAME,
+       comment = "Source of the ID that connects vendors, customers, and employees with address "
+                 + "and contact information.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_BusinessEntity_rowguid",
+                       columnNames = {
+                               BusinessEntity.COLUMN_NAME_ROWGUID
+                       }
+               )
+       }
+)
+public class BusinessEntity
+        extends MappedBusinessEntity {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

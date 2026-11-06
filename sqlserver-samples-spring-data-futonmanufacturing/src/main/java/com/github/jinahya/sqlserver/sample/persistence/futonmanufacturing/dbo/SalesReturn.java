@@ -24,18 +24,27 @@ import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedReturnReason;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesOrder;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesReturn;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code dbo.SalesReturn} table.
  */
 @Entity(name = "DboSalesReturn")
-@Table(schema = MappedSalesReturn.TABLE_SCHEMA, name = MappedSalesReturn.TABLE_NAME)
+@Table(schema = MappedSalesReturn.TABLE_SCHEMA,
+       name = MappedSalesReturn.TABLE_NAME,
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       columnNames = {
+                               SalesReturn.COLUMN_NAME_RETURN_NUMBER
+                       }
+               )
+       }
+)
 public class SalesReturn extends MappedSalesReturn {
 
     /**
@@ -53,7 +62,7 @@ public class SalesReturn extends MappedSalesReturn {
      */
     public static final String ATTRIBUTE_NAME_RETURN_REASON = "returnReason";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -62,76 +71,73 @@ public class SalesReturn extends MappedSalesReturn {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------ salesOrder
+    // ---------------------------------------------------------------------------------- salesOrder
 
     /**
      * Returns the {@code SalesOrder} which the {@code FK_Return_SalesOrder} foreign key references.
      *
      * @return the {@code SalesOrder} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesOrder getSalesOrder() {
         return salesOrder;
     }
 
     /**
-     * Replaces the {@code SalesOrder} which the {@code FK_Return_SalesOrder} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesOrder} which the {@code FK_Return_SalesOrder} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param salesOrder the {@code SalesOrder} to reference; {@code null} for none.
      */
-    public void setSalesOrder(@Nullable final SalesOrder salesOrder) {
+    public void setSalesOrder(final SalesOrder salesOrder) {
         this.salesOrder = salesOrder;
         setSalesOrderId(salesOrder == null ? null : salesOrder.getSalesOrderId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- customer
+    // ------------------------------------------------------------------------------------ customer
 
     /**
      * Returns the {@code Customer} which the {@code FK_Return_Customer} foreign key references.
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getCustomer() {
         return customer;
     }
 
     /**
-     * Replaces the {@code Customer} which the {@code FK_Return_Customer} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Customer} which the {@code FK_Return_Customer} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param customer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setCustomer(@Nullable final Customer customer) {
+    public void setCustomer(final Customer customer) {
         this.customer = customer;
         setCustomerId(customer == null ? null : customer.getCustomerId());
     }
 
-    // ---------------------------------------------------------------------------------------------------- returnReason
+    // -------------------------------------------------------------------------------- returnReason
 
     /**
      * Returns the {@code ReturnReason} which the {@code FK_Return_Reason} foreign key references.
      *
      * @return the {@code ReturnReason} referenced; {@code null} when none is.
      */
-    @Nullable
     public ReturnReason getReturnReason() {
         return returnReason;
     }
 
     /**
-     * Replaces the {@code ReturnReason} which the {@code FK_Return_Reason} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code ReturnReason} which the {@code FK_Return_Reason} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param returnReason the {@code ReturnReason} to reference; {@code null} for none.
      */
-    public void setReturnReason(@Nullable final ReturnReason returnReason) {
+    public void setReturnReason(final ReturnReason returnReason) {
         this.returnReason = returnReason;
         setReturnReasonId(returnReason == null ? null : returnReason.getReturnReasonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SALES_ORDER_ID,
                 referencedColumnName = MappedSalesOrder.COLUMN_NAME_SALES_ORDER_ID,
@@ -141,7 +147,7 @@ public class SalesReturn extends MappedSalesReturn {
     )
     private SalesOrder salesOrder;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -151,7 +157,7 @@ public class SalesReturn extends MappedSalesReturn {
     )
     private Customer customer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_RETURN_REASON_ID,
                 referencedColumnName = MappedReturnReason.COLUMN_NAME_RETURN_REASON_ID,

@@ -23,15 +23,28 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedCurrency;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.Currency} table.
  */
 @Entity(name = "SalesCurrency")
-@Table(schema = MappedCurrency.TABLE_SCHEMA, name = MappedCurrency.TABLE_NAME)
-public class Currency extends MappedCurrency {
+@Table(schema = MappedCurrency.TABLE_SCHEMA,
+       name = MappedCurrency.TABLE_NAME,
+       comment = "Lookup table containing standard ISO currencies.",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "AK_Currency_Name",
+                       columnNames = {
+                               Currency.COLUMN_NAME_NAME
+                       }
+               )
+       }
+)
+public class Currency
+        extends MappedCurrency {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

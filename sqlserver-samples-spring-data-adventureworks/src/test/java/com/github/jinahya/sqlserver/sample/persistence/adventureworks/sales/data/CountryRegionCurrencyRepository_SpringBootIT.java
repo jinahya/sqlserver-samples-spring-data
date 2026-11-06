@@ -1,7 +1,7 @@
 package com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data;
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.data._Repository_SpringBootIT;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedCountryRegionCurrencyId;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.CountryRegionCurrencyId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.CountryRegionCurrency;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data.CountryRegionCurrencyRepository;
 
@@ -13,12 +13,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales.data
  */
 class CountryRegionCurrencyRepository_SpringBootIT
         extends _Repository_SpringBootIT<CountryRegionCurrencyRepository, CountryRegionCurrency,
-                                         MappedCountryRegionCurrencyId> {
+                                         CountryRegionCurrencyId> {
 
     /**
      * Creates a new instance.
      */
     CountryRegionCurrencyRepository_SpringBootIT() {
-        super(CountryRegionCurrencyRepository.class, CountryRegionCurrency.class, MappedCountryRegionCurrencyId.class);
+        super(CountryRegionCurrencyRepository.class, CountryRegionCurrency.class, CountryRegionCurrencyId.class);
     }
 }

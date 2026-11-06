@@ -23,7 +23,6 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedItem;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesQuote;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSalesQuoteDetail;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -47,7 +46,7 @@ public class SalesQuoteDetail extends MappedSalesQuoteDetail {
      */
     public static final String ATTRIBUTE_NAME_ITEM = "item";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,53 +55,51 @@ public class SalesQuoteDetail extends MappedSalesQuoteDetail {
         super();
     }
 
-    // ----------------------------------------------------------------------------------------------------------- quote
+    // --------------------------------------------------------------------------------------- quote
 
     /**
      * Returns the {@code SalesQuote} which the {@code FK_QuoteDetail_Quote} foreign key references.
      *
      * @return the {@code SalesQuote} referenced; {@code null} when none is.
      */
-    @Nullable
     public SalesQuote getQuote() {
         return quote;
     }
 
     /**
-     * Replaces the {@code SalesQuote} which the {@code FK_QuoteDetail_Quote} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code SalesQuote} which the {@code FK_QuoteDetail_Quote} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param quote the {@code SalesQuote} to reference; {@code null} for none.
      */
-    public void setQuote(@Nullable final SalesQuote quote) {
+    public void setQuote(final SalesQuote quote) {
         this.quote = quote;
         setQuoteId(quote == null ? null : quote.getQuoteId());
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_QuoteDetail_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_QuoteDetail_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_QuoteDetail_Item} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_QUOTE_ID,
                 referencedColumnName = MappedSalesQuote.COLUMN_NAME_QUOTE_ID,
@@ -112,7 +109,7 @@ public class SalesQuoteDetail extends MappedSalesQuoteDetail {
     )
     private SalesQuote quote;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,

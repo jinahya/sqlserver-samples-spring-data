@@ -11,12 +11,12 @@ import com.github.jinahya.sqlserver.sample.persistence.adventureworks.production
  * AdventureWorks loaded; see that file.
  */
 class ScrapReasonRepository_SpringBootIT
-        extends _Repository_SpringBootIT<ScrapReasonRepository, ScrapReason, Short> {
+        extends _Repository_SpringBootIT<ScrapReasonRepository, ScrapReason, Long> {
 
     /**
      * Creates a new instance.
      */
     ScrapReasonRepository_SpringBootIT() {
-        super(ScrapReasonRepository.class, ScrapReason.class, Short.class);
+        super(ScrapReasonRepository.class, ScrapReason.class, Long.class);
     }
 }

@@ -27,7 +27,7 @@ import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedCustomer;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedInvoice;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedOrder;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -38,7 +38,17 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Sales.Invoices} table.
  */
 @Entity(name = "SalesInvoice")
-@Table(schema = MappedInvoice.TABLE_SCHEMA, name = MappedInvoice.TABLE_NAME)
+@Table(schema = MappedInvoice.TABLE_SCHEMA,
+       name = MappedInvoice.TABLE_NAME,
+       comment = "Details of customer invoices",
+       check = {
+               @CheckConstraint(
+                       name = "CK_Sales_Invoices_ReturnedDeliveryData_Must_Be_Valid_JSON",
+                       constraint = "([ReturnedDeliveryData] IS NULL OR "
+                               + "isjson([ReturnedDeliveryData])<>(0))"
+               )
+       }
+)
 public class Invoice extends MappedInvoice {
 
     /**
@@ -54,7 +64,8 @@ public class Invoice extends MappedInvoice {
     public static final String ATTRIBUTE_NAME_PACKED_BY_PERSON = "packedByPerson";
 
     /**
-     * The name of the attribute of the {@code FK_Sales_Invoices_Application_People} foreign key. The value is {@value}.
+     * The name of the attribute of the {@code FK_Sales_Invoices_Application_People} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
@@ -94,7 +105,7 @@ public class Invoice extends MappedInvoice {
      */
     public static final String ATTRIBUTE_NAME_ACCOUNTS_PERSON = "accountsPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -103,32 +114,30 @@ public class Invoice extends MappedInvoice {
         super();
     }
 
-    // ----------------------------------------------------------------------------------------------- salespersonPerson
+    // --------------------------------------------------------------------------- salespersonPerson
 
     /**
-     * Returns the {@code Person} which the {@code FK_Sales_Invoices_SalespersonPersonID_Application_People} foreign
-     * key references.
+     * Returns the {@code Person} which the {@code FK_Sales_Invoices_SalespersonPersonID_Application_People} foreign key
+     * references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getSalespersonPerson() {
         return salespersonPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Invoices_SalespersonPersonID_Application_People} foreign
-     * key references, and the
-     * value of the column it consists of.
+     * key references, and the value of the column it consists of.
      *
      * @param salespersonPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setSalespersonPerson(@Nullable final Person salespersonPerson) {
+    public void setSalespersonPerson(final Person salespersonPerson) {
         this.salespersonPerson = salespersonPerson;
         setSalespersonPersonId(salespersonPerson == null ? null : salespersonPerson.getPersonId());
     }
 
-    // -------------------------------------------------------------------------------------------------- packedByPerson
+    // ------------------------------------------------------------------------------ packedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Invoices_PackedByPersonID_Application_People} foreign key
@@ -136,48 +145,44 @@ public class Invoice extends MappedInvoice {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getPackedByPerson() {
         return packedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Invoices_PackedByPersonID_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param packedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setPackedByPerson(@Nullable final Person packedByPerson) {
+    public void setPackedByPerson(final Person packedByPerson) {
         this.packedByPerson = packedByPerson;
         setPackedByPersonId(packedByPerson == null ? null : packedByPerson.getPersonId());
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Invoices_Application_People} foreign key references.
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Invoices_Application_People} foreign key references, and
-     * the
-     * value of the column it consists of.
+     * the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -------------------------------------------------------------------------------------------------------- customer
+    // ------------------------------------------------------------------------------------ customer
 
     /**
      * Returns the {@code Customer} which the {@code FK_Sales_Invoices_CustomerID_Sales_Customers} foreign key
@@ -185,24 +190,22 @@ public class Invoice extends MappedInvoice {
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getCustomer() {
         return customer;
     }
 
     /**
      * Replaces the {@code Customer} which the {@code FK_Sales_Invoices_CustomerID_Sales_Customers} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param customer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setCustomer(@Nullable final Customer customer) {
+    public void setCustomer(final Customer customer) {
         this.customer = customer;
         setCustomerId(customer == null ? null : customer.getCustomerId());
     }
 
-    // -------------------------------------------------------------------------------------------------- billToCustomer
+    // ------------------------------------------------------------------------------ billToCustomer
 
     /**
      * Returns the {@code Customer} which the {@code FK_Sales_Invoices_BillToCustomerID_Sales_Customers} foreign key
@@ -210,73 +213,68 @@ public class Invoice extends MappedInvoice {
      *
      * @return the {@code Customer} referenced; {@code null} when none is.
      */
-    @Nullable
     public Customer getBillToCustomer() {
         return billToCustomer;
     }
 
     /**
      * Replaces the {@code Customer} which the {@code FK_Sales_Invoices_BillToCustomerID_Sales_Customers} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param billToCustomer the {@code Customer} to reference; {@code null} for none.
      */
-    public void setBillToCustomer(@Nullable final Customer billToCustomer) {
+    public void setBillToCustomer(final Customer billToCustomer) {
         this.billToCustomer = billToCustomer;
         setBillToCustomerId(billToCustomer == null ? null : billToCustomer.getCustomerId());
     }
 
-    // ----------------------------------------------------------------------------------------------------------- order
+    // --------------------------------------------------------------------------------------- order
 
     /**
      * Returns the {@code Order} which the {@code FK_Sales_Invoices_OrderID_Sales_Orders} foreign key references.
      *
      * @return the {@code Order} referenced; {@code null} when none is.
      */
-    @Nullable
     public Order getOrder() {
         return order;
     }
 
     /**
      * Replaces the {@code Order} which the {@code FK_Sales_Invoices_OrderID_Sales_Orders} foreign key references, and
-     * the
-     * value of the column it consists of.
+     * the value of the column it consists of.
      *
      * @param order the {@code Order} to reference; {@code null} for none.
      */
-    public void setOrder(@Nullable final Order order) {
+    public void setOrder(final Order order) {
         this.order = order;
         setOrderId(order == null ? null : order.getOrderId());
     }
 
-    // -------------------------------------------------------------------------------------------------- deliveryMethod
+    // ------------------------------------------------------------------------------ deliveryMethod
 
     /**
-     * Returns the {@code DeliveryMethod} which the {@code
-     * FK_Sales_Invoices_DeliveryMethodID_Application_DeliveryMethods} foreign key references.
+     * Returns the {@code DeliveryMethod} which the
+     * {@code FK_Sales_Invoices_DeliveryMethodID_Application_DeliveryMethods} foreign key references.
      *
      * @return the {@code DeliveryMethod} referenced; {@code null} when none is.
      */
-    @Nullable
     public DeliveryMethod getDeliveryMethod() {
         return deliveryMethod;
     }
 
     /**
-     * Replaces the {@code DeliveryMethod} which the {@code
-     * FK_Sales_Invoices_DeliveryMethodID_Application_DeliveryMethods} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code DeliveryMethod} which the
+     * {@code FK_Sales_Invoices_DeliveryMethodID_Application_DeliveryMethods} foreign key references, and the value of
+     * the column it consists of.
      *
      * @param deliveryMethod the {@code DeliveryMethod} to reference; {@code null} for none.
      */
-    public void setDeliveryMethod(@Nullable final DeliveryMethod deliveryMethod) {
+    public void setDeliveryMethod(final DeliveryMethod deliveryMethod) {
         this.deliveryMethod = deliveryMethod;
         setDeliveryMethodId(deliveryMethod == null ? null : deliveryMethod.getDeliveryMethodId());
     }
 
-    // --------------------------------------------------------------------------------------------------- contactPerson
+    // ------------------------------------------------------------------------------- contactPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Invoices_ContactPersonID_Application_People} foreign key
@@ -284,24 +282,22 @@ public class Invoice extends MappedInvoice {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getContactPerson() {
         return contactPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Invoices_ContactPersonID_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param contactPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setContactPerson(@Nullable final Person contactPerson) {
+    public void setContactPerson(final Person contactPerson) {
         this.contactPerson = contactPerson;
         setContactPersonId(contactPerson == null ? null : contactPerson.getPersonId());
     }
 
-    // -------------------------------------------------------------------------------------------------- accountsPerson
+    // ------------------------------------------------------------------------------ accountsPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_Invoices_AccountsPersonID_Application_People} foreign key
@@ -309,24 +305,22 @@ public class Invoice extends MappedInvoice {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getAccountsPerson() {
         return accountsPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_Invoices_AccountsPersonID_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param accountsPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setAccountsPerson(@Nullable final Person accountsPerson) {
+    public void setAccountsPerson(final Person accountsPerson) {
         this.accountsPerson = accountsPerson;
         setAccountsPersonId(accountsPerson == null ? null : accountsPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SALESPERSON_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -336,7 +330,7 @@ public class Invoice extends MappedInvoice {
     )
     private Person salespersonPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PACKED_BY_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -346,7 +340,7 @@ public class Invoice extends MappedInvoice {
     )
     private Person packedByPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -356,7 +350,7 @@ public class Invoice extends MappedInvoice {
     )
     private Person lastEditedByPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -366,7 +360,7 @@ public class Invoice extends MappedInvoice {
     )
     private Customer customer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BILL_TO_CUSTOMER_ID,
                 referencedColumnName = MappedCustomer.COLUMN_NAME_CUSTOMER_ID,
@@ -376,7 +370,7 @@ public class Invoice extends MappedInvoice {
     )
     private Customer billToCustomer;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ORDER_ID,
                 referencedColumnName = MappedOrder.COLUMN_NAME_ORDER_ID,
@@ -386,7 +380,7 @@ public class Invoice extends MappedInvoice {
     )
     private Order order;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_DELIVERY_METHOD_ID,
                 referencedColumnName = MappedDeliveryMethod.COLUMN_NAME_DELIVERY_METHOD_ID,
@@ -396,7 +390,7 @@ public class Invoice extends MappedInvoice {
     )
     private DeliveryMethod deliveryMethod;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CONTACT_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,
@@ -406,7 +400,7 @@ public class Invoice extends MappedInvoice {
     )
     private Person contactPerson;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ACCOUNTS_PERSON_ID,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

@@ -28,10 +28,12 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code Sales.SalesReason} table.
  */
 @Entity(name = "SalesSalesReason")
-@Table(schema = MappedSalesReason.TABLE_SCHEMA, name = MappedSalesReason.TABLE_NAME)
-public class SalesReason extends MappedSalesReason {
+@Table(schema = MappedSalesReason.TABLE_SCHEMA, name = MappedSalesReason.TABLE_NAME,
+       comment = "Lookup table of customer purchase reasons.")
+public class SalesReason
+        extends MappedSalesReason {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

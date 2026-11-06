@@ -20,32 +20,53 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanreso
  * #L%
  */
 
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.EmployeePayHistoryId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployee;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployeePayHistory;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployeePayHistoryId;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.Optional;
 
 /**
  * An entity which maps the {@code HumanResources.EmployeePayHistory} table.
+ * <p>
+ * The application adds a row through
+ * {@link Employee#NAMED_STORED_PROCEDURE_QUERY_USP_UPDATE_EMPLOYEE_HIRE_INFO}.
  */
 @Entity(name = "HumanResourcesEmployeePayHistory")
-@Table(schema = MappedEmployeePayHistory.TABLE_SCHEMA, name = MappedEmployeePayHistory.TABLE_NAME)
-@IdClass(MappedEmployeePayHistoryId.class)
-public class EmployeePayHistory extends MappedEmployeePayHistory {
+@Table(schema = MappedEmployeePayHistory.TABLE_SCHEMA,
+       name = MappedEmployeePayHistory.TABLE_NAME,
+       comment = "Employee pay history.",
+       check = {
+               @CheckConstraint(
+                       name = "CK_EmployeePayHistory_PayFrequency",
+                       constraint = "([PayFrequency]=(2) OR [PayFrequency]=(1))"
+               ),
+               @CheckConstraint(
+                       name = "CK_EmployeePayHistory_Rate",
+                       constraint = "([Rate]>=(6.50) AND [Rate]<=(200.00))"
+               )
+       }
+)
+@IdClass(EmployeePayHistoryId.class)
+public class EmployeePayHistory
+        extends MappedEmployeePayHistory {
 
     /**
-     * The name of the attribute of the {@code FK_EmployeePayHistory_Employee_BusinessEntityID} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_EmployeePayHistory_Employee_BusinessEntityID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_BUSINESS_ENTITY = "businessEntity";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -54,32 +75,34 @@ public class EmployeePayHistory extends MappedEmployeePayHistory {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------- businessEntity
+    // ------------------------------------------------------------------------------ businessEntity
 
     /**
-     * Returns the {@code Employee} which the {@code FK_EmployeePayHistory_Employee_BusinessEntityID} foreign key
-     * references.
+     * Returns the {@code Employee} which the
+     * {@code FK_EmployeePayHistory_Employee_BusinessEntityID} foreign key references.
      *
      * @return the {@code Employee} referenced; {@code null} when none is.
      */
-    @Nullable
     public Employee getBusinessEntity() {
         return businessEntity;
     }
 
     /**
-     * Replaces the {@code Employee} which the {@code FK_EmployeePayHistory_Employee_BusinessEntityID} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Employee} which the
+     * {@code FK_EmployeePayHistory_Employee_BusinessEntityID} foreign key references, and the value
+     * of the column it consists of.
      *
      * @param businessEntity the {@code Employee} to reference; {@code null} for none.
      */
-    public void setBusinessEntity(@Nullable final Employee businessEntity) {
+    protected void setBusinessEntity(final Employee businessEntity) {
         this.businessEntity = businessEntity;
-        setBusinessEntityId(businessEntity == null ? null : businessEntity.getBusinessEntityId());
+        setBusinessEntityId(Optional.ofNullable(businessEntity).map(Employee::getBusinessEntityId)
+                                    .orElse(null));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUSINESS_ENTITY_ID,
                 referencedColumnName = MappedEmployee.COLUMN_NAME_BUSINESS_ENTITY_ID,

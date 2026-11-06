@@ -23,27 +23,38 @@ package com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.sales
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.application.Person;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.application.MappedPerson;
 import com.github.jinahya.sqlserver.sample.persistence.wideworldimporters.mapped.sales.MappedCustomerCategory;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code Sales.CustomerCategories} table.
  */
 @Entity(name = "SalesCustomerCategory")
-@Table(schema = MappedCustomerCategory.TABLE_SCHEMA, name = MappedCustomerCategory.TABLE_NAME)
+@Table(schema = MappedCustomerCategory.TABLE_SCHEMA,
+       name = MappedCustomerCategory.TABLE_NAME,
+       comment = "Categories for customers (ie restaurants, cafes, supermarkets, etc.)",
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       name = "UQ_Sales_CustomerCategories_CustomerCategoryName",
+                       columnNames = {
+                               CustomerCategory.COLUMN_NAME_CUSTOMER_CATEGORY_NAME
+                       }
+               )
+       }
+)
 public class CustomerCategory extends MappedCustomerCategory {
 
     /**
-     * The name of the attribute of the {@code FK_Sales_CustomerCategories_Application_People} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_Sales_CustomerCategories_Application_People} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_LAST_EDITED_BY_PERSON = "lastEditedByPerson";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -52,7 +63,7 @@ public class CustomerCategory extends MappedCustomerCategory {
         super();
     }
 
-    // ---------------------------------------------------------------------------------------------- lastEditedByPerson
+    // -------------------------------------------------------------------------- lastEditedByPerson
 
     /**
      * Returns the {@code Person} which the {@code FK_Sales_CustomerCategories_Application_People} foreign key
@@ -60,24 +71,22 @@ public class CustomerCategory extends MappedCustomerCategory {
      *
      * @return the {@code Person} referenced; {@code null} when none is.
      */
-    @Nullable
     public Person getLastEditedByPerson() {
         return lastEditedByPerson;
     }
 
     /**
      * Replaces the {@code Person} which the {@code FK_Sales_CustomerCategories_Application_People} foreign key
-     * references, and the
-     * value of the column it consists of.
+     * references, and the value of the column it consists of.
      *
      * @param lastEditedByPerson the {@code Person} to reference; {@code null} for none.
      */
-    public void setLastEditedByPerson(@Nullable final Person lastEditedByPerson) {
+    public void setLastEditedByPerson(final Person lastEditedByPerson) {
         this.lastEditedByPerson = lastEditedByPerson;
         setLastEditedBy(lastEditedByPerson == null ? null : lastEditedByPerson.getPersonId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_LAST_EDITED_BY,
                 referencedColumnName = MappedPerson.COLUMN_NAME_PERSON_ID,

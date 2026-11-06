@@ -23,18 +23,27 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedPurchaseOrder;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedSupplier;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedWarehouse;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 /**
  * An entity which maps the {@code dbo.PurchaseOrder} table.
  */
 @Entity(name = "DboPurchaseOrder")
-@Table(schema = MappedPurchaseOrder.TABLE_SCHEMA, name = MappedPurchaseOrder.TABLE_NAME)
+@Table(schema = MappedPurchaseOrder.TABLE_SCHEMA,
+       name = MappedPurchaseOrder.TABLE_NAME,
+       uniqueConstraints = {
+               @UniqueConstraint(
+                       columnNames = {
+                               PurchaseOrder.COLUMN_NAME_PO_NUMBER
+                       }
+               )
+       }
+)
 public class PurchaseOrder extends MappedPurchaseOrder {
 
     /**
@@ -47,7 +56,7 @@ public class PurchaseOrder extends MappedPurchaseOrder {
      */
     public static final String ATTRIBUTE_NAME_WAREHOUSE = "warehouse";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,53 +65,51 @@ public class PurchaseOrder extends MappedPurchaseOrder {
         super();
     }
 
-    // -------------------------------------------------------------------------------------------------------- supplier
+    // ------------------------------------------------------------------------------------ supplier
 
     /**
      * Returns the {@code Supplier} which the {@code FK_PO_Supplier} foreign key references.
      *
      * @return the {@code Supplier} referenced; {@code null} when none is.
      */
-    @Nullable
     public Supplier getSupplier() {
         return supplier;
     }
 
     /**
-     * Replaces the {@code Supplier} which the {@code FK_PO_Supplier} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Supplier} which the {@code FK_PO_Supplier} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param supplier the {@code Supplier} to reference; {@code null} for none.
      */
-    public void setSupplier(@Nullable final Supplier supplier) {
+    public void setSupplier(final Supplier supplier) {
         this.supplier = supplier;
         setSupplierId(supplier == null ? null : supplier.getSupplierId());
     }
 
-    // ------------------------------------------------------------------------------------------------------- warehouse
+    // ----------------------------------------------------------------------------------- warehouse
 
     /**
      * Returns the {@code Warehouse} which the {@code FK_PO_Warehouse} foreign key references.
      *
      * @return the {@code Warehouse} referenced; {@code null} when none is.
      */
-    @Nullable
     public Warehouse getWarehouse() {
         return warehouse;
     }
 
     /**
-     * Replaces the {@code Warehouse} which the {@code FK_PO_Warehouse} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Warehouse} which the {@code FK_PO_Warehouse} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param warehouse the {@code Warehouse} to reference; {@code null} for none.
      */
-    public void setWarehouse(@Nullable final Warehouse warehouse) {
+    public void setWarehouse(final Warehouse warehouse) {
         this.warehouse = warehouse;
         setWarehouseId(warehouse == null ? null : warehouse.getWarehouseId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SUPPLIER_ID,
                 referencedColumnName = MappedSupplier.COLUMN_NAME_SUPPLIER_ID,
@@ -112,7 +119,7 @@ public class PurchaseOrder extends MappedPurchaseOrder {
     )
     private Supplier supplier;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_WAREHOUSE_ID,
                 referencedColumnName = MappedWarehouse.COLUMN_NAME_WAREHOUSE_ID,

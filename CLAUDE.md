@@ -27,7 +27,8 @@ In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldim
 - Repositories: **the entity's package plus `.data`**, `...<db>.<schema>.data` (`...adventureworks.person.data`), each
   with its own `package-info.java` (`@NullMarked`, JSpecify). One per entity, named `<Entity>Repository`, extending
   `_Repository<E, ID>` (`JpaRepository` + `JpaSpecificationExecutor`, `@NoRepositoryBean`). An entity with an
-  `@IdClass` takes upstream's `Mapped*Id` class as its `ID`. The repositories are **empty** for now.
+  `@IdClass` or an `@EmbeddedId` takes upstream's `<Entity>Id` class as its `ID`. The repositories are **empty** for
+  now.
 - Shared: `_Repository` is in `...<db>.data` (public, so every `<schema>.data` package can extend it), the one
   package of main sources that is neither an entity package nor a repository package.
 - **Where two schemas have an entity of the same simple name**, both repositories keep the plain name
@@ -44,16 +45,25 @@ In each module (`<db>` is `adventureworks`, `futonmanufacturing` or `wideworldim
 ## Upstream, and the entities
 
 The upstream checkout `../../sqlserver-samples-persistence` publishes, at `0.0.1-SNAPSHOT`, one jar per database of
-**mapped superclasses, their `Mapped*Id` id classes, their generated static metamodel, their attribute converters,
+**mapped superclasses, their `<Entity>Id` id classes, their generated static metamodel, their attribute converters,
 `__Constants` and `__Utils`**, all under `...<db>.mapped` (and its schema subpackages). They are **SNAPSHOTs that exist
-only locally**: after a change upstream, run `./mvnw -DskipTests install` there before building here. There is no
-`test-companion` jar and no H2 upstream; its tests are ITs only, on SQL Server.
+only locally**: after a change upstream, run `./mvnw -DskipTests install` there before building here. This project
+uses no `test-companion` jar of upstream's. Upstream tests each mapping on H2 (`<db>-test`) and on SQL Server
+(`<db>-it`); this project has no H2.
 
 - **Upstream keeps its entities in `src/test`**, on purpose: which associations an entity maps, lazy or not, with what
   cascade, is an application's decision, and this project is that application. The entities here are copies of
   upstream's test `@Entity` classes, **verbatim**, at the same path and package
   (`<upstream module>/src/test/java/.../<db>/<schema>/<Entity>.java`). **Keep them in step with upstream**: diff
   against upstream's before touching a mapping, and change the mapping there first.
+- **The copies are upstream HEAD's test entities, verbatim, with nothing of this project's own.** A member upstream
+  does not have (a named query, a method) is added to a copy only where this project uses it, by a repository method or
+  a test, and is named here; there is none so far. Before taking a difference from upstream for an addition of this
+  project's, find the upstream commit the copy matches: an old copy carries what upstream had then (the `@Nullable`s
+  and javadoc of upstream's c6fbfd6, which the copies carried until they
+  were brought to upstream's current ones). What a
+  copy needs of upstream's `src/test` besides the entities is copied too, into `src/main/java` in the same package;
+  the id classes (`<Entity>Id`) are not, since upstream's main jar has them.
 - **Upstream's keyless classes are not copied**: the views with no key, WideWorldImporters' `*_Archive` history tables,
   AdventureWorks' `ProductDocument`. They are plain classes, not entities, and have no repository. Neither are
   upstream's test utilities (`___Persistence_TestUtils`, `_Entity_PersistenceIT`, `*_PersistenceIT`).
@@ -92,9 +102,10 @@ Each is commented in `pom.xml`:
 - **Spring Boot 4.x (`4.1.2`), not 3.x.** Boot 4 manages `jakarta.persistence-api` 3.2, which the upstream mappings are
   written against. Do not downgrade to dodge a problem.
 - **`spring-boot-dependencies` is imported, not inherited** (the root pom is parent-less). Every Spring / Boot /
-  Hibernate version comes from the BOM; declare those with no `<version>`. Direct `dependencyManagement` entries beat
-  the BOM, which is how the pins work: Lombok, Logback, AssertJ, and `mssql-jdbc` at upstream's version, so the tests
-  hit the same driver upstream's do. JUnit and Mockito come from their own BOMs, imported before Boot's.
+  Hibernate version comes from the BOM; declare those with no `<version>`. A direct `dependencyManagement` entry is only
+  for what Boot does not manage. Lombok, the JDBC driver, H2, JUnit, Mockito, AssertJ and Logback are at Boot's
+  versions: nothing is imported before Boot's BOM, and no entry pins over it, since a -data project is aligned by its
+  platform and the platform is what moves (PROJECTS_VERSIONS.asciidoc of jakarta-persistence-applied-book).
 - **`hibernate-processor` is on the processor path** of both compile executions, from the BOM's version, to generate
   the entities' static metamodel (`Store_`, ..., extending upstream's `MappedStore_`).
 - **Boot 4 starters come in pairs.** Tests declare `spring-boot-starter-data-jpa-test` and `-validation-test`, not
@@ -123,7 +134,7 @@ members**, because the tests extending them are in the `<schema>.data` packages:
   `@Transactional`. `selectRandom()` / `selectRandomPresent()` pick a row, the latter aborting the test by an
   assumption when the table is empty. It declares no tests yet.
 - `<Repository>_SpringBootIT`, one per repository, in its repository's `<schema>.data` package, **empty** for now.
-  There is no `_DataJpaTest` and no H2: as upstream, the tests are ITs only.
+  There is no `_DataJpaTest` and no H2: the tests are ITs only.
 
 A repository test never calls `entityManager()` itself; everything a test does with the database goes through the
 repository under test. An integration test **reads the sample data; it never fabricates rows**. A test that must write

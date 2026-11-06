@@ -21,39 +21,69 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.sales;
  */
 
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.person.MappedCountryRegion;
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.CountryRegionCurrencyId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedCountryRegionCurrency;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedCountryRegionCurrencyId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.sales.MappedCurrency;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.person.CountryRegion;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.Objects;
 
 /**
  * An entity which maps the {@code Sales.CountryRegionCurrency} table.
+ * <p>
+ * Each attribute of the embedded {@link CountryRegionCurrencyId} is derived, with
+ * {@link MapsId @MapsId}, from the association which references the same column.
  */
 @Entity(name = "SalesCountryRegionCurrency")
-@Table(schema = MappedCountryRegionCurrency.TABLE_SCHEMA, name = MappedCountryRegionCurrency.TABLE_NAME)
-@IdClass(MappedCountryRegionCurrencyId.class)
-public class CountryRegionCurrency extends MappedCountryRegionCurrency {
+@Table(schema = MappedCountryRegionCurrency.TABLE_SCHEMA,
+       name = MappedCountryRegionCurrency.TABLE_NAME,
+       comment = "Cross-reference table mapping ISO currency codes to a country or region.")
+public class CountryRegionCurrency
+        extends MappedCountryRegionCurrency {
 
     /**
-     * The name of the attribute of the {@code FK_CountryRegionCurrency_CountryRegion_CountryRegionCode} foreign key.
-     * The value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_CountryRegionCurrency_CountryRegion_CountryRegionCode} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_COUNTRY_REGION = "countryRegion";
 
     /**
-     * The name of the attribute of the {@code FK_CountryRegionCurrency_Currency_CurrencyCode} foreign key. The value
-     * is {@value}.
+     * The name of the attribute of the {@code FK_CountryRegionCurrency_Currency_CurrencyCode}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_CURRENCY = "currency";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // ---------------------------------------------------------------------- STATIC_FACTORY_METHODS
+
+    /**
+     * Creates a new instance which references {@code countryRegion} and {@code currency}.
+     *
+     * @param countryRegion the {@code CountryRegion} to reference.
+     * @param currency      the {@code Currency} to reference.
+     * @return a new instance which references {@code countryRegion} and {@code currency}.
+     * @throws NullPointerException if any of the arguments is {@code null}.
+     */
+    public static CountryRegionCurrency of(final CountryRegion countryRegion,
+                                           final Currency currency) {
+        Objects.requireNonNull(countryRegion, "countryRegion is null");
+        Objects.requireNonNull(currency, "currency is null");
+        final var instance = new CountryRegionCurrency();
+        instance.countryRegion = countryRegion;
+        instance.currency = currency;
+        return instance;
+    }
+
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -62,72 +92,70 @@ public class CountryRegionCurrency extends MappedCountryRegionCurrency {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------- countryRegion
+    // ----------------------------------------------------------------------------------------- id_
 
     /**
-     * Returns the {@code CountryRegion} which the {@code FK_CountryRegionCurrency_CountryRegion_CountryRegionCode}
-     * foreign key references.
+     * Returns current value of {@value #ATTRIBUTE_NAME_ID_} attribute.
+     *
+     * @return current value of {@value #ATTRIBUTE_NAME_ID_} attribute.
+     */
+    @Override
+    protected CountryRegionCurrencyId getId_() {
+        return id_;
+    }
+
+    // ------------------------------------------------------------------------------- countryRegion
+
+    /**
+     * Returns the {@code CountryRegion} which the
+     * {@code FK_CountryRegionCurrency_CountryRegion_CountryRegionCode} foreign key references.
      *
      * @return the {@code CountryRegion} referenced; {@code null} when none is.
      */
-    @Nullable
     public CountryRegion getCountryRegion() {
         return countryRegion;
     }
 
-    /**
-     * Replaces the {@code CountryRegion} which the {@code FK_CountryRegionCurrency_CountryRegion_CountryRegionCode}
-     * foreign key references, and the
-     * value of the column it consists of.
-     *
-     * @param countryRegion the {@code CountryRegion} to reference; {@code null} for none.
-     */
-    public void setCountryRegion(@Nullable final CountryRegion countryRegion) {
-        this.countryRegion = countryRegion;
-        setCountryRegionCode(countryRegion == null ? null : countryRegion.getCountryRegionCode());
-    }
-
-    // -------------------------------------------------------------------------------------------------------- currency
+    // ------------------------------------------------------------------------------------ currency
 
     /**
-     * Returns the {@code Currency} which the {@code FK_CountryRegionCurrency_Currency_CurrencyCode} foreign key
-     * references.
+     * Returns the {@code Currency} which the {@code FK_CountryRegionCurrency_Currency_CurrencyCode}
+     * foreign key references.
      *
      * @return the {@code Currency} referenced; {@code null} when none is.
      */
-    @Nullable
     public Currency getCurrency() {
         return currency;
     }
 
-    /**
-     * Replaces the {@code Currency} which the {@code FK_CountryRegionCurrency_Currency_CurrencyCode} foreign key
-     * references, and the
-     * value of the column it consists of.
-     *
-     * @param currency the {@code Currency} to reference; {@code null} for none.
-     */
-    public void setCurrency(@Nullable final Currency currency) {
-        this.currency = currency;
-        setCurrencyCode(currency == null ? null : currency.getCurrencyCode());
-    }
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @EmbeddedId
+    private CountryRegionCurrencyId id_;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @MapsId(CountryRegionCurrencyId.ATTRIBUTE_NAME_COUNTRY_REGION_CODE)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_COUNTRY_REGION_CODE,
                 referencedColumnName = MappedCountryRegion.COLUMN_NAME_COUNTRY_REGION_CODE,
                 nullable = false,
-                insertable = false,
+                insertable = true,
                 updatable = false
     )
     private CountryRegion countryRegion;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
+    @MapsId(CountryRegionCurrencyId.ATTRIBUTE_NAME_CURRENCY_CODE)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_CURRENCY_CODE,
                 referencedColumnName = MappedCurrency.COLUMN_NAME_CURRENCY_CODE,
                 nullable = false,
-                insertable = false,
+                insertable = true,
                 updatable = false
     )
     private Currency currency;

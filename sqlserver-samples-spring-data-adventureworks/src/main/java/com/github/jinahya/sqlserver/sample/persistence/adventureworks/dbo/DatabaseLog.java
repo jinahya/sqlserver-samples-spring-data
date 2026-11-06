@@ -28,10 +28,13 @@ import jakarta.persistence.Table;
  * An entity which maps the {@code dbo.DatabaseLog} table.
  */
 @Entity(name = "DboDatabaseLog")
-@Table(schema = MappedDatabaseLog.TABLE_SCHEMA, name = MappedDatabaseLog.TABLE_NAME)
-public class DatabaseLog extends MappedDatabaseLog {
+@Table(schema = MappedDatabaseLog.TABLE_SCHEMA, name = MappedDatabaseLog.TABLE_NAME,
+       comment = "Audit table tracking all DDL changes made to the AdventureWorks database. Data "
+                 + "is captured by the database trigger ddlDatabaseTriggerLog.")
+public class DatabaseLog
+        extends MappedDatabaseLog {
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.

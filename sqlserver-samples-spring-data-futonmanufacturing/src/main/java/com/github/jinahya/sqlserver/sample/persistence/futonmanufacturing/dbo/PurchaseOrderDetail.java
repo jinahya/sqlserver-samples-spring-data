@@ -23,7 +23,6 @@ package com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.dbo;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedItem;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedPurchaseOrder;
 import com.github.jinahya.sqlserver.sample.persistence.futonmanufacturing.mapped.dbo.MappedPurchaseOrderDetail;
-import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -47,7 +46,7 @@ public class PurchaseOrderDetail extends MappedPurchaseOrderDetail {
      */
     public static final String ATTRIBUTE_NAME_ITEM = "item";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -56,53 +55,51 @@ public class PurchaseOrderDetail extends MappedPurchaseOrderDetail {
         super();
     }
 
-    // --------------------------------------------------------------------------------------------------- purchaseOrder
+    // ------------------------------------------------------------------------------- purchaseOrder
 
     /**
      * Returns the {@code PurchaseOrder} which the {@code FK_PODetail_PO} foreign key references.
      *
      * @return the {@code PurchaseOrder} referenced; {@code null} when none is.
      */
-    @Nullable
     public PurchaseOrder getPurchaseOrder() {
         return purchaseOrder;
     }
 
     /**
-     * Replaces the {@code PurchaseOrder} which the {@code FK_PODetail_PO} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code PurchaseOrder} which the {@code FK_PODetail_PO} foreign key references, and the value of the
+     * column it consists of.
      *
      * @param purchaseOrder the {@code PurchaseOrder} to reference; {@code null} for none.
      */
-    public void setPurchaseOrder(@Nullable final PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(final PurchaseOrder purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
         setPurchaseOrderId(purchaseOrder == null ? null : purchaseOrder.getPurchaseOrderId());
     }
 
-    // ------------------------------------------------------------------------------------------------------------ item
+    // ---------------------------------------------------------------------------------------- item
 
     /**
      * Returns the {@code Item} which the {@code FK_PODetail_Item} foreign key references.
      *
      * @return the {@code Item} referenced; {@code null} when none is.
      */
-    @Nullable
     public Item getItem() {
         return item;
     }
 
     /**
-     * Replaces the {@code Item} which the {@code FK_PODetail_Item} foreign key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Item} which the {@code FK_PODetail_Item} foreign key references, and the value of the column
+     * it consists of.
      *
      * @param item the {@code Item} to reference; {@code null} for none.
      */
-    public void setItem(@Nullable final Item item) {
+    public void setItem(final Item item) {
         this.item = item;
         setItemId(item == null ? null : item.getItemId());
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_PURCHASE_ORDER_ID,
                 referencedColumnName = MappedPurchaseOrder.COLUMN_NAME_PURCHASE_ORDER_ID,
@@ -112,7 +109,7 @@ public class PurchaseOrderDetail extends MappedPurchaseOrderDetail {
     )
     private PurchaseOrder purchaseOrder;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_ITEM_ID,
                 referencedColumnName = MappedItem.COLUMN_NAME_ITEM_ID,

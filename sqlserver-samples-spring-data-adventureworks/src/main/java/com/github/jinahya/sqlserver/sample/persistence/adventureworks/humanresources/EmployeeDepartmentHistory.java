@@ -20,46 +20,93 @@ package com.github.jinahya.sqlserver.sample.persistence.adventureworks.humanreso
  * #L%
  */
 
+import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.EmployeeDepartmentHistoryId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedDepartment;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployee;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployeeDepartmentHistory;
-import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedEmployeeDepartmentHistoryId;
 import com.github.jinahya.sqlserver.sample.persistence.adventureworks.mapped.humanresources.MappedShift;
-import jakarta.annotation.Nullable;
+import jakarta.persistence.CheckConstraint;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * An entity which maps the {@code HumanResources.EmployeeDepartmentHistory} table.
  */
 @Entity(name = "HumanResourcesEmployeeDepartmentHistory")
-@Table(schema = MappedEmployeeDepartmentHistory.TABLE_SCHEMA, name = MappedEmployeeDepartmentHistory.TABLE_NAME)
-@IdClass(MappedEmployeeDepartmentHistoryId.class)
-public class EmployeeDepartmentHistory extends MappedEmployeeDepartmentHistory {
+@Table(schema = MappedEmployeeDepartmentHistory.TABLE_SCHEMA,
+       name = MappedEmployeeDepartmentHistory.TABLE_NAME,
+       comment = "Employee department transfers.",
+       check = {
+               @CheckConstraint(
+                       name = "CK_EmployeeDepartmentHistory_EndDate",
+                       constraint = "([EndDate]>=[StartDate] OR [EndDate] IS NULL)"
+               )
+       }
+)
+@IdClass(EmployeeDepartmentHistoryId.class)
+public class EmployeeDepartmentHistory
+        extends MappedEmployeeDepartmentHistory {
 
     /**
-     * The name of the attribute of the {@code FK_EmployeeDepartmentHistory_Department_DepartmentID} foreign key. The
-     * value is {@value}.
+     * The name of the attribute of the {@code FK_EmployeeDepartmentHistory_Department_DepartmentID}
+     * foreign key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_DEPARTMENT = "department";
 
     /**
-     * The name of the attribute of the {@code FK_EmployeeDepartmentHistory_Employee_BusinessEntityID} foreign key. The
-     * value is {@value}.
+     * The name of the attribute of the
+     * {@code FK_EmployeeDepartmentHistory_Employee_BusinessEntityID} foreign key. The value is
+     * {@value}.
      */
     public static final String ATTRIBUTE_NAME_BUSINESS_ENTITY = "businessEntity";
 
     /**
-     * The name of the attribute of the {@code FK_EmployeeDepartmentHistory_Shift_ShiftID} foreign key. The value is
-     * {@value}.
+     * The name of the attribute of the {@code FK_EmployeeDepartmentHistory_Shift_ShiftID} foreign
+     * key. The value is {@value}.
      */
     public static final String ATTRIBUTE_NAME_SHIFT = "shift";
 
-    // ---------------------------------------------------------------------------------------------------- CONSTRUCTORS
+    // ---------------------------------------------------------------------- STATIC_FACTORY_METHODS
+
+    /**
+     * Creates a new instance which references the specified employee, department and shift, from
+     * the specified date.
+     *
+     * @param businessEntity the {@code Employee} to reference.
+     * @param startDate      the value of the {@value #COLUMN_NAME_START_DATE} column.
+     * @param department     the {@code Department} to reference.
+     * @param shift          the {@code Shift} to reference.
+     * @return a new instance which references {@code businessEntity}, {@code department} and
+     *         {@code shift}, from {@code startDate}.
+     * @throws NullPointerException if any of the arguments is {@code null}.
+     */
+    public static EmployeeDepartmentHistory of(final Employee businessEntity,
+                                               final LocalDate startDate,
+                                               final Department department,
+                                               final Shift shift) {
+        Objects.requireNonNull(businessEntity, "businessEntity is null");
+        Objects.requireNonNull(startDate, "startDate is null");
+        Objects.requireNonNull(department, "department is null");
+        Objects.requireNonNull(shift, "shift is null");
+        final var instance = new EmployeeDepartmentHistory();
+        instance.setBusinessEntity(businessEntity);
+        instance.setStartDate(startDate);
+        instance.setDepartment(department);
+        instance.setShift(shift);
+        return instance;
+    }
+
+    // -------------------------------------------------------------------------------- CONSTRUCTORS
 
     /**
      * Creates a new instance.
@@ -68,82 +115,84 @@ public class EmployeeDepartmentHistory extends MappedEmployeeDepartmentHistory {
         super();
     }
 
-    // ------------------------------------------------------------------------------------------------------ department
+    // ---------------------------------------------------------------------------------- department
 
     /**
-     * Returns the {@code Department} which the {@code FK_EmployeeDepartmentHistory_Department_DepartmentID} foreign
-     * key references.
+     * Returns the {@code Department} which the
+     * {@code FK_EmployeeDepartmentHistory_Department_DepartmentID} foreign key references.
      *
      * @return the {@code Department} referenced; {@code null} when none is.
      */
-    @Nullable
     public Department getDepartment() {
         return department;
     }
 
     /**
-     * Replaces the {@code Department} which the {@code FK_EmployeeDepartmentHistory_Department_DepartmentID} foreign
-     * key references, and the
+     * Replaces the {@code Department} which the
+     * {@code FK_EmployeeDepartmentHistory_Department_DepartmentID} foreign key references, and the
      * value of the column it consists of.
      *
      * @param department the {@code Department} to reference; {@code null} for none.
      */
-    public void setDepartment(@Nullable final Department department) {
+    private void setDepartment(final Department department) {
         this.department = department;
-        setDepartmentId(department == null || department.getDepartmentId() == null
-                        ? null : department.getDepartmentId().intValue());
+        setDepartmentId(Optional.ofNullable(department)
+                                .map(MappedDepartment::getDepartmentId)
+                                .orElse(null));
     }
 
-    // -------------------------------------------------------------------------------------------------- businessEntity
+    // ------------------------------------------------------------------------------ businessEntity
 
     /**
-     * Returns the {@code Employee} which the {@code FK_EmployeeDepartmentHistory_Employee_BusinessEntityID} foreign
-     * key references.
+     * Returns the {@code Employee} which the
+     * {@code FK_EmployeeDepartmentHistory_Employee_BusinessEntityID} foreign key references.
      *
      * @return the {@code Employee} referenced; {@code null} when none is.
      */
-    @Nullable
     public Employee getBusinessEntity() {
         return businessEntity;
     }
 
     /**
-     * Replaces the {@code Employee} which the {@code FK_EmployeeDepartmentHistory_Employee_BusinessEntityID} foreign
-     * key references, and the
-     * value of the column it consists of.
+     * Replaces the {@code Employee} which the
+     * {@code FK_EmployeeDepartmentHistory_Employee_BusinessEntityID} foreign key references, and
+     * the value of the column it consists of.
      *
      * @param businessEntity the {@code Employee} to reference; {@code null} for none.
      */
-    public void setBusinessEntity(@Nullable final Employee businessEntity) {
+    private void setBusinessEntity(final Employee businessEntity) {
         this.businessEntity = businessEntity;
-        setBusinessEntityId(businessEntity == null ? null : businessEntity.getBusinessEntityId());
+        setBusinessEntityId(
+                Optional.ofNullable(businessEntity).map(MappedEmployee::getBusinessEntityId)
+                        .orElse(null));
     }
 
-    // ----------------------------------------------------------------------------------------------------------- shift
+    // --------------------------------------------------------------------------------------- shift
 
     /**
-     * Returns the {@code Shift} which the {@code FK_EmployeeDepartmentHistory_Shift_ShiftID} foreign key references.
+     * Returns the {@code Shift} which the {@code FK_EmployeeDepartmentHistory_Shift_ShiftID}
+     * foreign key references.
      *
      * @return the {@code Shift} referenced; {@code null} when none is.
      */
-    @Nullable
     public Shift getShift() {
         return shift;
     }
 
     /**
-     * Replaces the {@code Shift} which the {@code FK_EmployeeDepartmentHistory_Shift_ShiftID} foreign key references,
-     * and the
-     * value of the column it consists of.
+     * Replaces the {@code Shift} which the {@code FK_EmployeeDepartmentHistory_Shift_ShiftID}
+     * foreign key references, and the value of the column it consists of.
      *
      * @param shift the {@code Shift} to reference; {@code null} for none.
      */
-    public void setShift(@Nullable final Shift shift) {
+    private void setShift(final Shift shift) {
         this.shift = shift;
-        setShiftId(shift == null || shift.getShiftId() == null ? null : shift.getShiftId().intValue());
+        setShiftId(Optional.ofNullable(shift).map(MappedShift::getShiftId).orElse(null));
     }
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_DEPARTMENT_ID,
                 referencedColumnName = MappedDepartment.COLUMN_NAME_DEPARTMENT_ID,
@@ -153,7 +202,9 @@ public class EmployeeDepartmentHistory extends MappedEmployeeDepartmentHistory {
     )
     private Department department;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_BUSINESS_ENTITY_ID,
                 referencedColumnName = MappedEmployee.COLUMN_NAME_BUSINESS_ENTITY_ID,
@@ -163,7 +214,9 @@ public class EmployeeDepartmentHistory extends MappedEmployeeDepartmentHistory {
     )
     private Employee businessEntity;
 
-    // -----------------------------------------------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------------------------
+    @Valid
+    @NotNull
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = COLUMN_NAME_SHIFT_ID,
                 referencedColumnName = MappedShift.COLUMN_NAME_SHIFT_ID,
